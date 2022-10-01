@@ -1,7 +1,10 @@
-![Anxious](/Content/Images/anxious.jpg)
+<img src="/Content/Images/anxious.jpg" alt="drawing" style="width:150%;"/>
+
 # anxY
 
 This is a nerve wrecking Nightmare Jump & Run developed by mayfly studios 
+
+</br>
 
 ## Table of Contents:
 * [Installation of the Application](#installation)
