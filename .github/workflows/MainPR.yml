@@ -1,4 +1,4 @@
-name: .NET
+name: Main Branch PR
 
 on:
   push:
