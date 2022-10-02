@@ -26,7 +26,6 @@ jobs:
     - name: Print Path
       run:
         cd
-        ls
           
     - name: Install .NET dependencies
       run: dotnet restore
