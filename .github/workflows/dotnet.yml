@@ -27,7 +27,7 @@ jobs:
       run: dotnet restore
       
     - name: Build the Solution
-      run: dotnet build /ANXY/ANXY.sln
+      run: dotnet build ./ANXY/ANXY.sln
       
     - name: .NET Test
-      run: dotnet test /ANXY/ANXY.sln
+      run: dotnet test ./ANXY/ANXY.sln
