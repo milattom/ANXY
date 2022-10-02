@@ -18,12 +18,6 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1.1
       
-    - name: Setup NuGet
-      uses: NuGet/setup-nuget@v1.0.7
-      
-    - name: Restore NuGet
-      run: nuget restore ANXY.sln
-      
     - name: Build the Solution
       run: dotnet build ANXY.sln
       
