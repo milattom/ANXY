@@ -12,23 +12,22 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Setup GitHub Actions
-      uses: actions/checkout@v3
+    - uses: actions/checkout@v3
       
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1.1
       
-    - name: Setup NuGet
-      uses: NuGet/setup-nuget@v1.0.7
-      
-    - name: Restore NuGet
-      run: nuget restore ANXY.sln
-      
-    - name: Restore DotNet packages
-      run: dotnet restore ANXY.sln
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v3.0.0
+      with:
+        dotnet-version:
+          6.0.x
+          
+    - name: Install .NET dependencies
+      run: dotnet restore
       
     - name: Build the Solution
       run: dotnet build ANXY.sln
       
-    - name: DotNet Test
+    - name: .NET Test
       run: dotnet test ANXY.sln
