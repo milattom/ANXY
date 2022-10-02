@@ -24,9 +24,6 @@ jobs:
     - name: Restore NuGet
       run: nuget restore ANXY.sln
       
-    - name: Restore DotNet packages
-      run: dotnet restore ANXY.sln
-      
     - name: Build the Solution
       run: dotnet build ANXY.sln
       
