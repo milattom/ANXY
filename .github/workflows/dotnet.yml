@@ -23,6 +23,11 @@ jobs:
         dotnet-version:
           6.0.x
           
+    - name: Print Path
+      run:
+        cd
+        ls
+          
     - name: Install .NET dependencies
       run: dotnet restore
       
