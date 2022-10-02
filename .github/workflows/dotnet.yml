@@ -22,9 +22,12 @@ jobs:
       with:
         dotnet-version:
           6.0.x
+          
+    - name: Install .NET dependencies
+      run: dotnet restore
       
     - name: Build the Solution
       run: dotnet build ANXY.sln
       
-    - name: DotNet Test
+    - name: .NET Test
       run: dotnet test ANXY.sln
