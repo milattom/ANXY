@@ -12,9 +12,10 @@ namespace ANXY.Tests
     public class Game1Tests
     {
         [TestMethod()]
-        public void Game1Test()
+        public void IsMouseVisible()
         {
-            Assert.Fail();
+            Game1 game1 = new Game1();
+            Assert.IsTrue(game1.IsMouseVisible);
         }
     }
 }
