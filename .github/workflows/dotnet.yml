@@ -22,4 +22,4 @@ jobs:
       run: nuget restore ANXY.sln
       
     - name: Build the Solution
-      run: msbuild ANXY.sln
+      run: dotnet build ANXY.sln
