@@ -34,6 +34,8 @@ This is a nerve wrecking Nightmare Jump & Run developed by mayfly studios
 
 <h4 id="tests">Tests</h4>
 
+<h4 id="Builds">Builds</h4>
+<img alt="Builds Passing" src="https://github.com/milattom/ANXY/actions/workflows/MainPR.yml/badge.svg">
 
 -----
 
