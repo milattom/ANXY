@@ -4,7 +4,7 @@ on:
   push:
     branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "Jira-Automation" ]
   workflow_dispatch:    
 
 jobs:
