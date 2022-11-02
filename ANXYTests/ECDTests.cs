@@ -5,36 +5,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ANXY.ECS.Components;
 using ANXY.ECS;
+using ANXY.ECS.Components;
 using Microsoft.Xna.Framework;
 
 namespace ANXY.Tests
 {
     [TestClass()]
-    public class ANXYGameTests
+    public class ECDTests
     {
         [TestMethod()]
-        public void IsMouseVisible()
+        public void CreateEntityWithTransformComponent()
         {
-            ANXYGame anxyGame = new ANXYGame();
-            Assert.IsTrue(anxyGame.IsMouseVisible);
+            Vector2 testVector = new Vector2(0, 0);
+            Entity testEntity = new Entity();
+            testEntity.AddComponent(new Transform(testVector,0,0));
+            Assert.IsNotNull(testEntity.GetComponent<Transform>());
         }
+
         [TestMethod()]
-        public void TestTransformSystemUpdate()
+        public void TestTransformTranslation()
         {
-            ANXYGame anxyGame = new ANXYGame();
             Vector2 vectorBefore = new Vector2(0, 0);
             Vector2 vectorAfter = new Vector2(2, 0);
             Entity testEntity = new Entity();
             testEntity.AddComponent(new Transform(vectorBefore,0,0));
 
             testEntity.GetComponent<Transform>().Translate(vectorAfter);
-            Thread.Sleep(2000);
 
             Assert.AreEqual( vectorAfter, testEntity.GetComponent<Transform>().Position);
-            Assert.AreEqual( vectorBefore, testEntity.GetComponent<Transform>().LastPosition);
-
         }
     }
 }
