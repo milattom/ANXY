@@ -1,3 +1,3 @@
 ﻿
-using var game = new ANXY.Game1();
+using var game = new ANXY.ANXYGame();
 game.Run();

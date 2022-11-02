@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 namespace ANXY.Tests
 {
     [TestClass()]
-    public class Game1Tests
+    public class ANXYGameTests
     {
         [TestMethod()]
         public void IsMouseVisible()
         {
-            Game1 game1 = new Game1();
-            Assert.IsTrue(game1.IsMouseVisible);
+            ANXYGame anxyGame = new ANXYGame();
+            Assert.IsTrue(anxyGame.IsMouseVisible);
         }
     }
 }
