@@ -1,6 +1,6 @@
 ﻿using ANXY.ECS.Components;
 using ANXY.ECS.Systems;
-using ANXY.GameObjects;
+using ANXY.Player;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -11,7 +11,7 @@ namespace ANXY
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private Player _player;
+        private GameObjects.Player _player;
 
         public ANXYGame()
         {
@@ -30,6 +30,8 @@ namespace ANXY
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            await GameContent.Init(Content);
+
 
             // TODO: use this.Content to load your game content here
             //Vector pointing to middle of the screen

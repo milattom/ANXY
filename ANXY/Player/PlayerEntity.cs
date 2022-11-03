@@ -4,12 +4,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace ANXY.GameObjects
+namespace ANXY
 {
-    public class Player : Entity
+    public class PlayerEntity : Entity
     {
         private Texture2D textureStanding;
-        public Player(Vector2 pos, ContentManager content)
+        public PlayerEntity(Vector2 pos, ContentManager content)
         {
             this.Name = "Bob";
             //-------------- Components for Entity --------------------
