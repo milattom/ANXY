@@ -16,8 +16,6 @@ namespace ANXY.GameObjects
         public Player()
         {
             this.Name = "Bob";
-            Transform transform = GetComponent<Transform>();
-            transform.Position = Vector2.Zero;
         }
     }
 }
