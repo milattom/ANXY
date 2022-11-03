@@ -1,9 +1,10 @@
 ﻿using ANXY.ECS.Components;
 using ANXY.ECS.Systems;
-using ANXY.Player;
+using Microsoft.VisualBasic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace ANXY
 {
@@ -11,7 +12,7 @@ namespace ANXY
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private GameObjects.Player _player;
+        private PlayerEntity _player;
 
         public ANXYGame()
         {
@@ -30,18 +31,23 @@ namespace ANXY
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            await GameContent.Init(Content);
 
 
-            // TODO: use this.Content to load your game content here
-            //Vector pointing to middle of the screen
-            Vector2 position = new Vector2(
-                _graphics.PreferredBackBufferWidth / 2,
-                _graphics.PreferredBackBufferHeight / 2);
-            //---------------------- Entity ---------------------------
-            // Content shouldnt be parameter for entity, but we would need a contentmanager
-            // for loading things like textures, if we dont want to do everything in Game.cs
-            _player = new Player(position, Content);
+            //// TODO: use this.Content to load your game content here
+            ////Vector pointing to middle of the screen
+            //Vector2 position = new Vector2(
+            //    _graphics.PreferredBackBufferWidth / 2,
+            //    _graphics.PreferredBackBufferHeight / 2);
+            ////---------------------- Entity ---------------------------
+            //// Content shouldnt be parameter for entity, but we would need a contentmanager
+            //// for loading things like textures, if we dont want to do everything in Game.cs
+            //_player = new PlayerEntity(position, Content);
+            LoadAsync();
+        }
+
+        private async void LoadAsync()
+        {
+            await ContentLoader.Init(Content);
         }
 
         protected override void Update(GameTime gameTime)

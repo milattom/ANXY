@@ -19,7 +19,7 @@ namespace ANXY.Player
             return Task.CompletedTask;
         }
 
-        public BasicSprite CreateLinkWalkingRight()
+        public BasicSprite CreatePlayerWalkingRight()
         {
             List<Rectangle> frames = new List<Rectangle>
             {
@@ -32,7 +32,7 @@ namespace ANXY.Player
             };
             return new BasicSprite(PlayerSpriteSheet, frames);
         }
-        public BasicSprite CreateLinkWalkingLeft()
+        public BasicSprite CreatePlayerWalkingLeft()
         {
             List<Rectangle> frames = new List<Rectangle>
             {
