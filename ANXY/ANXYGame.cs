@@ -1,4 +1,6 @@
-﻿using ANXY.ECS.Systems;
+﻿using ANXY.ECS.Components;
+using ANXY.ECS.Systems;
+using ANXY.GameObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -9,6 +11,7 @@ namespace ANXY
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private Player _player;
 
         public ANXYGame()
         {
@@ -29,6 +32,14 @@ namespace ANXY
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            //Vector pointing to middle of the screen
+            Vector2 position = new Vector2(
+                _graphics.PreferredBackBufferWidth / 2,
+                _graphics.PreferredBackBufferHeight / 2);
+            //---------------------- Entity ---------------------------
+            // Content shouldnt be parameter for entity, but we would need a contentmanager
+            // for loading things like textures, if we dont want to do everything in Game.cs
+            _player = new Player(position, Content);
         }
 
         protected override void Update(GameTime gameTime)
@@ -37,7 +48,9 @@ namespace ANXY
                 Exit();
 
             // TODO: Add your update logic here
+
             TransformSystem.Update(gameTime);
+            SpriteSystem.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -47,6 +60,9 @@ namespace ANXY
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            _spriteBatch.Begin();
+            _player.GetComponent<Sprite>().Draw(_spriteBatch, null);
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }

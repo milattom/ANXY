@@ -10,12 +10,19 @@ using Microsoft.Xna.Framework;
 
 namespace ANXY.ECS.Components
 {
+    /// <summary>
+    /// Transform Component of an Entity which holds variables for Position, Scale, last position,
+    /// layer depth, velocity and rotation. 
+    /// </summary>
     public class Transform : Component
     {
 
         public Vector2 Position { get; set; } = Vector2.Zero;
         public Vector2 Scale { get; set; } = Vector2.Zero;
         public Vector2 LastPosition { get; set; }= Vector2.Zero;
+
+        public Vector2 Velocity { get; set; } = Vector2.One;
+
         public float LayerDepth { get; set; } = 0;
         public float Rotation { get; set; } = 0;
 

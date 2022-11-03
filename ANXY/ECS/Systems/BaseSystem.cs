@@ -32,8 +32,7 @@ namespace ANXY.ECS.Systems
 
     }
 
-    class TransformSystem : BaseSystem<Transform> { }
-
-    //class SpriteSystem : BaseSystem<Sprite> { }
+    class TransformSystem : BaseSystem<Transform> { } 
+    class SpriteSystem : BaseSystem<Sprite> { } //to update all sprites: SpriteSystem.Update(gameTime);
     //class ColliderSystem : BaseSystem<Collider> { }
 }
