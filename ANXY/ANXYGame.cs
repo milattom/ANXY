@@ -1,5 +1,4 @@
-﻿using ANXY.ECS.Systems;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -37,7 +36,6 @@ namespace ANXY
                 Exit();
 
             // TODO: Add your update logic here
-            TransformSystem.Update(gameTime);
 
             base.Update(gameTime);
         }
