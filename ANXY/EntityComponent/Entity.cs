@@ -13,12 +13,14 @@ namespace ANXY.EntityComponent
     {
         public Vector2 Position { get; set; } = Vector2.Zero;
         public int ID { get; }
+        public bool IsActive;
         private static int previousID = 0;
         private readonly List<Component> _components = new();
 
         public Entity()
         {
             ID = previousID++;
+            IsActive = true;
         }
 
         /// <summary>
@@ -97,7 +99,26 @@ namespace ANXY.EntityComponent
             _components.Remove(foundComponent);
         }
 
-        public virtual void Update(GameTime gameTime) { }
-        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch) { }
+        public void Update(GameTime gameTime)
+        {
+            foreach (Component component in _components)
+            {
+                if (component.IsActive)
+                {
+                    component.Update(gameTime);
+                }
+            }
+        }
+
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            foreach (Component component in _components)
+            {
+                if (component.IsActive)
+                {
+                    component.Draw(gameTime, spriteBatch);
+                }
+            }
+        }
     }
 }
