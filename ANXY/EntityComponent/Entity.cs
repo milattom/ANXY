@@ -32,7 +32,7 @@ namespace ANXY.EntityComponent
         public void AddComponent(Component component)
         {
             component.Entity = this;
-            component.Initialize();
+            //component.Initialize();
             if (GetComponent(component.GetType()) == null) { RemoveComponent(component.GetType()); }
             _components.Add(component);
         }

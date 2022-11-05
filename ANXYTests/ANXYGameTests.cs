@@ -8,17 +8,12 @@ namespace ANXY.Tests
     [TestClass()]
     public class ANXYGameTests
     {
-        private static ANXYGame game;
 
-        [TestInitialize]
-        public static void InitializeTests()
-        {
-            game = new ANXYGame();
-        }
-        
         [TestMethod()]
         public void IsMouseVisible()
         {
+            ANXYGame game = new ANXYGame();
+
             Assert.IsTrue(game.IsMouseVisible);
         }
     }

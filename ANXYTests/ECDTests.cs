@@ -9,14 +9,6 @@ namespace ANXY.Tests
     [TestClass()]
     public class ECDTests
     {
-        private static ANXYGame game;
-
-        [TestInitialize]
-        public static void InitializeTests()
-        {
-            game = new ANXYGame();
-        }
-
         [TestMethod()]
         public void TestEntity()
         {
