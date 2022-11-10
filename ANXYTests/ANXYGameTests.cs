@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xna.Framework;
 using ANXY.EntityComponent.Components;
+using ANXY.Game;
 
 namespace ANXY.Tests
 {
