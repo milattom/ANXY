@@ -1,13 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ANXY;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ANXY.ECS;
-using ANXY.ECS.Components;
+﻿using ANXY.ECS;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xna.Framework;
+using ANXY.EntityComponent;
+using ANXY.EntityComponent.Components;
 
 namespace ANXY.Tests
 {
@@ -15,25 +10,29 @@ namespace ANXY.Tests
     public class ECDTests
     {
         [TestMethod()]
-        public void CreateEntityWithTransformComponent()
+        public void TestEntity()
         {
-            Vector2 testVector = new Vector2(0, 0);
+            Vector2 testVector = new Vector2(2, 0);
             Entity testEntity = new Entity();
-            testEntity.AddComponent(new Transform(testVector,0,0));
-            Assert.IsNotNull(testEntity.GetComponent<Transform>());
+            testEntity.Position = testVector;
+            Console.WriteLine("testEntity ID: " + testEntity.ID);
+            Assert.AreEqual( testVector, testEntity.Position);
         }
 
         [TestMethod()]
-        public void TestTransformTranslation()
+        public void TestGetComponent()
         {
-            Vector2 vectorBefore = new Vector2(0, 0);
-            Vector2 vectorAfter = new Vector2(2, 0);
+            Vector2 testVector = new Vector2(2, 0);
             Entity testEntity = new Entity();
-            testEntity.AddComponent(new Transform(vectorBefore,0,0));
+            OldComponent testComponent = new Player(); ;
+            testEntity.Position = testVector;
+            testEntity.AddComponent(testComponent);
 
-            testEntity.GetComponent<Transform>().Translate(vectorAfter);
+            Thread.Sleep(2000);
 
-            Assert.AreEqual( vectorAfter, testEntity.GetComponent<Transform>().Position);
+            Assert.AreEqual( testComponent, testEntity.GetComponent<Player>());
+            Assert.AreEqual( testComponent, testEntity.GetComponent(testComponent.GetType()));
+
         }
     }
 }
