@@ -27,7 +27,7 @@ public class Player : Component
 
     public bool WalkingRight = true;
 
-    private const float WalkingSpeed = 300;
+    private const float WalkingSpeed = 200;
 
 
     /// <summary>

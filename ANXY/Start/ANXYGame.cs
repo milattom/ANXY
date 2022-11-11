@@ -73,7 +73,7 @@ namespace ANXY.Start{
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             playerSprite = Content.Load<Texture2D>("playerAtlas");
-            backgroundSprite = Content.Load<Texture2D>("Background");
+            backgroundSprite = Content.Load<Texture2D>("Background-2");
             
             // TODO: use this.Content to load your game content here
         }
