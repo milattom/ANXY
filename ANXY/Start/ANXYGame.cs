@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
+using System;
 
 namespace ANXY.Start{
     /// <summary>
@@ -38,6 +39,8 @@ namespace ANXY.Start{
             base.Initialize();
 
             InitializeDefaultScene();
+
+            EntityManager.Instance._InitializeEntities();
         }
 
         /// <summary>
@@ -69,7 +72,7 @@ namespace ANXY.Start{
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            playerSprite = Content.Load<Texture2D>("PlayerCharacter");
+            playerSprite = Content.Load<Texture2D>("playerAtlas");
             backgroundSprite = Content.Load<Texture2D>("Background");
             
             // TODO: use this.Content to load your game content here
@@ -91,7 +94,7 @@ namespace ANXY.Start{
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            EntityManager.Instance.UpdateEntities(gameTime);
+            EntityManager.Instance._UpdateEntities(gameTime);
             // TODO: Add your update logic here
 
             base.Update(gameTime);

@@ -12,8 +12,8 @@ public class Player : Component
 
     private bool isAlive = true;
     private PlayerInputController playerInputController;
-    
-    private Vector2 CurrentVelocity { get; set; }
+
+    public Vector2 CurrentVelocity { get; private set; }
     private PlayerState State { get; }
     public enum PlayerState
     {
@@ -24,6 +24,8 @@ public class Player : Component
         Ducking,
         Falling
     }
+
+    public bool WalkingRight = true;
 
     private const float WalkingSpeed = 300;
 
@@ -50,7 +52,6 @@ public class Player : Component
 
     public override void Initialize()
     {
-        throw new NotImplementedException();
     }
 
     public override void Destroy()
@@ -85,8 +86,12 @@ public class Player : Component
         //velocity update
         CurrentVelocity = inputDirection * WalkingSpeed;
 
+        //Direction update
+        WalkingRight = CurrentVelocity.X >= 0;
+
         //position update
         Entity.Position += CurrentVelocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
     }
 
     /// <summary>
@@ -94,6 +99,7 @@ public class Player : Component
     /// </summary>
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
+
     }
 
     public bool Jump()

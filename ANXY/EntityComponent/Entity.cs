@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Numerics;
 using ANXY.EntityComponent.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace ANXY.EntityComponent;
 
@@ -15,8 +17,8 @@ public sealed class Entity
 {
     public static int previousID = 0;
     public int ID { get; set; } = previousID++;
-    private readonly List<Component> _components = new();
-
+    private List<Component> _components = new();
+    
     public Vector2 Position { get; set; } = Vector2.Zero;
 
     /// <summary>
@@ -38,7 +40,7 @@ public sealed class Entity
     /// <returns>T A Component of the matching type, otherwise null if no Component is found.</returns>
     public T GetComponent<T>() where T : Component
     {
-        return (T) _components.FirstOrDefault(component => component.GetType() == typeof(T));
+        return (T) _components.FirstOrDefault(c => c.GetType() == typeof(T));
 
         /* see why this is the same
         foreach (var component in _components)
@@ -77,6 +79,13 @@ public sealed class Entity
         foreach (var component in _components)
             if (component.IsActive)
                 component.Update(gameTime);
+    }
+
+    public void Initialize()
+    {
+        foreach (var component in _components)
+            if (component.IsActive)
+                component.Initialize();
     }
 
     public void Draw(GameTime gameTime, SpriteBatch spriteBatch)

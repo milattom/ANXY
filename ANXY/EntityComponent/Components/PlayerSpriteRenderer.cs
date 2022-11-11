@@ -1,14 +1,20 @@
 ﻿using System;
-using System.Runtime.ConstrainedExecution;
+using System.Net.Http.Headers;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace ANXY.EntityComponent.Components;
 
 public class PlayerSpriteRenderer : Component
 {
-    public Texture2D PlayerAtlas { get; private set; }
+    public const int XOffsetRectangle = 33;
+    public readonly Rectangle StartPlayerRectangle = new(0, 0, 33, 70);
+    private int _currentFrame;
+    public Rectangle CurrentPlayerRectangle;
+    private Rectangle _outputRectangle;
+    private readonly int _numberOfFrames = 7;
+    private Player _player;
+    private SpriteEffects spriteEffect;
 
 
     /// <summary>
@@ -17,21 +23,45 @@ public class PlayerSpriteRenderer : Component
     public PlayerSpriteRenderer(Texture2D playerAtlas)
     {
         PlayerAtlas = playerAtlas;
+        CurrentPlayerRectangle = StartPlayerRectangle;
     }
+
+    public Texture2D PlayerAtlas { get; }
 
 
     public override void Update(GameTime gameTime)
     {
+        //Animation Update
+        _outputRectangle.X = (int) Entity.Position.X;
+        _outputRectangle.Y = (int) Entity.Position.Y;
+        if (_currentFrame < _numberOfFrames && _player.CurrentVelocity.X > 0)
+        {
+            CurrentPlayerRectangle.X = XOffsetRectangle * _currentFrame;
+            _currentFrame++;
+            spriteEffect = SpriteEffects.None;
+        }
+        else if (_currentFrame < _numberOfFrames && _player.CurrentVelocity.X < 0)
+        {
+            CurrentPlayerRectangle.X = XOffsetRectangle * _currentFrame;
+            _currentFrame++;
+            spriteEffect = SpriteEffects.FlipHorizontally;
+        }
+        else
+        {
+            CurrentPlayerRectangle.X = 0;
+            _currentFrame = 0;
+        }
     }
 
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
-        spriteBatch.Draw(PlayerAtlas, Entity.Position, Color.White);
+        spriteBatch.Draw(PlayerAtlas, _outputRectangle, CurrentPlayerRectangle, Color.White,0f,new Vector2(0,0), spriteEffect, 0f);
     }
 
     public override void Initialize()
     {
-        throw new NotImplementedException();
+        _player = Entity.GetComponent<Player>();
+        _outputRectangle = new Rectangle((int)Entity.Position.X, (int)Entity.Position.Y, 33, 70);
     }
 
     public override void Destroy()

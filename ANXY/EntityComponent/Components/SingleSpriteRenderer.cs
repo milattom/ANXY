@@ -30,7 +30,6 @@ public class SingleSpriteRenderer : Component
 
     public override void Initialize()
     {
-        throw new NotImplementedException();
     }
 
     public override void Destroy()

@@ -67,9 +67,17 @@ public sealed class EntityManager
     /// <summary>
     ///     TODO
     /// </summary>
-    internal void UpdateEntities(GameTime gameTime)
+    internal void _UpdateEntities(GameTime gameTime)
     {
         foreach (var entity in _gameEntities) entity.Update(gameTime);
+    }
+
+    /// <summary>
+    ///     TODO
+    /// </summary>
+    internal void _InitializeEntities()
+    {
+        foreach (var entity in _gameEntities) entity.Initialize();
     }
 
     /// <summary>
