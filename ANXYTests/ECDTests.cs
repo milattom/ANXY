@@ -1,5 +1,4 @@
-﻿using ANXY.ECS;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xna.Framework;
 using ANXY.EntityComponent;
 using ANXY.EntityComponent.Components;
@@ -24,15 +23,13 @@ namespace ANXY.Tests
         {
             Vector2 testVector = new Vector2(2, 0);
             Entity testEntity = new Entity();
-            OldComponent testComponent = new Player(); ;
+            Component testComponent = new Player(); ;
             testEntity.Position = testVector;
             testEntity.AddComponent(testComponent);
 
             Thread.Sleep(2000);
 
             Assert.AreEqual( testComponent, testEntity.GetComponent<Player>());
-            Assert.AreEqual( testComponent, testEntity.GetComponent(testComponent.GetType()));
-
         }
     }
 }
