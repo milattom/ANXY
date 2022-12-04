@@ -1,7 +1,7 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace ANXY.EntityComponent.Components;
 
@@ -18,10 +18,10 @@ public class Player : Component
     }
 
     private const int GroundLevel = 400;
-    private const int JumpHeight = 150;
+    private const float Gravity = 10;
+    private const float WalkForce = 200;
+    private const float JumpForce = 500;
 
-
-    public readonly Vector2 _movementSpeed = new(200, 1000);
     private float _jumpedHeight;
     public BoxCollider BoxCollider;
 
@@ -43,7 +43,7 @@ public class Player : Component
 
     public float WalkingInXVelocity { get; private set; }
 
-    public Vector2 CurrentVelocity { get; private set; }
+    public Vector2 Velocity = Vector2.Zero;
     public PlayerState MovementState { get; private set; }
 
     /* TODO implement later
@@ -75,41 +75,41 @@ public class Player : Component
         //input
         var state = Keyboard.GetState();
         var inputDirection = Vector2.Zero;
-        var jumpingDirection = Vector2.Zero;
+        var colliding = false;
+        var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        var acceleration = new Vector2(WalkForce, Gravity);
 
-        if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right)) inputDirection += new Vector2(1, 0);
-        if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left)) inputDirection += new Vector2(-1, 0);
-        if (state.IsKeyDown(Keys.Space))
+        //on ground
+        if(Entity.Position.Y >= GroundLevel)
         {
-            if (MovementState == PlayerState.Idle) MovementState = PlayerState.Jumping;
-            inputDirection += Jump(gameTime);
+            colliding = true;
+            Velocity.Y = 0;
+            Entity.Position = new Vector2(Entity.Position.X, GroundLevel);
+        }
+        //free fall
+        else
+        {
+            inputDirection.Y = 1;
         }
 
-
-        /*TODO remove
-        if (state.IsKeyDown(Keys.W) || state.IsKeyDown(Keys.Up))
-        {
-            inputDirection += new Vector2(0, -1);
-        }
-        if (state.IsKeyDown(Keys.S) || state.IsKeyDown(Keys.Down))
-        {
-            inputDirection += new Vector2(0, 1);
-        }*/
+        if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right)) inputDirection.X = 1;
+        if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left)) inputDirection.X = -1;
+        if (colliding && state.IsKeyDown(Keys.Space)) inputDirection.Y = -JumpForce/Gravity;
 
         //velocity update
-        CurrentVelocity = inputDirection * _movementSpeed;
-        CurrentVelocity += ApplyGravity();
+        Velocity.X =  inputDirection.X * acceleration.X;
+        Velocity.Y += inputDirection.Y * Gravity;
 
         //Direction update
-        WalkingInXVelocity = CurrentVelocity.X;
+        WalkingInXVelocity = Velocity.X;
 
         //ScreenConstraintUpdate
         if ((WalkingInXVelocity > 0 && Entity.Position.X >= windowWidth * 3.0 / 4.0)
             || (WalkingInXVelocity < 0 && Entity.Position.X <= windowWidth * 1.0 / 4.0))
-            CurrentVelocity *= new Vector2(0, 1);
+            Velocity *= new Vector2(0, 1);
 
         //position update
-        Entity.Position += CurrentVelocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        Entity.Position += Velocity * dt;
     }
 
     /// <summary>
@@ -117,25 +117,6 @@ public class Player : Component
     /// </summary>
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
-    }
-
-    public Vector2 Jump(GameTime gameTime)
-    {
-        if (MovementState != PlayerState.Falling)
-        {
-            _jumpedHeight += _movementSpeed.Y * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (_jumpedHeight >= JumpHeight)
-            {
-                _jumpedHeight = 0;
-                MovementState = PlayerState.Falling;
-            }
-            else
-            {
-                return new Vector2(0, -1);
-            }
-        }
-
-        return new Vector2(0, 0);
     }
 
     public bool DoubleJump()
@@ -151,12 +132,5 @@ public class Player : Component
     public bool Die()
     {
         return true;
-    }
-
-    private Vector2 ApplyGravity()
-    {
-        if (Entity.Position.Y < GroundLevel && MovementState != PlayerState.Jumping) return new Vector2(0, 250);
-        MovementState = PlayerState.Idle;
-        return new Vector2(0, 0);
     }
 }
