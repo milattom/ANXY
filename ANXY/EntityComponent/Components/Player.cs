@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Numerics;
-using System.Xml;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -27,14 +24,24 @@ public class Player : Component
 
     public bool colliding;
 
-    public bool WalkingRight = true;
+    private const int GroundLevel = 400;
+    private const int JumpHeight = 150;
 
+    private int windowHeight;
+    private readonly int windowWidth;
     /// <summary>
     ///     TODO
     /// </summary>
-    public Player()
+    public Player(int windowWidth, int windowHeight)
     {
+        this.windowWidth = windowWidth;
+        this.windowHeight = windowHeight;
     }
+
+    public float WalkingInXVelocity { get; private set; }
+
+    public Vector2 CurrentVelocity { get; private set; }
+    public PlayerState MovementState { get; private set; }
 
     /* TODO implement later
     public bool Crouch()
@@ -91,7 +98,14 @@ public class Player : Component
         }
 
         //Direction update
-        WalkingRight = Velocity.X >= 0;
+        WalkingInXVelocity = CurrentVelocity.X;
+
+        //ScreenConstraintUpdate
+        if ((WalkingInXVelocity > 0 && Entity.Position.X >= windowWidth * 3.0 / 4.0)
+            || (WalkingInXVelocity < 0 && Entity.Position.X <= windowWidth * 1.0 / 4.0))
+            CurrentVelocity *= new Vector2(0, 1);
+
+        //position update
         //velocity & position update
         Velocity.X =  _inputDirection.X * Acceleration.X;
         Velocity.Y = _inputDirection.Y * _gravity;
@@ -103,7 +117,6 @@ public class Player : Component
     /// </summary>
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
-
     }
 
     public bool DoubleJump()
