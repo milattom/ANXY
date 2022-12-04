@@ -21,7 +21,7 @@ public class Player : Component
     private const int JumpHeight = 150;
 
 
-    private readonly Vector2 _movementSpeed = new(200, 1000);
+    public readonly Vector2 _movementSpeed = new(200, 1000);
     private float _jumpedHeight;
     public BoxCollider BoxCollider;
 

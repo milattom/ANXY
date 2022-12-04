@@ -7,14 +7,16 @@ namespace ANXY.EntityComponent.Components;
 
 public class Background : Component
 {
-    private Vector2 ScreenScrollingDirection;
-    private int windowHeight;
-    private int windowWidth;
+    private Player _playerComponent;
+    private Vector2 _screenScrollingDirection;
+    private float _screenScrollingSpeed;
+    private int _windowHeight;
+    private int _windowWidth;
 
     public Background(int windowWidth, int windowHeight)
     {
-        this.windowWidth = windowWidth;
-        this.windowHeight = windowHeight;
+        this._windowWidth = windowWidth;
+        this._windowHeight = windowHeight;
     }
 
     public Entity playerEntity { get; set; }
@@ -22,11 +24,18 @@ public class Background : Component
     public override void Update(GameTime gameTime)
     {
         var state = Keyboard.GetState();
-        ScreenScrollingDirection = Vector2.Zero;
-        if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right)) ScreenScrollingDirection += new Vector2(-1, 0);
-        if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left)) ScreenScrollingDirection += new Vector2(1, 0);
+        _screenScrollingDirection = Vector2.Zero;
+        if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right)) _screenScrollingDirection = new Vector2(-1, 0);
+        if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left)) _screenScrollingDirection = new Vector2(1, 0);
 
-        Entity.Position += ScreenScrollingDirection;
+        if (_playerComponent.CurrentVelocity.X == 0 && _playerComponent.WalkingInXVelocity != 0)
+            _screenScrollingSpeed = Math.Abs(_playerComponent.WalkingInXVelocity);
+        else
+            _screenScrollingSpeed = 0;
+
+
+        Entity.Position += _screenScrollingDirection * _screenScrollingSpeed *
+                           (float)gameTime.ElapsedGameTime.TotalSeconds;
     }
 
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -35,6 +44,7 @@ public class Background : Component
 
     public override void Initialize()
     {
+        _playerComponent = playerEntity.GetComponent<Player>();
     }
 
     public override void Destroy()
