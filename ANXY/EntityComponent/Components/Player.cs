@@ -41,7 +41,6 @@ public class Player : Component
     public float WalkingInXVelocity { get; private set; }
 
     public Vector2 CurrentVelocity { get; private set; }
-    public PlayerState MovementState { get; private set; }
 
     /* TODO implement later
     public bool Crouch()
