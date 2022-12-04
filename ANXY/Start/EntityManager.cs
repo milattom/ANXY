@@ -91,9 +91,13 @@ public sealed class EntityManager
     /// <summary>
     ///     TODO
     /// </summary>
-    public List<T> FindEntityByType<T>(T entity)
+    public List<Entity> FindEntityByType<T>() where T : Component
     {
-        var FoundEntities = new List<T>();
+        var FoundEntities = new List<Entity>();
+
+        foreach (var e in _gameEntities)
+            if (e.GetComponent<T>() != null)
+                FoundEntities.Add(e);
 
         return FoundEntities;
     }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Http.Headers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -8,14 +7,14 @@ namespace ANXY.EntityComponent.Components;
 public class PlayerSpriteRenderer : Component
 {
     public const int XOffsetRectangle = 33;
-    public readonly Rectangle StartPlayerRectangle = new(0, 0, 33, 70);
-    public Rectangle CurrentPlayerRectangle;
-    private int _currentFrame;
-    private Rectangle _outputRectangle;
     private readonly int _numberOfFrames = 7;
-    private int _timeSinceLastFrame = 0;
-    private int _millisecondsPerFrame = 40; //the smaller the faster animation
+    public readonly Rectangle StartPlayerRectangle = new(0, 0, 33, 70);
+    private int _currentFrame;
+    private readonly int _millisecondsPerFrame = 40; //the smaller the faster animation
+    private Rectangle _outputRectangle;
     private Player _player;
+    private int _timeSinceLastFrame;
+    public Rectangle CurrentPlayerRectangle;
     private SpriteEffects spriteEffect;
 
 
@@ -34,16 +33,16 @@ public class PlayerSpriteRenderer : Component
     public override void Update(GameTime gameTime)
     {
         //Animation Update
-        _outputRectangle.X = (int) Entity.Position.X;
-        _outputRectangle.Y = (int) Entity.Position.Y;
+        _outputRectangle.X = (int)Entity.Position.X;
+        _outputRectangle.Y = (int)Entity.Position.Y;
         _timeSinceLastFrame += gameTime.ElapsedGameTime.Milliseconds;
         if (_timeSinceLastFrame > _millisecondsPerFrame) _updateAnimation();
-
     }
 
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
-        spriteBatch.Draw(PlayerAtlas, _outputRectangle, CurrentPlayerRectangle, Color.White,0f,new Vector2(0,0), spriteEffect, 0f);
+        spriteBatch.Draw(PlayerAtlas, _outputRectangle, CurrentPlayerRectangle, Color.White, 0f, new Vector2(0, 0),
+            spriteEffect, 0f);
     }
 
     public override void Initialize()
@@ -84,13 +83,13 @@ public class PlayerSpriteRenderer : Component
     private void _updateAnimation()
     {
         _timeSinceLastFrame = 0;
-        if (_currentFrame < _numberOfFrames && _player.CurrentVelocity.X > 0)
+        if (_currentFrame < _numberOfFrames && _player.WalkingInXVelocity > 0)
         {
             CurrentPlayerRectangle.X = XOffsetRectangle * _currentFrame;
             spriteEffect = SpriteEffects.None;
             _currentFrame++;
         }
-        else if (_currentFrame < _numberOfFrames && _player.CurrentVelocity.X < 0)
+        else if (_currentFrame < _numberOfFrames && _player.WalkingInXVelocity < 0)
         {
             CurrentPlayerRectangle.X = XOffsetRectangle * _currentFrame;
             spriteEffect = SpriteEffects.FlipHorizontally;
