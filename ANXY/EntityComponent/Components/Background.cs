@@ -28,7 +28,7 @@ public class Background : Component
         if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right)) _screenScrollingDirection = new Vector2(-1, 0);
         if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left)) _screenScrollingDirection = new Vector2(1, 0);
 
-        if (_playerComponent.CurrentVelocity.X == 0 && _playerComponent.WalkingInXVelocity != 0)
+        if (_playerComponent.Velocity.X == 0 && _playerComponent.WalkingInXVelocity != 0)
             _screenScrollingSpeed = Math.Abs(_playerComponent.WalkingInXVelocity);
         else
             _screenScrollingSpeed = 0;
