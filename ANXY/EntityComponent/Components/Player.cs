@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Xml;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -12,9 +13,12 @@ public class Player : Component
 
     private bool isAlive = true;
     private PlayerInputController playerInputController;
+    private readonly int _GroundLevel = 400;
+    private readonly int _JumpHeight = 150;
+    private float JumpedHeight = 0;
 
     public Vector2 CurrentVelocity { get; private set; }
-    private PlayerState State { get; }
+    public PlayerState MovementState { get; private set; }
     public enum PlayerState
     {
         Idle,
@@ -27,7 +31,7 @@ public class Player : Component
 
     public bool WalkingRight = true;
 
-    private const float WalkingSpeed = 200;
+    private Vector2 MovementSpeed = new Vector2(200,1000);
 
 
     /// <summary>
@@ -35,7 +39,6 @@ public class Player : Component
     /// </summary>
     public Player()
     {
-
     }
 
     /* TODO implement later
@@ -52,6 +55,7 @@ public class Player : Component
 
     public override void Initialize()
     {
+        MovementState = PlayerState.Idle;
     }
 
     public override void Destroy()
@@ -66,6 +70,8 @@ public class Player : Component
         //input
         KeyboardState state = Keyboard.GetState();
         Vector2 inputDirection = Vector2.Zero;
+        Vector2 jumpingDirection = Vector2.Zero;
+
         if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right))
         {
             inputDirection += new Vector2(1, 0);
@@ -74,6 +80,14 @@ public class Player : Component
         {
             inputDirection += new Vector2( -1,0);
         }
+        if (state.IsKeyDown(Keys.Space) && MovementState != PlayerState.Falling)
+        {
+            MovementState = PlayerState.Jumping;
+            inputDirection += Jump(gameTime);
+        }
+
+
+        /*TODO remove
         if (state.IsKeyDown(Keys.W) || state.IsKeyDown(Keys.Up))
         {
             inputDirection += new Vector2(0, -1);
@@ -81,10 +95,16 @@ public class Player : Component
         if (state.IsKeyDown(Keys.S) || state.IsKeyDown(Keys.Down))
         {
             inputDirection += new Vector2(0, 1);
-        }
+        }*/
 
         //velocity update
-        CurrentVelocity = inputDirection * WalkingSpeed;
+        CurrentVelocity = inputDirection * MovementSpeed;
+
+        if (Entity.Position.Y < _GroundLevel)
+        {
+            MovementState = PlayerState.Idle;
+            CurrentVelocity += applyGravity();
+        }
 
         //Direction update
         WalkingRight = CurrentVelocity.X >= 0;
@@ -102,9 +122,27 @@ public class Player : Component
 
     }
 
-    public bool Jump()
+    public Vector2 Jump(GameTime gameTime)
     {
-        return true;
+        if (MovementState == PlayerState.Idle || MovementState == PlayerState.Running)
+        {
+            MovementState = PlayerState.Jumping;
+        }
+
+        if (MovementState == PlayerState.Jumping)
+        {
+            JumpedHeight += MovementSpeed.Y * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (JumpedHeight >= _JumpHeight)
+            {
+                JumpedHeight = 0;
+                MovementState = PlayerState.Falling;
+            }
+            else
+            {
+                return new Vector2(0, -1);
+            }
+        }
+        return new Vector2(0, 0);
     }
 
     public bool DoubleJump()
@@ -122,6 +160,18 @@ public class Player : Component
         return true;
     }
 
+    private Vector2 applyGravity()
+    {
+        if (Entity.Position.Y < _GroundLevel && MovementState != PlayerState.Jumping)
+        {
+            return new Vector2(0, 250);
+        }
+        else
+        {
+            MovementState = PlayerState.Idle;
+            return new Vector2(0, 0);
+        }
+    }
 
-    
+
 }
