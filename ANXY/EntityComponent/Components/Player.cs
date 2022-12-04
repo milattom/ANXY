@@ -1,34 +1,37 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Vector2 = Microsoft.Xna.Framework.Vector2;
+using System;
 
 namespace ANXY.EntityComponent.Components;
 
 public class Player : Component
 {
+    public enum PlayerState
+    {
+        Idle,
+        Running,
+        Jumping,
+        DoubleJumping,
+        Ducking,
+        Falling
+    }
+
+    private const int GroundLevel = 400;
+    private const float Gravity = 10;
+    private const float WalkForce = 200;
+    private const float JumpForce = 500;
+
+    private float _jumpedHeight;
     public BoxCollider BoxCollider;
 
     private bool isAlive = true;
     private PlayerInputController playerInputController;
-
-    private readonly int _GroundLevel = 400;
-    private static float _gravity = 9;
-    private static float _walkForce = 200;
-    private static float _jumpforce = 350;
-    private Vector2 _inputDirection = Vector2.Zero;
-
-    public Vector2 Velocity = Vector2.Zero;
-    public Vector2 Acceleration = new Vector2(_walkForce, _gravity);
-
-    public bool colliding;
-
-    private const int GroundLevel = 400;
-    private const int JumpHeight = 150;
-
     private int windowHeight;
+
     private readonly int windowWidth;
+
+
     /// <summary>
     ///     TODO
     /// </summary>
@@ -40,7 +43,8 @@ public class Player : Component
 
     public float WalkingInXVelocity { get; private set; }
 
-    public Vector2 CurrentVelocity { get; private set; }
+    public Vector2 Velocity = Vector2.Zero;
+    public PlayerState MovementState { get; private set; }
 
     /* TODO implement later
     public bool Crouch()
@@ -56,6 +60,7 @@ public class Player : Component
 
     public override void Initialize()
     {
+        MovementState = PlayerState.Falling;
     }
 
     public override void Destroy()
@@ -67,47 +72,43 @@ public class Player : Component
 
     public override void Update(GameTime gameTime)
     {
-        KeyboardState state = Keyboard.GetState();
+        //input
+        var state = Keyboard.GetState();
+        var inputDirection = Vector2.Zero;
+        var colliding = false;
         var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        var acceleration = new Vector2(WalkForce, Gravity);
 
         //on ground
-        if(Entity.Position.Y > _GroundLevel)
+        if(Entity.Position.Y >= GroundLevel)
         {
             colliding = true;
-            _inputDirection = Vector2.Zero;
+            Velocity.Y = 0;
+            Entity.Position = new Vector2(Entity.Position.X, GroundLevel);
         }
         //free fall
         else
         {
-            colliding = false;
-            _inputDirection.Y += 1;
+            inputDirection.Y = 1;
         }
 
-        if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right))
-        {
-            _inputDirection.X = 1;
-        }
-        if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left))
-        {
-            _inputDirection.X = -1;
-        }
-        if (colliding && state.IsKeyDown(Keys.Space))
-        {
-            _inputDirection.Y = -_jumpforce/_gravity;
-        }
+        if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right)) inputDirection.X = 1;
+        if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left)) inputDirection.X = -1;
+        if (colliding && state.IsKeyDown(Keys.Space)) inputDirection.Y = -JumpForce/Gravity;
+
+        //velocity update
+        Velocity.X =  inputDirection.X * acceleration.X;
+        Velocity.Y += inputDirection.Y * Gravity;
 
         //Direction update
-        WalkingInXVelocity = CurrentVelocity.X;
+        WalkingInXVelocity = Velocity.X;
 
         //ScreenConstraintUpdate
         if ((WalkingInXVelocity > 0 && Entity.Position.X >= windowWidth * 3.0 / 4.0)
             || (WalkingInXVelocity < 0 && Entity.Position.X <= windowWidth * 1.0 / 4.0))
-            CurrentVelocity *= new Vector2(0, 1);
+            Velocity *= new Vector2(0, 1);
 
         //position update
-        //velocity & position update
-        Velocity.X =  _inputDirection.X * Acceleration.X;
-        Velocity.Y = _inputDirection.Y * _gravity;
         Entity.Position += Velocity * dt;
     }
 
