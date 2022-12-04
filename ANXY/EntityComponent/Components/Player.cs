@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Numerics;
 using System.Xml;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace ANXY.EntityComponent.Components;
 
@@ -13,26 +15,19 @@ public class Player : Component
 
     private bool isAlive = true;
     private PlayerInputController playerInputController;
-    private readonly int _GroundLevel = 400;
-    private readonly int _JumpHeight = 150;
-    private float JumpedHeight = 0;
 
-    public Vector2 CurrentVelocity { get; private set; }
-    public PlayerState MovementState { get; private set; }
-    public enum PlayerState
-    {
-        Idle,
-        Running,
-        Jumping,
-        DoubleJumping,
-        Ducking,
-        Falling
-    }
+    private readonly int _GroundLevel = 400;
+    private static float _gravity = 9;
+    private static float _walkForce = 200;
+    private static float _jumpforce = 350;
+    private Vector2 _inputDirection = Vector2.Zero;
+
+    public Vector2 Velocity = Vector2.Zero;
+    public Vector2 Acceleration = new Vector2(_walkForce, _gravity);
+
+    public bool colliding;
 
     public bool WalkingRight = true;
-
-    private Vector2 MovementSpeed = new Vector2(200,1000);
-
 
     /// <summary>
     ///     TODO
@@ -55,7 +50,6 @@ public class Player : Component
 
     public override void Initialize()
     {
-        MovementState = PlayerState.Idle;
     }
 
     public override void Destroy()
@@ -67,51 +61,41 @@ public class Player : Component
 
     public override void Update(GameTime gameTime)
     {
-        //input
         KeyboardState state = Keyboard.GetState();
-        Vector2 inputDirection = Vector2.Zero;
-        Vector2 jumpingDirection = Vector2.Zero;
+        var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+        //on ground
+        if(Entity.Position.Y > _GroundLevel)
+        {
+            colliding = true;
+            _inputDirection = Vector2.Zero;
+        }
+        //free fall
+        else
+        {
+            colliding = false;
+            _inputDirection.Y += 1;
+        }
 
         if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right))
         {
-            inputDirection += new Vector2(1, 0);
+            _inputDirection.X = 1;
         }
         if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left))
         {
-            inputDirection += new Vector2( -1,0);
+            _inputDirection.X = -1;
         }
-        if (state.IsKeyDown(Keys.Space) && MovementState != PlayerState.Falling)
+        if (colliding && state.IsKeyDown(Keys.Space))
         {
-            MovementState = PlayerState.Jumping;
-            inputDirection += Jump(gameTime);
-        }
-
-
-        /*TODO remove
-        if (state.IsKeyDown(Keys.W) || state.IsKeyDown(Keys.Up))
-        {
-            inputDirection += new Vector2(0, -1);
-        }
-        if (state.IsKeyDown(Keys.S) || state.IsKeyDown(Keys.Down))
-        {
-            inputDirection += new Vector2(0, 1);
-        }*/
-
-        //velocity update
-        CurrentVelocity = inputDirection * MovementSpeed;
-
-        if (Entity.Position.Y < _GroundLevel)
-        {
-            MovementState = PlayerState.Idle;
-            CurrentVelocity += applyGravity();
+            _inputDirection.Y = -_jumpforce/_gravity;
         }
 
         //Direction update
-        WalkingRight = CurrentVelocity.X >= 0;
-
-        //position update
-        Entity.Position += CurrentVelocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
+        WalkingRight = Velocity.X >= 0;
+        //velocity & position update
+        Velocity.X =  _inputDirection.X * Acceleration.X;
+        Velocity.Y = _inputDirection.Y * _gravity;
+        Entity.Position += Velocity * dt;
     }
 
     /// <summary>
@@ -120,29 +104,6 @@ public class Player : Component
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
 
-    }
-
-    public Vector2 Jump(GameTime gameTime)
-    {
-        if (MovementState == PlayerState.Idle || MovementState == PlayerState.Running)
-        {
-            MovementState = PlayerState.Jumping;
-        }
-
-        if (MovementState == PlayerState.Jumping)
-        {
-            JumpedHeight += MovementSpeed.Y * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (JumpedHeight >= _JumpHeight)
-            {
-                JumpedHeight = 0;
-                MovementState = PlayerState.Falling;
-            }
-            else
-            {
-                return new Vector2(0, -1);
-            }
-        }
-        return new Vector2(0, 0);
     }
 
     public bool DoubleJump()
@@ -159,19 +120,4 @@ public class Player : Component
     {
         return true;
     }
-
-    private Vector2 applyGravity()
-    {
-        if (Entity.Position.Y < _GroundLevel && MovementState != PlayerState.Jumping)
-        {
-            return new Vector2(0, 250);
-        }
-        else
-        {
-            MovementState = PlayerState.Idle;
-            return new Vector2(0, 0);
-        }
-    }
-
-
 }
