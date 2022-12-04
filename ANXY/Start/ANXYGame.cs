@@ -1,124 +1,128 @@
-﻿using ANXY.EntityComponent.Components;
+﻿using System.Diagnostics;
 using ANXY.EntityComponent;
+using ANXY.EntityComponent.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System.Diagnostics;
-using System;
 
-namespace ANXY.Start{
-    /// <summary>
-    /// This is the main type for your game.
-    /// </summary>
-    public class ANXYGame : Game
+namespace ANXY.Start;
+
+/// <summary>
+///     This is the main type for your game.
+/// </summary>
+public class ANXYGame : Game
+{
+    private Texture2D _backgroundSprite;
+
+    private GraphicsDeviceManager _graphics;
+    private Texture2D _playerSprite;
+    private SpriteBatch _spriteBatch;
+
+    public ANXYGame()
     {
-        private Texture2D playerSprite;
-        private Texture2D backgroundSprite;
+        _graphics = new GraphicsDeviceManager(this);
+        IsMouseVisible = true;
+        Content.RootDirectory = "Content";
+    }
 
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
 
-        public ANXYGame()
-        {
-            graphics = new GraphicsDeviceManager(this);
-            IsMouseVisible = true;
-            Content.RootDirectory = "Content";
-        }
-        
+    /// <summary>
+    ///     Allows the game to perform any initialization it needs to before starting to run.
+    ///     This is where it can query for any required services and load any non-graphic
+    ///     related content.  Calling base.Initialize will enumerate through any components
+    ///     and initialize them as well.
+    /// </summary>
+    protected override void Initialize()
+    {
+        // TODO: Add your initialization logic here
 
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
-        protected override void Initialize()
-        {
-            // TODO: Add your initialization logic here
+        base.Initialize();
 
-            base.Initialize();
+        InitializeDefaultScene();
 
-            InitializeDefaultScene();
+        EntityManager.Instance._InitializeEntities();
+    }
 
-            EntityManager.Instance._InitializeEntities();
-        }
+    /// <summary>
+    ///     TODO
+    /// </summary>
+    private void InitializeDefaultScene()
+    {
+        //Background
+        var backgroundEntity = new Entity();
+        EntityManager.Instance.AddEntity(backgroundEntity);
+        var windowWidth = Window.ClientBounds.Width;
+        var windowHeight = Window.ClientBounds.Height;
+        Debug.WriteLine(windowWidth);
+        backgroundEntity.AddComponent(new Background(windowWidth, windowHeight));
+        backgroundEntity.AddComponent(new SingleSpriteRenderer(_backgroundSprite));
 
-        /// <summary>
-        ///     TODO
-        /// </summary>
-        private void InitializeDefaultScene()
-        {
-            //Background
-            Entity backgroundEntity = new Entity();
-            EntityManager.Instance.AddEntity(backgroundEntity);
-            backgroundEntity.AddComponent(new SingleSpriteRenderer(backgroundSprite));
+        //Player
+        var playerEntity = new Entity();
+        playerEntity.Position = new Vector2(windowWidth / 2, windowHeight / 2);
+        EntityManager.Instance.AddEntity(playerEntity);
+        var player = new Player(windowWidth, windowHeight);
+        playerEntity.AddComponent(player);
+        var playerSpriteRenderer = new PlayerSpriteRenderer(_playerSprite);
+        playerEntity.AddComponent(playerSpriteRenderer);
 
-            //Player
-            Entity playerEntity = new Entity();
-            EntityManager.Instance.AddEntity(playerEntity);
-            Player player = new Player();
-            playerEntity.AddComponent(player);
-            PlayerSpriteRenderer playerSpriteRenderer = new PlayerSpriteRenderer(playerSprite);
-            playerEntity.AddComponent(playerSpriteRenderer);
+        backgroundEntity.GetComponent<Background>().playerEntity = playerEntity;
+    }
 
-        }
+    /// <summary>
+    ///     LoadContent will be called once per game and is the place to load
+    ///     all of your content.
+    /// </summary>
+    protected override void LoadContent()
+    {
+        // Create a new SpriteBatch, which can be used to draw textures.
+        _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
-        protected override void LoadContent()
-        {
-            // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+        _playerSprite = Content.Load<Texture2D>("playerAtlas");
+        _backgroundSprite = Content.Load<Texture2D>("Background-2");
 
-            playerSprite = Content.Load<Texture2D>("playerAtlas");
-            backgroundSprite = Content.Load<Texture2D>("Background-2");
-            
-            // TODO: use this.Content to load your game content here
-        }
+        // TODO: use this.Content to load your game content here
+    }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// game-specific content.
-        /// </summary>
-        protected override void UnloadContent()
-        {
-            // TODO: Unload any non ContentManager content here
-        }
+    /// <summary>
+    ///     UnloadContent will be called once per game and is the place to unload
+    ///     game-specific content.
+    /// </summary>
+    protected override void UnloadContent()
+    {
+        // TODO: Unload any non ContentManager content here
+    }
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Update(GameTime gameTime)
-        {
-            EntityManager.Instance._UpdateEntities(gameTime);
-            // TODO: Add your update logic here
+    /// <summary>
+    ///     Allows the game to run logic such as updating the world,
+    ///     checking for collisions, gathering input, and playing audio.
+    /// </summary>
+    /// <param name="gameTime">Provides a snapshot of timing values.</param>
+    protected override void Update(GameTime gameTime)
+    {
+        EntityManager.Instance._UpdateEntities(gameTime);
+        // TODO: Add your update logic here
 
-            base.Update(gameTime);
-        }
+        base.Update(gameTime);
+    }
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Draw(GameTime gameTime)
-        {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+    /// <summary>
+    ///     This is called when the game should draw itself.
+    /// </summary>
+    /// <param name="gameTime">Provides a snapshot of timing values.</param>
+    protected override void Draw(GameTime gameTime)
+    {
+        GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin();
-            EntityManager.Instance.DrawEntities(gameTime, spriteBatch);
+        _spriteBatch.Begin();
+        EntityManager.Instance.DrawEntities(gameTime, _spriteBatch);
 
-            
-            /*
-            spriteBatch.Draw(backgroundSprite, new Vector2(0, 0), Color.White);
-            spriteBatch.Draw(playerSprite, new Vector2(0, 0), Color.White);*/
-            spriteBatch.End();
-            // TODO: Add your drawing code here
 
-            base.Draw(gameTime);
-        }
+        /*
+        spriteBatch.Draw(backgroundSprite, new Vector2(0, 0), Color.White);
+        spriteBatch.Draw(playerSprite, new Vector2(0, 0), Color.White);*/
+        _spriteBatch.End();
+        // TODO: Add your drawing code here
+
+        base.Draw(gameTime);
     }
 }
