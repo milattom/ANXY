@@ -11,9 +11,8 @@ namespace ANXY.Start;
 /// </summary>
 public class ANXYGame : Game
 {
-    public Texture2D FillTexture2D;
+    private Texture2D _fillTexture2D;
     private Texture2D _backgroundSprite;
-
     private GraphicsDeviceManager _graphics;
     private Texture2D _playerSprite;
     private SpriteBatch _spriteBatch;
@@ -41,6 +40,8 @@ public class ANXYGame : Game
         InitializeDefaultScene();
 
         EntityManager.Instance._InitializeEntities();
+        //Debug mode
+        BoxColliderSystem.Instance.EnableDebugMode(_graphics.GraphicsDevice);
     }
 
     /// <summary>
@@ -65,6 +66,19 @@ public class ANXYGame : Game
         playerEntity.AddComponent(player);
         var playerSpriteRenderer = new PlayerSpriteRenderer(_playerSprite);
         playerEntity.AddComponent(playerSpriteRenderer);
+        var playerCollider = new BoxCollider(new Vector2(33, 70), "Player");
+        playerEntity.AddComponent(playerCollider);
+        BoxColliderSystem.Instance.AddBoxCollider(playerCollider);
+
+
+        //Box
+        var boxEntity = new Entity();
+        boxEntity.Position = new Vector2(80, 400);
+        EntityManager.Instance.AddEntity(boxEntity);
+        var boxCollider = new BoxCollider(new Vector2(200, 100), "Ground");
+        boxEntity.AddComponent(boxCollider);
+        BoxColliderSystem.Instance.AddBoxCollider(boxCollider);
+
 
         backgroundEntity.GetComponent<Background>().playerEntity = playerEntity;
     }
@@ -80,7 +94,6 @@ public class ANXYGame : Game
 
         _playerSprite = Content.Load<Texture2D>("playerAtlas");
         _backgroundSprite = Content.Load<Texture2D>("Background-2");
-
         // TODO: use this.Content to load your game content here
     }
 
@@ -101,6 +114,7 @@ public class ANXYGame : Game
     protected override void Update(GameTime gameTime)
     {
         EntityManager.Instance._UpdateEntities(gameTime);
+        BoxColliderSystem.Instance.CheckCollisions();
         // TODO: Add your update logic here
 
         base.Update(gameTime);

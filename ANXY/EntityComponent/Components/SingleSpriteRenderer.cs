@@ -7,7 +7,6 @@ namespace ANXY.EntityComponent.Components;
 public class SingleSpriteRenderer : Component
 {
     public Texture2D Atlas { get; set; }
-    public Rectangle SingleSpriteRectangle;
 
     //TODO public SpriteAnimation SpriteAnimation;
 
@@ -31,7 +30,6 @@ public class SingleSpriteRenderer : Component
 
     public override void Initialize()
     {
-        SingleSpriteRectangle = new Rectangle(200, 0, 33, 70);
     }
 
     public override void Destroy()

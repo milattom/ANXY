@@ -23,8 +23,6 @@ public class Player : Component
     private const float JumpForce = 500;
 
     private float _jumpedHeight;
-    public BoxCollider BoxCollider;
-
     private bool isAlive = true;
     private PlayerInputController playerInputController;
     private int windowHeight;
