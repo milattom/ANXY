@@ -64,7 +64,6 @@ public class ANXYGame : Game
         playerEntity.AddComponent(player);
         var playerSpriteRenderer = new PlayerSpriteRenderer(_playerSprite);
         playerEntity.AddComponent(playerSpriteRenderer);
-
         backgroundEntity.GetComponent<Background>().playerEntity = playerEntity;
     }
 
