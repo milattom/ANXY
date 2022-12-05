@@ -17,10 +17,10 @@ public class Player : Component
         Falling
     }
 
-    private const int GroundLevel = 400;
-    private const float Gravity = 10;
+    private const int GroundLevel = 800;
+    private const float Gravity = 15;
     private const float WalkForce = 200;
-    private const float JumpForce = 500;
+    private const float JumpForce = 550;
 
     private float _jumpedHeight;
     private bool isAlive = true;
@@ -71,18 +71,17 @@ public class Player : Component
     public override void Update(GameTime gameTime)
     {
         //input
+        var colliding = Entity.GetComponent<BoxCollider>().isColliding;
         var state = Keyboard.GetState();
         var inputDirection = Vector2.Zero;
-        var colliding = false;
         var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
         var acceleration = new Vector2(WalkForce, Gravity);
 
         //on ground
-        if(Entity.Position.Y >= GroundLevel)
+        if(Entity.Position.Y >= GroundLevel || colliding)
         {
             colliding = true;
             Velocity.Y = 0;
-            Entity.Position = new Vector2(Entity.Position.X, GroundLevel);
         }
         //free fall
         else

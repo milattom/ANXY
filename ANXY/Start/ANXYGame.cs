@@ -11,7 +11,6 @@ namespace ANXY.Start;
 /// </summary>
 public class ANXYGame : Game
 {
-    private Texture2D _fillTexture2D;
     private Texture2D _backgroundSprite;
     private GraphicsDeviceManager _graphics;
     private Texture2D _playerSprite;
@@ -76,13 +75,29 @@ public class ANXYGame : Game
         BoxColliderSystem.Instance.AddBoxCollider(playerCollider);
 
 
-        //Box
+        //Box1
         var boxEntity = new Entity();
-        boxEntity.Position = new Vector2(80, 400);
+        boxEntity.Position = new Vector2(1200, 800);
         EntityManager.Instance.AddEntity(boxEntity);
         var boxCollider = new BoxCollider(new Vector2(200, 100), "Ground");
         boxEntity.AddComponent(boxCollider);
         BoxColliderSystem.Instance.AddBoxCollider(boxCollider);
+
+        //Box2
+        var boxEntity2 = new Entity();
+        boxEntity2.Position = new Vector2(1300, 600);
+        EntityManager.Instance.AddEntity(boxEntity2);
+        var boxCollider2 = new BoxCollider(new Vector2(100, 100), "Ground");
+        boxEntity2.AddComponent(boxCollider2);
+        BoxColliderSystem.Instance.AddBoxCollider(boxCollider2);
+
+        //Box3
+        var boxEntity3 = new Entity();
+        boxEntity3.Position = new Vector2(1000, 400);
+        EntityManager.Instance.AddEntity(boxEntity3);
+        var boxCollider3 = new BoxCollider(new Vector2(60, 60), "Ground");
+        boxEntity3.AddComponent(boxCollider3);
+        BoxColliderSystem.Instance.AddBoxCollider(boxCollider3);
 
 
         backgroundEntity.GetComponent<Background>().playerEntity = playerEntity;

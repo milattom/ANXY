@@ -58,7 +58,7 @@ public class BoxCollider : Component
     {
         return _bBox.maxX >= other._bBox.minX
                && _bBox.minX <= other._bBox.maxX
-               && _bBox.maxY >= other._bBox.minY 
+               && _bBox.maxY >= other._bBox.minY
                && _bBox.minY <= other._bBox.maxY;
     }
 

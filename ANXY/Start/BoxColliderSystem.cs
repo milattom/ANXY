@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ANXY.EntityComponent;
 using ANXY.EntityComponent.Components;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
@@ -40,39 +41,60 @@ namespace ANXY.Start
                 if (box.IsColliding(otherBox))
                 {
                     colliders.Add(otherBox);
-                    otherBox.Highlight();
                 }
             }
             return colliders;
         }
 
-        public void CheckCollisions()
-        {
-            for (int i = 0; i <= _boxColliders.Count - 1; i++)
-            {
-                for (int j = i + 1; j <= _boxColliders.Count - i - 1; j++)
+         //public void CheckCollisions()
+         //{
+         //    for (int i = 0; i <= _boxColliders.Count - 1; i++)
+         //    {
+         //        for (int j = i + 1; j <= _boxColliders.Count - i - 1; j++)
+         //        {
+         //            var box = _boxColliders[i];
+         //            var otherBox = _boxColliders[j];
+         //            if (box.IsColliding(otherBox))
+         //            {
+         //                box.Highlight();
+         //                box.isColliding=true;
+         //                otherBox.Highlight();
+         //                otherBox.isColliding = true;
+         //            }
+         //        }
+         //    }
+         //}
+
+         /// <summary>
+         /// Checks all box colliders with the one from the player and sets the isColliding = true if they are.
+         /// </summary>
+         public void CheckCollisions()
+         { 
+             var playerCollider = EntityManager.Instance.FindEntityByType<Player>()[0].GetComponent<BoxCollider>();
+             playerCollider.isColliding = false;
+             playerCollider.Dehighlight();
+             foreach (var boxCollider in _boxColliders)
+            { 
+                boxCollider.Dehighlight(); 
+                boxCollider.isColliding=false;
+                if (!boxCollider.LayerMask.Equals(playerCollider.LayerMask)) 
                 {
-                    var box = _boxColliders[i];
-                    var otherBox = _boxColliders[j];
-                    if (box.IsColliding(otherBox))
-                    {
-                        box.isColliding = true;
-                        otherBox.isColliding = true;
-                        //Debugging
-                        otherBox.Highlight();
-                        box.Highlight();    
-                    }
-                    else
-                    {
-                        box.isColliding = false;
-                        box.isColliding = false;
-                        //Debugging
-                        otherBox.Dehighlight();
-                        box.Dehighlight(); 
-                    }
-                }
+                   if (playerCollider.IsColliding(boxCollider))
+                   {
+                       boxCollider.Highlight();
+                       boxCollider.isColliding = true;
+                       playerCollider.Highlight();
+                       playerCollider.isColliding = true;
+                       continue;
+                   }
+                   else
+                   {
+                       boxCollider.Dehighlight();
+                   }
+               }
             }
-        }
+            
+         }
 
         public void EnableDebugMode(GraphicsDevice graphics)
         {
