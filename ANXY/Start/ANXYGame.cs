@@ -20,7 +20,12 @@ public class ANXYGame : Game
     public ANXYGame()
     {
         _graphics = new GraphicsDeviceManager(this);
-        IsMouseVisible = true;
+        //IsMouseVisible = true;
+        _graphics.PreferredBackBufferWidth = 1920;
+        _graphics.PreferredBackBufferHeight = 1080;
+        //_graphics.ToggleFullScreen();
+        Window.AllowUserResizing = true; // makes it possible for the user to change the window size
+        _graphics.ApplyChanges();
         Content.RootDirectory = "Content";
     }
 
