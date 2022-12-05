@@ -11,6 +11,7 @@ namespace ANXY.Start;
 /// </summary>
 public class ANXYGame : Game
 {
+    public Texture2D FillTexture2D;
     private Texture2D _backgroundSprite;
 
     private GraphicsDeviceManager _graphics;
