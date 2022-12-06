@@ -17,6 +17,7 @@ public class Player : Component
         Falling
     }
     public Vector2 Velocity { get; private set; } = Vector2.Zero;
+    public float ScrollSpeed { get; private set; } = 0;
     public PlayerState State { get; private set; } = PlayerState.Idle;
     public Vector2 Inputdirection { get; private set; } = Vector2.Zero;
 
@@ -87,6 +88,7 @@ public class Player : Component
         var xVelocity = Inputdirection.X * acceleration.X;
         var yVelocity = Velocity.Y + (Inputdirection.Y * acceleration.Y);
         Velocity = new Vector2(xVelocity, yVelocity);
+        ScrollSpeed = Velocity.X;
 
         //ScreenConstraintUpdate
         if ((Inputdirection.X > 0 && Entity.Position.X >= windowWidth * 3.0 / 4.0)
