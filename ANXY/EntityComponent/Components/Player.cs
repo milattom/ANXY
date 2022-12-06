@@ -74,24 +74,20 @@ public class Player : Component
         if(Entity.Position.Y >= GroundLevel || colliding)
         {
             colliding = true;
-            Velocity.Y = 0;
+            Velocity = new Vector2(Velocity.X, 0);
         }
         //free fall
-        else
-        {
-            inputDirection.Y = 1;
-        }
+        else Inputdirection = new Vector2(0, 1);
 
-        if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right)) inputDirection.X = 1;
-        if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left)) inputDirection.X = -1;
-        if (colliding && state.IsKeyDown(Keys.Space)) inputDirection.Y = -JumpForce/Gravity;
+        if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right)) Inputdirection = new Vector2( 1, Inputdirection.Y);
+        if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left)) Inputdirection = new Vector2( -1, Inputdirection.Y);
+        if (colliding && state.IsKeyDown(Keys.Space)) Inputdirection = new Vector2( Inputdirection.X, -JumpForce/Gravity);
 
         //velocity update
-        Velocity.X =  inputDirection.X * acceleration.X;
-        Velocity.Y += inputDirection.Y * Gravity;
+        var xVelocity = Inputdirection.X * acceleration.X;
+        var yVelocity = Velocity.Y + (Inputdirection.Y * acceleration.Y);
+        Velocity = new Vector2(xVelocity, yVelocity);
 
-
-        
         //ScreenConstraintUpdate
         if ((Inputdirection.X > 0 && Entity.Position.X >= windowWidth * 3.0 / 4.0)
             || (Inputdirection.X < 0 && Entity.Position.X <= windowWidth * 1.0 / 4.0))
