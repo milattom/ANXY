@@ -46,25 +46,6 @@ namespace ANXY.Start
             return colliders;
         }
 
-         //public void CheckCollisions()
-         //{
-         //    for (int i = 0; i <= _boxColliders.Count - 1; i++)
-         //    {
-         //        for (int j = i + 1; j <= _boxColliders.Count - i - 1; j++)
-         //        {
-         //            var box = _boxColliders[i];
-         //            var otherBox = _boxColliders[j];
-         //            if (box.IsColliding(otherBox))
-         //            {
-         //                box.Highlight();
-         //                box.isColliding=true;
-         //                otherBox.Highlight();
-         //                otherBox.isColliding = true;
-         //            }
-         //        }
-         //    }
-         //}
-
          /// <summary>
          /// Checks all box colliders with the one from the player and sets the isColliding = true if they are.
          /// </summary>

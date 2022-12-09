@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ANXY", "ANXY\ANXY.csproj", "{B5CB4BD8-1007-48F5-871B-5EF7AAFA72ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ANXY", "ANXY\ANXY.csproj", "{B5CB4BD8-1007-48F5-871B-5EF7AAFA72ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ANXYTests", "ANXYTests\ANXYTests.csproj", "{AA7344D8-A421-4D0B-B4F2-19254C1641FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ANXYTests", "ANXYTests\ANXYTests.csproj", "{AA7344D8-A421-4D0B-B4F2-19254C1641FB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

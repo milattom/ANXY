@@ -16,13 +16,16 @@ public class Player : Component
         Ducking,
         Falling
     }
+    public Vector2 Velocity { get; private set; } = Vector2.Zero;
+    public float ScrollSpeed { get; private set; } = 0;
+    public PlayerState State { get; private set; } = PlayerState.Idle;
+    public Vector2 Inputdirection { get; private set; } = Vector2.Zero;
 
     private const int GroundLevel = 800;
     private const float Gravity = 15;
     private const float WalkForce = 200;
     private const float JumpForce = 550;
 
-    private float _jumpedHeight;
     private bool isAlive = true;
     private PlayerInputController playerInputController;
     private int windowHeight;
@@ -39,11 +42,6 @@ public class Player : Component
         this.windowHeight = windowHeight;
     }
 
-    public float WalkingInXVelocity { get; private set; }
-
-    public Vector2 Velocity = Vector2.Zero;
-    public PlayerState MovementState { get; private set; }
-
     /* TODO implement later
     public bool Crouch()
     {
@@ -55,10 +53,8 @@ public class Player : Component
     }
     */
 
-
     public override void Initialize()
     {
-        MovementState = PlayerState.Falling;
     }
 
     public override void Destroy()
@@ -66,43 +62,37 @@ public class Player : Component
         throw new NotImplementedException();
     }
 
-    // Methods
-
     public override void Update(GameTime gameTime)
     {
         //input
         var colliding = Entity.GetComponent<BoxCollider>().isColliding;
         var state = Keyboard.GetState();
-        var inputDirection = Vector2.Zero;
         var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
         var acceleration = new Vector2(WalkForce, Gravity);
+        Inputdirection = Vector2.Zero;
 
         //on ground
         if(Entity.Position.Y >= GroundLevel || colliding)
         {
             colliding = true;
-            Velocity.Y = 0;
+            Velocity = new Vector2(Velocity.X, 0);
         }
         //free fall
-        else
-        {
-            inputDirection.Y = 1;
-        }
+        else Inputdirection = new Vector2(0, 1);
 
-        if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right)) inputDirection.X = 1;
-        if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left)) inputDirection.X = -1;
-        if (colliding && state.IsKeyDown(Keys.Space)) inputDirection.Y = -JumpForce/Gravity;
+        if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right)) Inputdirection = new Vector2( 1, Inputdirection.Y);
+        if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left)) Inputdirection = new Vector2( -1, Inputdirection.Y);
+        if (colliding && state.IsKeyDown(Keys.Space)) Inputdirection = new Vector2( Inputdirection.X, -JumpForce/Gravity);
 
         //velocity update
-        Velocity.X =  inputDirection.X * acceleration.X;
-        Velocity.Y += inputDirection.Y * Gravity;
-
-        //Direction update
-        WalkingInXVelocity = Velocity.X;
+        var xVelocity = Inputdirection.X * acceleration.X;
+        var yVelocity = Velocity.Y + (Inputdirection.Y * acceleration.Y);
+        Velocity = new Vector2(xVelocity, yVelocity);
+        ScrollSpeed = Velocity.X;
 
         //ScreenConstraintUpdate
-        if ((WalkingInXVelocity > 0 && Entity.Position.X >= windowWidth * 3.0 / 4.0)
-            || (WalkingInXVelocity < 0 && Entity.Position.X <= windowWidth * 1.0 / 4.0))
+        if ((Inputdirection.X > 0 && Entity.Position.X >= windowWidth * 3.0 / 4.0)
+            || (Inputdirection.X < 0 && Entity.Position.X <= windowWidth * 1.0 / 4.0))
             Velocity *= new Vector2(0, 1);
 
         //position update

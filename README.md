@@ -26,6 +26,28 @@ This is a nerve wrecking Nightmare Jump & Run developed by mayfly studios
 
 3. Import the project into your IDE:
 
+<h2 if="howToBuild">How To Build</h2>
+
+in the commandline do the following:
+
+install dotnet GameBundle
+`dotnet tool install --global GameBundle`
+
+change to the ANXY solution directory and go into the ANXY Application.
+`ls` should show you something like ANXY
+<a target="_blank" href="/Content/Images/installGameBundle-LS.jpg">
+    <img src="/Content/Images/installGameBundle-LS.jpg" alt="Folder Structure" style="width:50%;"/>
+</a>
+
+with `gambundle --help` you can show any possible commands.
+
+to build the windows app write `gamebundle -w -v`
+
+and to build the macOS app write `gamebundle -m --mac-bundle -v`
+
+if the console output shows something along the lines of ==dotnet is missing or not installed== go to the provided link or follow this link [dotnet install link](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-2.1.30-windows-x64-installer?cid=getdotnetcore)
+
+the game output is located in `cd .\bin\Bundled\`
 
 <h2 id="info">Application Info</h2>
 <h3 id="idea">Idea</h3>
@@ -35,7 +57,7 @@ This is a nerve wrecking Nightmare Jump & Run developed by mayfly studios
 
 <h4 id="diagram">Class Diagram</h4>
 <a target="_blank" href="/Content/Images/ClassDiagram.svg">
-    <img src="/Content/Images/ClassDiagram.svg" alt="drawing" style="width:150%;"/>
+    <img src="/Content/Images/ClassDiagram.svg" alt="Class Diagram Drawing" style="width:150%;"/>
 </a>
 
 <h4 id="pattern">Pattern used</h4>
