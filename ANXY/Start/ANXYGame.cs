@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Serialization;
 using MonoGame.Extended.Tiled;
+using MonoGame.Extended.Tiled.Renderers;
 using Newtonsoft.Json.Serialization;
 
 namespace ANXY.Start;
@@ -19,8 +20,8 @@ public class ANXYGame : Game
     private Texture2D _backgroundSprite;
     private GraphicsDeviceManager _graphics;
     private Texture2D _levelSprite;
-    private JsonContentTypeReader<AsnReader> _levelTileset;
-    private JsonContentTypeReader<AsnReader> _levelTerrain;
+    private TiledMap _levelTileMap;
+    private TiledMapRenderer _tiledMapRenderer;
     private Texture2D _playerSprite;
     private SpriteBatch _spriteBatch;
     private string jsonLevelString;
@@ -83,30 +84,6 @@ public class ANXYGame : Game
         BoxColliderSystem.Instance.AddBoxCollider(playerCollider);
 
         //Level
-        /*
-        var filePath = Path.Combine(Content.RootDirectory, "./Level/Terrain.tsj");
-        using (var stream = TitleContainer.OpenStream(filePath))
-        {
-            using (var reader = new StreamReader(stream))
-            {
-                jsonLevelString = reader.ReadToEnd();
-            }
-        }*/
-        DirectoryInfo directoryInfo = new DirectoryInfo(Content.RootDirectory + "\\Level");
-        FileInfo[] Files = directoryInfo.GetFiles();
-        foreach (var file in Files)
-        {
-            Debug.WriteLine(file);
-        }
-        Debug.WriteLine("Level files:");
-        Debug.WriteLine(jsonLevelString);
-        string resultText;
-        Debug.WriteLine("JSON:");
-        /*using (var sr = new StreamReader(Content.RootDirectory + "\\Level\\Terrain.tsj"))
-        {
-            resultText = sr.ReadToEnd();
-        }
-        Debug.WriteLine(resultText);*/
 
 
         //Box1
@@ -125,6 +102,8 @@ public class ANXYGame : Game
         boxEntity2.AddComponent(boxCollider2);
         BoxColliderSystem.Instance.AddBoxCollider(boxCollider2);
 
+        TiledMap tiledMap;
+        
         //Box3
         var boxEntity3 = new Entity();
         boxEntity3.Position = new Vector2(1000, 400);
@@ -148,11 +127,9 @@ public class ANXYGame : Game
 
         _playerSprite = Content.Load<Texture2D>("playerAtlas");
         _backgroundSprite = Content.Load<Texture2D>("Background-2");
-        _levelSprite = Content.Load<Texture2D>("Level/Terrain (32x32)");
-        /*
-        _levelTileset = Content.Load<JsonContentTypeReader<AsnReader>>("Level/Tile1");
-        _levelTerrain = Content.Load<JsonContentTypeReader<AsnReader>>("Level/Terrain");*/
-        // TODO: use this.Content to load your game content here
+        _levelTileMap = Content.Load<TiledMap>("TileMapSet2");
+        _tiledMapRenderer = new TiledMapRenderer(GraphicsDevice, _levelTileMap);
+
     }
 
     /// <summary>
@@ -171,6 +148,9 @@ public class ANXYGame : Game
     /// <param name="gameTime">Provides a snapshot of timing values.</param>
     protected override void Update(GameTime gameTime)
     {
+        //TODO remove and diy
+        _tiledMapRenderer.Update(gameTime);
+
         EntityManager.Instance._UpdateEntities(gameTime);
         BoxColliderSystem.Instance.CheckCollisions();
         // TODO: Add your update logic here
@@ -184,16 +164,21 @@ public class ANXYGame : Game
     /// <param name="gameTime">Provides a snapshot of timing values.</param>
     protected override void Draw(GameTime gameTime)
     {
+
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         _spriteBatch.Begin();
         EntityManager.Instance.DrawEntities(gameTime, _spriteBatch);
-
+        _spriteBatch.End();
 
         /*
         spriteBatch.Draw(backgroundSprite, new Vector2(0, 0), Color.White);
         spriteBatch.Draw(playerSprite, new Vector2(0, 0), Color.White);*/
-        _spriteBatch.End();
+
+        //TODO remove and diy
+        _tiledMapRenderer.Draw();
+
+
         // TODO: Add your drawing code here
 
         base.Draw(gameTime);

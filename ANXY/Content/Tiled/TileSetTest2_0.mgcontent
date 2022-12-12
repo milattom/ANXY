@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SourceFile>C:/Users/Gamer/Documents/Git/PA/ANXY/Tiled/TileSetTest2.tsx</SourceFile>
+  <SourceTime>2022-12-11T01:43:07.4438723+01:00</SourceTime>
+  <DestFile>C:/Users/Gamer/Documents/Git/PA/ANXY/ANXY/Content/bin/DesktopGL/../../Tiled/TileSetTest2_0.xnb</DestFile>
+  <DestTime>2022-12-11T01:56:22.867579+01:00</DestTime>
+  <Importer>TiledMapTilesetImporter</Importer>
+  <ImporterTime>2022-11-20T17:02:02+01:00</ImporterTime>
+  <Processor>TiledMapTilesetProcessor</Processor>
+  <ProcessorTime>2022-11-20T17:02:02+01:00</ProcessorTime>
+  <Dependencies />
+  <BuildAsset>
+    <string>C:/Users/Gamer/Documents/Git/PA/ANXY/ANXY/Content/bin/DesktopGL/../../Tiled/TileSet2_0.xnb</string>
+  </BuildAsset>
+  <BuildOutput />
+</PipelineBuildEvent>
