@@ -164,9 +164,15 @@ From [Tiled](https://www.mapeditor.org/) install the newest Version.
 
     ![Screenshot showing Properties of the Tiled folder files. Change to "Copy if newer"](./Content/Images/SolutionExplorer-Tiled-CopyIfNewer.jpg "Select all Tiled folder files, Right Click/Properties and change to \"Copy if newer\"")
 
-1. ### Build with Visual Studio
-    Don't worry, the hard part is over.
-    
+1. ### Delete Debug folder in bin
+    Don't worry, the hard part is now done.
+
+    In the Solution Explorer right click the solution and choose `Open Folder in File Explorer`. Go to *ANXY/bin* and delete any `Debug` folders that are in there.
+
+    ![Screenshot showing the ANXY/bin and the Debug folder"](./Content/Images/Delete-Debug-Folder.jpg "Delete all Debug folders in here")
+
+
+1. ### Build with Visual Studio    
     In the Solution Explorer, Right Click the topmost thing called `Solution 'ANXY'` and choose `Build    Solution`.
 
 1. ### Build with GameBundle
