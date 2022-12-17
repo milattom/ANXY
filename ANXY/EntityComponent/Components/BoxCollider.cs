@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.ConstrainedExecution;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -14,12 +15,21 @@ public class BoxCollider : Component
     public bool isColliding;
 
     private BBox _bBox;
-    private Color _color = Color.Red;
+    private readonly Color _activeColor = Color.Green;
+    private readonly Color _inactiveColor = Color.Blue;
+    private Color _highlightColor;
     private Texture2D _recTexture;
 
     public struct BBox
     {
         public float minX, maxX, minY, maxY;
+    }
+
+    public BoxCollider(Rectangle rectangle, string layerMask)
+    {
+        Dimensions = new Vector2(rectangle.Width, rectangle.Height);
+        Offset = new Vector2(rectangle.X, rectangle.Y);
+        LayerMask = layerMask;
     }
 
     public BoxCollider(Vector2 dimensions, string layerMask)
@@ -40,12 +50,13 @@ public class BoxCollider : Component
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
         if (!DebugMode) return;
-        spriteBatch.Draw(_recTexture, new Rectangle((int)Pivot.X, (int)Pivot.Y, (int)Dimensions.X, (int)Dimensions.Y), _color);
+        spriteBatch.Draw(_recTexture, new Rectangle((int)Pivot.X, (int)Pivot.Y, (int)Dimensions.X, (int)Dimensions.Y), _highlightColor);
 
     }
 
     public override void Initialize()
     {
+        _highlightColor = _activeColor;
         Pivot = Entity.Position + Offset;
     }
 
@@ -70,10 +81,10 @@ public class BoxCollider : Component
     //Debugging
     public void Highlight()
     {
-        _color = Color.Green;
+        _highlightColor = _activeColor;
     }
     public void Dehighlight()
     {
-        _color = Color.Red;
+        _highlightColor = _inactiveColor;
     }
 }

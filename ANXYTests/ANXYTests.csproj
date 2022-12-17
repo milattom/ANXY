@@ -10,9 +10,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
+    <PackageReference Include="MonoGame.Extended" Version="3.9.0-alpha0084" />
+    <PackageReference Include="MonoGame.Extended.Content.Pipeline" Version="3.9.0-alpha0084" />
+    <PackageReference Include="MonoGame.Extended.Tiled" Version="3.9.0-alpha0084" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.2.8" />
     <PackageReference Include="MSTest.TestFramework" Version="2.2.8" />
     <PackageReference Include="coverlet.collector" Version="3.1.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
   </ItemGroup>
 
   <ItemGroup>

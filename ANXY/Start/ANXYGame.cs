@@ -1,8 +1,11 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using ANXY.EntityComponent;
 using ANXY.EntityComponent.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended.Tiled;
+using MonoGame.Extended.Tiled.Renderers;
 
 namespace ANXY.Start;
 
@@ -11,10 +14,14 @@ namespace ANXY.Start;
 /// </summary>
 public class ANXYGame : Game
 {
+    private readonly GraphicsDeviceManager _graphics;
     private Texture2D _backgroundSprite;
-    private GraphicsDeviceManager _graphics;
+    private Texture2D _levelSprite;
+    private TiledMap _levelTileMap;
     private Texture2D _playerSprite;
     private SpriteBatch _spriteBatch;
+    private TiledMapRenderer _tiledMapRenderer;
+    private string jsonLevelString;
 
     public ANXYGame()
     {
@@ -53,18 +60,18 @@ public class ANXYGame : Game
     /// </summary>
     private void InitializeDefaultScene()
     {
+        var windowWidth = Window.ClientBounds.Width;
+        var windowHeight = Window.ClientBounds.Height;
+
         //Background
         var backgroundEntity = new Entity();
         EntityManager.Instance.AddEntity(backgroundEntity);
-        var windowWidth = Window.ClientBounds.Width;
-        var windowHeight = Window.ClientBounds.Height;
-        Debug.WriteLine(windowWidth);
         backgroundEntity.AddComponent(new Background(windowWidth, windowHeight));
         backgroundEntity.AddComponent(new SingleSpriteRenderer(_backgroundSprite));
 
         //Player
         var playerEntity = new Entity();
-        playerEntity.Position = new Vector2(windowWidth / 2, windowHeight / 2);
+        playerEntity.Position = new Vector2((int)Math.Round(windowWidth / 2.0), (int)Math.Round(windowHeight / 2.0));
         EntityManager.Instance.AddEntity(playerEntity);
         var player = new Player(windowWidth, windowHeight);
         playerEntity.AddComponent(player);
@@ -74,6 +81,61 @@ public class ANXYGame : Game
         playerEntity.AddComponent(playerCollider);
         BoxColliderSystem.Instance.AddBoxCollider(playerCollider);
 
+        backgroundEntity.GetComponent<Background>().playerEntity = playerEntity;
+
+
+        //Level
+        Debug.WriteLine("This here is the tiles");
+        var tiles = _levelTileMap.TileLayers[0].Tiles;
+        var index = 0;
+        foreach (var singleTile in tiles)
+        {
+            Debug.Write(singleTile.GlobalIdentifier + ",");
+            index++;
+            if (index >= _levelTileMap.Width)
+            {
+                Debug.Write("\n");
+                index = 0;
+            }
+
+            var newTileEntity = new Entity
+            {
+                Position = new Vector2(singleTile.X * _levelTileMap.TileWidth,
+                    singleTile.Y * _levelTileMap.TileHeight)
+            };
+
+
+            var tileSprite = new SingleSpriteRenderer(_levelTileMap.Tilesets[0].Texture,
+                _levelTileMap.Tilesets[0].GetTileRegion(singleTile.GlobalIdentifier - 1));
+            newTileEntity.AddComponent(tileSprite);
+
+            if (singleTile.GlobalIdentifier != 0)
+            {
+                TiledMapTilesetTile foundTilesetTile = null;
+
+                foreach (var tile in _levelTileMap.Tilesets[0].Tiles)
+                    if (tile.LocalTileIdentifier == singleTile.GlobalIdentifier - 1)
+                    {
+                        foundTilesetTile = tile;
+                        break;
+                    }
+
+                if (foundTilesetTile != null)
+                    foreach (var collider in foundTilesetTile.Objects)
+                    {
+                        var rectangle = new Rectangle((int)Math.Round(collider.Position.X)
+                            , (int)Math.Round(collider.Position.Y)
+                            , (int)Math.Round(collider.Size.Width)
+                            , (int)Math.Round(collider.Size.Height));
+                        var tileBoxCollider = new BoxCollider(rectangle, "Ground");
+                        BoxColliderSystem.Instance.AddBoxCollider(tileBoxCollider);
+                        newTileEntity.AddComponent(tileBoxCollider);
+                    }
+
+                EntityManager.Instance.AddEntity(newTileEntity);
+            }
+
+        }
 
         //Box1
         var boxEntity = new Entity();
@@ -98,9 +160,6 @@ public class ANXYGame : Game
         var boxCollider3 = new BoxCollider(new Vector2(60, 60), "Ground");
         boxEntity3.AddComponent(boxCollider3);
         BoxColliderSystem.Instance.AddBoxCollider(boxCollider3);
-
-
-        backgroundEntity.GetComponent<Background>().playerEntity = playerEntity;
     }
 
     /// <summary>
@@ -114,7 +173,7 @@ public class ANXYGame : Game
 
         _playerSprite = Content.Load<Texture2D>("playerAtlas");
         _backgroundSprite = Content.Load<Texture2D>("Background-2");
-        // TODO: use this.Content to load your game content here
+        _levelTileMap = Content.Load<TiledMap>("TileMapSet2");
     }
 
     /// <summary>
@@ -135,9 +194,7 @@ public class ANXYGame : Game
     {
         EntityManager.Instance._UpdateEntities(gameTime);
         BoxColliderSystem.Instance.CheckCollisions();
-        // TODO: Add your update logic here
-
-        base.Update(gameTime);
+        //base.Update(gameTime);
     }
 
     /// <summary>
@@ -150,14 +207,8 @@ public class ANXYGame : Game
 
         _spriteBatch.Begin();
         EntityManager.Instance.DrawEntities(gameTime, _spriteBatch);
-
-
-        /*
-        spriteBatch.Draw(backgroundSprite, new Vector2(0, 0), Color.White);
-        spriteBatch.Draw(playerSprite, new Vector2(0, 0), Color.White);*/
         _spriteBatch.End();
-        // TODO: Add your drawing code here
 
-        base.Draw(gameTime);
+        //base.Draw(gameTime);
     }
 }

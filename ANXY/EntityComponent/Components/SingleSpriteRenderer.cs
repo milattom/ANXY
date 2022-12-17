@@ -6,17 +6,23 @@ namespace ANXY.EntityComponent.Components;
 
 public class SingleSpriteRenderer : Component
 {
-    public Texture2D Atlas { get; set; }
+    private readonly Texture2D _atlas;
+    private readonly Rectangle _region;
 
     //TODO public SpriteAnimation SpriteAnimation;
 
     /// <summary>
     /// </summary>
-    public SingleSpriteRenderer(Texture2D atlas)
+    public SingleSpriteRenderer(Texture2D atlas) : this(atlas, atlas.Bounds)
     {
-        Atlas = atlas;
+        //DO NOTHING, NOP
     }
 
+    public SingleSpriteRenderer(Texture2D atlas, Rectangle region)
+    {
+        _atlas = atlas;
+        _region = region;
+    }
 
 
     public override void Update(GameTime gameTime)
@@ -25,7 +31,7 @@ public class SingleSpriteRenderer : Component
 
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
-        spriteBatch.Draw(Atlas, Entity.Position, Color.White);
+        spriteBatch.Draw(_atlas, Entity.Position /*TODO - Camera.Position*/, _region, Color.White);
     }
 
     public override void Initialize()

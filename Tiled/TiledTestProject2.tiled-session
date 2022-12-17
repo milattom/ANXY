@@ -1,0 +1,48 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "TileSetTest2.tsx",
+    "expandedProjectPaths": [
+    ],
+    "fileStates": {
+        "C:/Users/Gamer/Documents/Git/PA/ANXY/ANXY/Content/TileMapSet2.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 514,
+                "y": 306
+            }
+        },
+        "TileMapSet2.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 519,
+                "y": 308
+            }
+        },
+        "TileSetTest2.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        }
+    },
+    "last.exportedFilePath": "C:/Users/Gamer/Documents/Git/PA/ANXY/ANXY/Content",
+    "last.imagePath": "C:/Users/Gamer/Documents/Git/PA/ANXY/Tiled",
+    "lastUsedTilesetExportFilter": "All Files (*)",
+    "map.lastUsedExportFilter": "All Files (*)",
+    "map.lastUsedFormat": "tmx",
+    "map.width": 100,
+    "openFiles": [
+        "C:/Users/Gamer/Documents/Git/PA/ANXY/ANXY/Content/TileMapSet2.tmx",
+        "TileSetTest2.tsx"
+    ],
+    "project": "TiledTestProject2.tiled-project",
+    "recentFiles": [
+        "C:/Users/Gamer/Documents/Git/PA/ANXY/ANXY/Content/TileMapSet2.tmx",
+        "TileSetTest2.tsx",
+        "TileMapSet2.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx"
+}
