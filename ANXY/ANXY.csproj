@@ -33,12 +33,6 @@
     <None Update="Content\Tiled\TileSet2_0.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Content\Tiled\TileSet2_1.mgcontent">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Content\Tiled\TileSet2_1.xnb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="Content\Tiled\TileSetTest2_0.mgcontent">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

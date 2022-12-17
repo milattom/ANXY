@@ -134,7 +134,6 @@ public class ANXYGame : Game
 
                 EntityManager.Instance.AddEntity(newTileEntity);
             }
-
         }
 
         //Box1
