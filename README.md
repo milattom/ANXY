@@ -1,4 +1,4 @@
-![A very dark drawing of a small room. In the middle stands a barely visible person holding a flashlight. The Flashlight is the only source of light, but still nothing really is visible](./Content/Images/anxious.jpg "anxY, Person in the Shadow"){: style="width:100%"}
+[<img src="./Content/Images/anxious.jpg" alt="A very dark drawing of a small room. In the middle stands a barely visible person holding a flashlight. The Flashlight is the only source of light, but still nothing really is visible" width="100%">](./Content/Images/anxious.jpg "anxY, Person mostly hidden in dark shadows.")
 
 # anxY
 anxY is a nerve wrecking Nightmare Jump & Run Game developed by mayfly studios with our own GameEngine using MonoGame as a helping tool. The Game was developed in the scope of a Bachelor Degree during one Semester.
@@ -42,10 +42,15 @@ Download and unpack the latest zip for your operating system (Windows or Mac) fr
 ## <a id="Installation-Play"></a>Play
 On Windows simply start the exe file from the unpacked zip.
 
-On Mac TODO.
+On Mac unpack the tar and start the App.
 
 ### Mac Security Warning
-TODO.
+
+[<img src="./Content/Images/Mac-CantOpen.jpg" alt="Screenshot describing how the Mac Security Warning looks" width="300px">](./Content/Images/Mac-CantOpen.jpg "Mac Security Warning. Press \"Cancel\".")
+
+Mac will tell you, that it's a security risk. Press cancel, open the `Settings`, go to `Security & Privacy` and press `Open Anyway`.
+
+[<img src="./Content/Images/Mac-SecurityPrivacy.jpg" alt="Screenshot describing how Open the Game in Mac despite the Security Warning" width="600px">](./Content/Images/Mac-SecurityPrivacy.jpg "Press \"Open Anyway\"")
 
 ## <a id="Installation-Stop"></a>Stop
 There is no menu yet, so simply *ALT+F4* or press the *Window Closing Button*.
@@ -207,7 +212,7 @@ From [Tiled](https://www.mapeditor.org/) install the newest Version.
 ## <a id="About-Idea"></a>Idea
 
 ## <a id="About-ClassDiagram"></a>Class Diagram
-[![Drawing of the Class Diagram for anxY](./Content/Images/ClassDiagram.svg "anxY Class Diagram"){: style="width:100%"}](./Content/Images/ClassDiagram.svg)
+[<img src="./Content/Images/ClassDiagram.svg" alt="Drawing of the Class Diagram for anxY" width="100%">](./Content/Images/ClassDiagram.svg "anxY Class Diagram")
 
 ## <a id="About-Pattern"></a>Pattern used
 
@@ -244,11 +249,11 @@ Many thanks for all these great tools which made it possible to develop anxY!
 
 <div align="center">
 
-[![Profile Picture of GitHub User "milattom"](https://avatars.githubusercontent.com/u/79468061?v=4 "GitHub user \"milattom\""){: style="width:65px"}](https://github.com/milattom)
+[<img src="https://avatars.githubusercontent.com/u/79468061?v=4" alt="Profile Picture of GitHub User milattom" width="65px">](https://github.com/milattom "GitHub user milattom")
 
 [Milata Tomas Stefan (milattom)](mailto:milattom@students.zhaw.ch)
 
-[![Profile Picture of GitHub User "D-akeret"](https://avatars.githubusercontent.com/u/79446856?v=4 "GitHub user \"D-akeret\""){: style="width:65px"}](https://github.com/D-akeret)
+[<img src="https://avatars.githubusercontent.com/u/79446856?v=4" alt="Profile Picture of GitHub User D-akeret" width="65px">](https://github.com/D-akeret "GitHub User D-akeret")
 
 [Akeret Dominic (akeredom)](mailto:akeredom@students.zhaw.ch)
 
