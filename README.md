@@ -1,4 +1,4 @@
-[<img src="./Content/Images/anxious.jpg" alt="A very dark drawing of a small room. In the middle stands a barely visible person holding a flashlight. The Flashlight is the only source of light, but still nothing really is visible" width="100%">](./Content/Images/anxious.jpg "anxY, Person mostly hidden in dark shadows.")
+[<img src="./Content/Images/anxious.jpg" alt="A very dark drawing of a small room. In the middle stands a barely visible person holding a flashlight. The Flashlight is the only source of light, but still nothing really is visible" width="100%">](./Content/Images/anxious.jpg?raw=true "anxY, Person mostly hidden in dark shadows.")
 
 # anxY
 anxY is a nerve wrecking Nightmare Jump & Run Game developed by mayfly studios with our own GameEngine using MonoGame as a helping tool. The Game was developed in the scope of a Bachelor Degree during one Semester.
@@ -51,11 +51,11 @@ On Mac unpack the tar and start the App.
 
 ### Mac Security Warning
 
-[<img src="./Content/Images/Mac-CantOpen.jpg" alt="Screenshot describing how the Mac Security Warning looks" width="300px">](./Content/Images/Mac-CantOpen.jpg "Mac Security Warning. Press \"Cancel\".")
+[<img src="./Content/Images/Mac-CantOpen.jpg" alt="Screenshot describing how the Mac Security Warning looks" width="300px">](./Content/Images/Mac-CantOpen.jpg?raw=true "Mac Security Warning. Press \"Cancel\".")
 
 Mac will tell you, that it's a security risk. Press cancel, open the `Settings`, go to `Security & Privacy` and press `Open Anyway`.
 
-[<img src="./Content/Images/Mac-SecurityPrivacy.jpg" alt="Screenshot describing how Open the Game in Mac despite the Security Warning" width="600px">](./Content/Images/Mac-SecurityPrivacy.jpg "Press \"Open Anyway\"")
+[<img src="./Content/Images/Mac-SecurityPrivacy.jpg" alt="Screenshot describing how Open the Game in Mac despite the Security Warning" width="600px">](./Content/Images/Mac-SecurityPrivacy.jpg?raw=true "Press \"Open Anyway\"")
 
 <a id="Installation-Stop"></a>
 ## Stop
@@ -90,15 +90,15 @@ In the terminal write `dotnet tool install -g dotnet-mgcb` and then `dotnet tool
 ### MonoGame Extended Content Pipeline
 In Visual Studio, in the Solution Explorer (*View/Solution Explorer*) right click on the Solution and choose *Manage NuGet Packages for Solution*.
 
-![Screenshot describing where to click to Manage NuGet Packages](./Content/Images/SolutionExplorer-NuGetPackages.jpg "Manage NuGet Packages for Solution")
+![Screenshot describing where to click to Manage NuGet Packages](./Content/Images/SolutionExplorer-NuGetPackages.jpg?raw=true "Manage NuGet Packages for Solution")
 
 On the top right of the NuGet Package Manager click on the Settings (*gear icon*) and add the Package Source for MyGet.org `https://www.myget.org/F/lithiumtoast/api/v3/index.json`. Press *OK* to save the changes.
 
-![Screenshot describing how to add MyGet.org as a Package Source](./Content/Images/NuGet-ManagePackages.jpg "Add MyGet as Package Source")
+![Screenshot describing how to add MyGet.org as a Package Source](./Content/Images/NuGet-ManagePackages.jpg?raw=true "Add MyGet as Package Source")
 
 Again in the Package Manager, press *Browse* and search for `newtonsoft.json` and install the latest stabel version for our project (including Tests). Make sure that the Package source is *nuget.org*.
 
-![Screenshot describing how to install NuGet Packages](./Content/Images/NuGet-InstallPackages.jpg "Install Newtonsoft.Json Package")
+![Screenshot describing how to install NuGet Packages](./Content/Images/NuGet-InstallPackages.jpg?raw=true "Install Newtonsoft.Json Package")
 
 Now change the Package source to *MyGet.org* and check the *Include prerelease* Checkbox and search for the following Packages and install them whenever possible in the newest *alpha version*.
 
@@ -108,23 +108,23 @@ Now change the Package source to *MyGet.org* and check the *Include prerelease* 
 - `MonoGame.Extended.Tiled`
 - `MonoGame.Framework.DesktopGL`
 
-![Screenshot describing which MyGet Packages to install](./Content/Images/MyGet-InstallPackages.jpg "Add all these Packages from MyGet.org, whenever possible newest Alpha Version")
+![Screenshot describing which MyGet Packages to install](./Content/Images/MyGet-InstallPackages.jpg?raw=true "Add all these Packages from MyGet.org, whenever possible newest Alpha Version")
 
 <a id="Change-MonoGame-Content-Manager-Settings"></a>
 #### Change MonoGame Content Manager Settings
 In the Solution Explorer right click the *Content.mgcb* in the folder *Content* and choose *open with*.
 
-![Screenshot describing where to find Content.mgcb](./Content/Images/MonoGame-ContentManager-OpenWith.jpg "Open With...")
+![Screenshot describing where to find Content.mgcb](./Content/Images/MonoGame-ContentManager-OpenWith.jpg?raw=true "Open With...")
 
 If you have can find the option to open it with *MGCB Editor*, perfect! Choose that and *Set as Default*, you can skip the next few steps and continue [here](#jumpToContent.mgcb). If you can't find the *MGCB Editor*, press *Add...*
 
-![Screenshot showing the Open With Dialoague](./Content/Images/MonoGame-ContentManager-OpenWith-MGCB-Editor.jpg "Open With \"MGCB Editor (Default)\"")
+![Screenshot showing the Open With Dialoague](./Content/Images/MonoGame-ContentManager-OpenWith-MGCB-Editor.jpg?raw=true "Open With \"MGCB Editor (Default)\"")
 
 The Installation Location of *MGCB-Editor* is `C:\Users\YOUR_USER_NAME\.nuget\packages\dotnet-mgcb-editor-windows\3.8.1.303\tools\net6.0\any\mgcb-editor-windows-data` replace YOUR_USER_NAME with your windows user name.
 
 If you can't find the MGCB-Editor try running `dotnet tool install -g dotnet-mgcb` in the terminal and make sure it's installed. Then run `dotnet tool restore` and start *MGCB-Editor* with `dotnet mgcb-editor` and check in the Task Manager (CTLR+ALT+Delete) where the program is installed. Right click on the running Program, Properties.
 
-![Screenshot showing the Task Manager](./Content/Images/MGCB-Editor-TaskManager.jpg "Find the installation path of MonoGame MGCB-Editor through the Windows Task Manager")
+![Screenshot showing the Task Manager](./Content/Images/MGCB-Editor-TaskManager.jpg?raw=true "Find the installation path of MonoGame MGCB-Editor through the Windows Task Manager")
 
 <a id="jumpToContent.mgcb"></a>
 If you couldn't open it with the *MGCB Editor*, go [back](#Change-MonoGame-Content-Manager-Settings).
@@ -132,13 +132,13 @@ If you couldn't open it with the *MGCB Editor*, go [back](#Change-MonoGame-Conte
 Open the Content.mgcb.
 Click on the topmost red symbol with "content" written next to it. In the *Properties* Window-Section scroll to References and left click it. A new Window is opened.
 
-![Screenshot showing MGCB-Editor and the content Properties section](./Content/Images/MGCB-Editor-ContentReferences.jpg "In the MGCB-Editor find \"content\" and it's Properties/References")
+![Screenshot showing MGCB-Editor and the content Properties section](./Content/Images/MGCB-Editor-ContentReferences.jpg?raw=true "In the MGCB-Editor find \"content\" and it's Properties/References")
 
 In this new Window *Add* a new Location. The new alpha dll is installed under `C:\Users\YOUR_USER_NAME\.nuget\packages\monogame.extended.content.pipeline\3.9.0-alpha0084\tools\MonoGame.Extended.Content.Pipeline.dll`
 
 After finding it and adding the new alpha version, remove the old one.
 
-![Screenshot showing MGCB-Editor and how to add the alpha version of the Content Pipeline](./Content/Images/MGCB-Editor-newAlphaVersion.jpg "In the new Window click *Add* and find the new alpha of the Content Pipeline")
+![Screenshot showing MGCB-Editor and how to add the alpha version of the Content Pipeline](./Content/Images/MGCB-Editor-newAlphaVersion.jpg?raw=true "In the new Window click *Add* and find the new alpha of the Content Pipeline")
 
 ### GameBundle
 In the Terminal:
@@ -162,29 +162,29 @@ From [Tiled](https://www.mapeditor.org/) install the newest Version.
 
     Do the same for the *.tsx* file but save it as *tsx*.
 
-    ![Screenshot showing which files from Tiled to save](./Content/Images/Tiled-SaveAs.jpg "Save both files, \".tmx\" and \".tsx\", in the Game/Content folder")
+    ![Screenshot showing which files from Tiled to save](./Content/Images/Tiled-SaveAs.jpg?raw=true "Save both files, \".tmx\" and \".tsx\", in the Game/Content folder")
 
 1. ### Delete bin, obj and Tiled folder in Content
     Back in the Visual Studio Solution Explorer delete the folders `Content/bin`, `Content/obj` and `Content/Tiled`.
 
-    ![Screenshot showing which folders to delete](./Content/Images/SolutionExplorer-DeleteFolders-bin-obj-Tiled.jpg "Delete bin, obj and Tiled")
+    ![Screenshot showing which folders to delete](./Content/Images/SolutionExplorer-DeleteFolders-bin-obj-Tiled.jpg?raw=true "Delete bin, obj and Tiled")
 
 1. ### Build Content
     Open the Content.mgcb again and press `save`, `clean` and `build`. If you've added the *MGCB-Editor* as the default option before, you can simply double click the Content.mgcb file.
 
-    ![Screenshot showing the MGCB-Editor building process](./Content/Images/MGCB-Save-Clean-Build.jpg "Save, Clean and Build the Content")
+    ![Screenshot showing the MGCB-Editor building process](./Content/Images/MGCB-Save-Clean-Build.jpg?raw=true "Save, Clean and Build the Content")
 
 1. ### Check Tiled folder to Copy on Build
     After building there again should be those three folders we deleted before: *bin, obj and Tiled*. Open Tiled and select all files in this folder. `Right click` and choose `Properties`. In the now open Properties View, under *Copy to Output Directory* choose the option `Copy if newer`.
 
-    ![Screenshot showing Properties of the Tiled folder files. Change to "Copy if newer"](./Content/Images/SolutionExplorer-Tiled-CopyIfNewer.jpg "Select all Tiled folder files, Right Click/Properties and change to \"Copy if newer\"")
+    ![Screenshot showing Properties of the Tiled folder files. Change to "Copy if newer"](./Content/Images/SolutionExplorer-Tiled-CopyIfNewer.jpg?raw=true "Select all Tiled folder files, Right Click/Properties and change to \"Copy if newer\"")
 
 1. ### Delete Debug folder in bin
     Don't worry, the hard part is now done.
 
     In the Solution Explorer right click the solution and choose `Open Folder in File Explorer`. Go to *ANXY/bin* and delete any `Debug` folders that are in there.
 
-    ![Screenshot showing the ANXY/bin and the Debug folder"](./Content/Images/Delete-Debug-Folder.jpg "Delete all Debug folders in here")
+    ![Screenshot showing the ANXY/bin and the Debug folder"](./Content/Images/Delete-Debug-Folder.jpg?raw=true "Delete all Debug folders in here")
 
 
 1. ### Build with Visual Studio    
@@ -197,7 +197,7 @@ From [Tiled](https://www.mapeditor.org/) install the newest Version.
 
     The command `ls` should show you something like this:
     
-    ![Screenshot showing all files and folders of ANXY in the Terminal with the ls command"](./Content/Images/installGameBundle-LS.jpg "This needs to look similar otherwise you're in the wrong directory.")
+    ![Screenshot showing all files and folders of ANXY in the Terminal with the ls command"](./Content/Images/installGameBundle-LS.jpg?raw=true "This needs to look similar otherwise you're in the wrong directory.")
     
     With `gamebundle --help` you can show any possible commands.
     
@@ -227,7 +227,7 @@ From [Tiled](https://www.mapeditor.org/) install the newest Version.
 
 <a id="About-ClassDiagram"></a>
 ## Class Diagram
-[<img src="./Content/Images/ClassDiagram.svg" alt="Drawing of the Class Diagram for anxY" width="100%">](./Content/Images/ClassDiagram.svg "anxY Class Diagram")
+[<img src="./Content/Images/ClassDiagram.svg" alt="Drawing of the Class Diagram for anxY" width="100%">](./Content/Images/ClassDiagram.svg?raw=true "anxY Class Diagram")
 
 <a id="About-Pattern"></a>
 ## Pattern used
