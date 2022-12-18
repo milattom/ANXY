@@ -1,4 +1,4 @@
-[<img src="./Content/Images/anxious.jpg" alt="A very dark drawing of a small room. In the middle stands a barely visible person holding a flashlight. The Flashlight is the only source of light, but still nothing really is visible" width="100%">](./Content/Images/anxious.jpg "anxY, Person mostly hidden in dark shadows.")
+[<img src="./Content/Images/anxious.jpg" alt="A very dark drawing of a small room. In the middle stands a barely visible person holding a flashlight. The Flashlight is the only source of light, but still nothing really is visible" width="100%">](./Content/Images/anxious.jpg?raw=true "anxY, Person mostly hidden in dark shadows.")
 
 # anxY
 anxY is a nerve wrecking Nightmare Jump & Run Game developed by mayfly studios with our own GameEngine using MonoGame as a helping tool. The Game was developed in the scope of a Bachelor Degree during one Semester.
@@ -51,11 +51,11 @@ On Mac unpack the tar and start the App.
 
 ### Mac Security Warning
 
-[<img src="./Content/Images/Mac-CantOpen.jpg" alt="Screenshot describing how the Mac Security Warning looks" width="300px">](./Content/Images/Mac-CantOpen.jpg "Mac Security Warning. Press \"Cancel\".")
+[<img src="./Content/Images/Mac-CantOpen.jpg" alt="Screenshot describing how the Mac Security Warning looks" width="300px">](./Content/Images/Mac-CantOpen.jpg?raw=true "Mac Security Warning. Press \"Cancel\".")
 
 Mac will tell you, that it's a security risk. Press cancel, open the `Settings`, go to `Security & Privacy` and press `Open Anyway`.
 
-[<img src="./Content/Images/Mac-SecurityPrivacy.jpg" alt="Screenshot describing how Open the Game in Mac despite the Security Warning" width="600px">](./Content/Images/Mac-SecurityPrivacy.jpg "Press \"Open Anyway\"")
+[<img src="./Content/Images/Mac-SecurityPrivacy.jpg" alt="Screenshot describing how Open the Game in Mac despite the Security Warning" width="600px">](./Content/Images/Mac-SecurityPrivacy.jpg?raw=true "Press \"Open Anyway\"")
 
 <a id="Installation-Stop"></a>
 ## Stop
@@ -227,7 +227,7 @@ From [Tiled](https://www.mapeditor.org/) install the newest Version.
 
 <a id="About-ClassDiagram"></a>
 ## Class Diagram
-[<img src="./Content/Images/ClassDiagram.svg" alt="Drawing of the Class Diagram for anxY" width="100%">](./Content/Images/ClassDiagram.svg "anxY Class Diagram")
+[<img src="./Content/Images/ClassDiagram.svg" alt="Drawing of the Class Diagram for anxY" width="100%">](./Content/Images/ClassDiagram.svg?raw=true "anxY Class Diagram")
 
 <a id="About-Pattern"></a>
 ## Pattern used
