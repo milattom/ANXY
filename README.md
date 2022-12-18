@@ -42,10 +42,15 @@ Download and unpack the latest zip for your operating system (Windows or Mac) fr
 ## <a id="Installation-Play"></a>Play
 On Windows simply start the exe file from the unpacked zip.
 
-On Mac TODO.
+On Mac unpack the tar and start the App.
 
 ### Mac Security Warning
-TODO.
+
+[<img src="./Content/Images/Mac-CantOpen.jpg" alt="Screenshot describing how the Mac Security Warning looks" width="300px">](./Content/Images/Mac-CantOpen.jpg "Mac Security Warning. Press \"Cancel\".")
+
+Mac will tell you, that it's a security risk. Press cancel, open the `Settings`, go to `Security & Privacy` and press `Open Anyway`.
+
+[<img src="./Content/Images/Mac-SecurityPrivacy.jpg" alt="Screenshot describing how Open the Game in Mac despite the Security Warning" width="600px">](./Content/Images/Mac-SecurityPrivacy.jpg "Press \"Open Anyway\"")
 
 ## <a id="Installation-Stop"></a>Stop
 There is no menu yet, so simply *ALT+F4* or press the *Window Closing Button*.
