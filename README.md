@@ -26,20 +26,25 @@ anxY is a nerve wrecking Nightmare Jump & Run Game developed by mayfly studios w
 
 ---
 
-# <a id="Installation"></a>Game Installation
+<a id="Installation"></a>
+# Game Installation
 
-## <a id="Installation-SupportedPlatforms"></a>Supported Platforms
+<a id="Installation-SupportedPlatforms"></a>
+## Supported Platforms
 For now, only Windows and MacOS are supported.
 
-## <a id="Installation-Prerequisites"></a>Prerequisites
+<a id="Installation-Prerequisites"></a>
+## Prerequisites
 
 ### .NET
 If you don't have .NET installed, install it from [here](https://dotnet.microsoft.com/en-us/download/dotnet/6.0).
 
-## <a id="Installation-Download"></a>Download
+<a id="Installation-Download"></a>
+## Download
 Download and unpack the latest zip for your operating system (Windows or Mac) from the [GitHub Releases Page](https://github.com/milattom/ANXY/releases).
 
-## <a id="Installation-Play"></a>Play
+<a id="Installation-Play"></a>
+## Play
 On Windows simply start the exe file from the unpacked zip.
 
 On Mac unpack the tar and start the App.
@@ -52,14 +57,17 @@ Mac will tell you, that it's a security risk. Press cancel, open the `Settings`,
 
 [<img src="./Content/Images/Mac-SecurityPrivacy.jpg" alt="Screenshot describing how Open the Game in Mac despite the Security Warning" width="600px">](./Content/Images/Mac-SecurityPrivacy.jpg "Press \"Open Anyway\"")
 
-## <a id="Installation-Stop"></a>Stop
+<a id="Installation-Stop"></a>
+## Stop
 There is no menu yet, so simply *ALT+F4* or press the *Window Closing Button*.
 
 ---
 
-# <a id="HowToBuild"></a>How To Build
+<a id="HowToBuild"></a>
+# How To Build
 
-## <a id="HowToBuild-Prerequisites"></a>Prerequisites
+<a id="HowToBuild-Prerequisites"></a>
+## Prerequisites
 
 ### Visual Studio (2022)
 We recommend [Visual Studio](https://visualstudio.microsoft.com/) but you can try a different IDE. Be aware that if you use a differnt IDE, you might need to figure out on your own how to set everything up to be compatible with anxY.
@@ -102,7 +110,8 @@ Now change the Package source to *MyGet.org* and check the *Include prerelease* 
 
 ![Screenshot describing which MyGet Packages to install](./Content/Images/MyGet-InstallPackages.jpg "Add all these Packages from MyGet.org, whenever possible newest Alpha Version")
 
-#### <a id="Change-MonoGame-Content-Manager-Settings"></a>Change MonoGame Content Manager Settings
+<a id="Change-MonoGame-Content-Manager-Settings"></a>
+#### Change MonoGame Content Manager Settings
 In the Solution Explorer right click the *Content.mgcb* in the folder *Content* and choose *open with*.
 
 ![Screenshot describing where to find Content.mgcb](./Content/Images/MonoGame-ContentManager-OpenWith.jpg "Open With...")
@@ -143,7 +152,8 @@ From [Tiled](https://www.mapeditor.org/) install the newest Version.
 
 ---
 
-## <a id="HowToBuild-Build"></a>Build 
+<a id="HowToBuild-Build"></a>
+## Build 
 
 1. ### Build Map
     Only needed if you want to make your own Maps/Levels.
@@ -201,30 +211,37 @@ From [Tiled](https://www.mapeditor.org/) install the newest Version.
 
 ---
 
-# <a id="DIY-Game"></a>Make it your own Game
+<a id="DIY-Game"></a>
+# Make it your own Game
 
-## <a id="DIY-Game-Map"></a>Create your own Map
+<a id="DIY-Game-Map"></a>
+## Create your own Map
 
 ---
 
-# <a id="About"></a>About the game
+<a id="About"></a>
+# About the game
 
-## <a id="About-Idea"></a>Idea
+<a id="About-Idea"></a>
+## Idea
 
-## <a id="About-ClassDiagram"></a>Class Diagram
+<a id="About-ClassDiagram"></a>
+## Class Diagram
 [<img src="./Content/Images/ClassDiagram.svg" alt="Drawing of the Class Diagram for anxY" width="100%">](./Content/Images/ClassDiagram.svg "anxY Class Diagram")
 
-## <a id="About-Pattern"></a>Pattern used
+<a id="About-Pattern"></a>
+## Pattern used
 
 [Entity Component System](https://en.wikipedia.org/wiki/Entity_component_system) is a pattern mostly used in video game development for the representation of game world objects. An ECS comprises entities composed from components of data, with systems which operate on entities' components. ECS follows the principle of composition over inheritance, meaning that every entity is defined not by a type hierarchy, but by the components that are associated with it. Systems act globally over all entities which have the required components.
 
 
 [Singleton pattern](https://en.wikipedia.org/wiki/Singleton_pattern) is a software design pattern that restricts the instantiation of a class to a singular instance. The pattern is useful when exactly one object is needed to coordinate actions across a system.
 
+<a id="About-Tests"></a>
+## Tests
 
-## <a id="About-Tests"></a>Tests
-
-## <a id="About-Tools-Used"></a>Tools Used
+<a id="About-Tools-Used"></a>
+## Tools Used
 
 Many thanks for all these great tools which made it possible to develop anxY!
 
@@ -239,13 +256,15 @@ Many thanks for all these great tools which made it possible to develop anxY!
 - [MonoGame Extended Content Pipeline Alpha](https://www.nuget.org/packages/MonoGame.Extended/3.9.0-alpha0084)
 - [GameBundle](https://github.com/Ellpeck/GameBundle)
 
-## <a id="About-Builds"></a>Builds
+<a id="About-Builds"></a>
+## Builds
 
 <img alt="Builds Passing" src="https://github.com/milattom/ANXY/actions/workflows/MainPR.yml/badge.svg">
 
 -----
 
-## <a id="Contributors"></a>Contributors
+<a id="Contributors"></a>
+## Contributors
 
 <div align="center">
 
