@@ -3,6 +3,7 @@
 # anxY
 anxY is a nerve wrecking Nightmare Jump & Run Game developed by mayfly studios with our own GameEngine using MonoGame as a helping tool. The Game was developed in the scope of a Bachelor Degree during one Semester.
 
+<a id="Table-of-Contents"></a>
 # Table of Contents
 - [Game Installation](#Installation)
     - [Supported Platforms](#Installation-SupportedPlatforms)
@@ -65,6 +66,7 @@ There is no menu yet, so simply *ALT+F4* or press the *Window Closing Button*.
 
 <a id="HowToBuild"></a>
 # How To Build
+[Back to top](#Table-of-Contents)
 
 <a id="HowToBuild-Prerequisites"></a>
 ## Prerequisites
@@ -153,7 +155,8 @@ From [Tiled](https://www.mapeditor.org/) install the newest Version.
 ---
 
 <a id="HowToBuild-Build"></a>
-## Build 
+## Build
+[Back to top](#Table-of-Contents)
 
 1. ### Build Map
     Only needed if you want to make your own Maps/Levels.
@@ -213,6 +216,7 @@ From [Tiled](https://www.mapeditor.org/) install the newest Version.
 
 <a id="DIY-Game"></a>
 # Make it your own Game
+[Back to top](#Table-of-Contents)
 
 <a id="DIY-Game-Map"></a>
 ## Create your own Map
@@ -221,6 +225,7 @@ From [Tiled](https://www.mapeditor.org/) install the newest Version.
 
 <a id="About"></a>
 # About the game
+[Back to top](#Table-of-Contents)
 
 <a id="About-Idea"></a>
 ## Idea
@@ -277,3 +282,6 @@ Many thanks for all these great tools which made it possible to develop anxY!
 [Akeret Dominic (akeredom)](mailto:akeredom@students.zhaw.ch)
 
 </div>
+
+
+[Back to top](#Table-of-Contents)
