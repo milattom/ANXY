@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace ANXY.EntityComponent.Components
 {
+    /// <summary>
+    /// TODO Player Input Controller
+    /// Checking for Keyboard input and setting everything accordingly. Every Class needing to check the Keyboard input must check it through this Class.
+    /// </summary>
     internal class PlayerInputController
     {
         ///Singleton Pattern
@@ -14,7 +18,7 @@ namespace ANXY.EntityComponent.Components
         //private List<Entity> _gameEntities;
 
         /// <summary>
-        ///     TODO
+        /// PlayerInputController Class Constructor. Private because of Singleton Pattern.
         /// </summary>
         private PlayerInputController()
         {

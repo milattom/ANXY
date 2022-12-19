@@ -1,40 +1,58 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace ANXY.EntityComponent.Components
 {
+    /// <summary>
+    /// TODO implement AnxietyManager with Anxiety Score
+    /// </summary>
     public class AnxietyManager : Component
     {
         public double AnxietyScore { get; set; }
 
         /// <summary>
-        /// 
+        /// TODO implement Anxiety Score. Starting Score, Death/Game Over Score. Steps per time, increase of Steps-Length
         /// </summary>
         public AnxietyManager()
         {
 
         }
 
+        /// <summary>
+        /// TODO implement Update
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <exception cref="NotImplementedException"></exception>
         public override void Update(GameTime gameTime)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// TODO implement Draw
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <param name="spriteBatch"></param>
+        /// <exception cref="NotImplementedException"></exception>
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// TODO implement Initialize
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
         public override void Initialize()
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// TODO implement Destory
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
         public override void Destroy()
         {
             throw new NotImplementedException();

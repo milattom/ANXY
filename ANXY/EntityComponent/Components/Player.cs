@@ -5,22 +5,17 @@ using System;
 
 namespace ANXY.EntityComponent.Components;
 
+/// <summary>
+/// Player is the Main Game Character
+/// </summary>
 public class Player : Component
 {
-    public enum PlayerState
-    {
-        Idle,
-        Running,
-        Jumping,
-        DoubleJumping,
-        Ducking,
-        Falling
-    }
     public Vector2 Velocity { get; private set; } = Vector2.Zero;
     public float ScrollSpeed { get; private set; } = 0;
     public PlayerState State { get; private set; } = PlayerState.Idle;
     public Vector2 Inputdirection { get; private set; } = Vector2.Zero;
 
+    //TODO remove GroundLevel or reduce it to Window Bottom Edge when Level is fully implemented in Tiled.
     private const int GroundLevel = 800;
     private const float Gravity = 15;
     private const float WalkForce = 200;
@@ -28,21 +23,23 @@ public class Player : Component
 
     private bool isAlive = true;
     private PlayerInputController playerInputController;
+
     private int windowHeight;
 
     private readonly int windowWidth;
 
-
     /// <summary>
-    ///     TODO
+    /// Player Class Constructor
     /// </summary>
+    /// <param name="windowWidth">Current Window size, Width</param>
+    /// <param name="windowHeight">Current Window size, Height</param>
     public Player(int windowWidth, int windowHeight)
     {
         this.windowWidth = windowWidth;
         this.windowHeight = windowHeight;
     }
 
-    /* TODO implement later
+    /* TODO maybe implement later. Ideas for now
     public bool Crouch()
     {
         return true;
@@ -53,15 +50,31 @@ public class Player : Component
     }
     */
 
+    /// <summary>
+    /// TODO implement Initialize
+    /// </summary>
     public override void Initialize()
     {
     }
 
+    /// <summary>
+    /// TODO implement Destroy
+    /// </summary>
+    /// <exception cref="NotImplementedException"></exception>
     public override void Destroy()
     {
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// Update, called multiple times per Frame. (Update Cycle)
+    /// TODO remove input from here and move it to PlayerInputController
+    /// - checks input, moves the player accordingly.
+    /// - creates gravity and checks for collisions.
+    /// TODO remove screen constraints for background movement to camera
+    /// - updates position of Player Entity
+    /// </summary>
+    /// <param name="gameTime"></param>
     public override void Update(GameTime gameTime)
     {
         //input
@@ -100,24 +113,50 @@ public class Player : Component
     }
 
     /// <summary>
-    ///     TODO
+    /// Draw
     /// </summary>
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
     }
 
+    /// <summary>
+    /// TODO implementation idea for DoubleJump
+    /// set DoubleJump to true or set Player State to Double jump. only one Double Jump Possible, not infinite or multiple.
+    /// </summary>
+    /// <returns>true if jumped.</returns>
     public bool DoubleJump()
     {
         return true;
     }
 
+    /// <summary>
+    /// TODO idea for future for cancelling jump and immediately starting to drop. No more Jumping or Double jumping. Set Player State to either Drop or Falling
+    /// </summary>
+    /// <returns>true if dropping possible and started</returns>
     public bool Drop()
     {
         return true;
     }
 
+    /// <summary>
+    /// TODO idea for future of player health or death. Will die when anxiety score is too high. Game Over. Try Again.
+    /// </summary>
+    /// <returns>true when dying possible.</returns>
     public bool Die()
     {
         return true;
+    }
+
+    /// <summary>
+    /// PlayerState describes in what movement state the Player currently is
+    /// </summary>
+    public enum PlayerState
+    {
+        Idle,
+        Running,
+        Jumping,
+        DoubleJumping,
+        Ducking,
+        Falling
     }
 }
