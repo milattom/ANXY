@@ -98,17 +98,20 @@ On the top right of the NuGet Package Manager click on the Settings (*gear icon*
 
 ![Screenshot describing how to add MyGet.org as a Package Source](./Content/Images/NuGet-ManagePackages.jpg?raw=true "Add MyGet as Package Source")
 
-Again in the Package Manager, press *Browse* and search for `newtonsoft.json` and install the latest stabel version for our project (including Tests). Make sure that the Package source is *nuget.org*.
+Again in the Package Manager, check the *Include prerelease* Checkbox, press *Browse* and search for `newtonsoft.json` and install the latest stabel version for our project (including Tests). Make sure that the Package source is *nuget.org*.
 
 ![Screenshot describing how to install NuGet Packages](./Content/Images/NuGet-InstallPackages.jpg?raw=true "Install Newtonsoft.Json Package")
 
-Now change the Package source to *MyGet.org* and check the *Include prerelease* Checkbox and search for the following Packages and install them whenever possible in the newest *alpha version*.
+The following Packages need to be installed from the Rackage source *nuget.org* as well.
 
 - `MonoGame.Content.Builder.Task`
+- `MonoGame.Framework.DesktopGL`
+
+Now change the Package source to *MyGet.org* and check the *Include prerelease* Checkbox and search for the following Packages and install them whenever possible in the newest *alpha version*.
+
 - `MonoGame.Extended`
 - `MonoGame.Extended.Contetn.Pipeline`
 - `MonoGame.Extended.Tiled`
-- `MonoGame.Framework.DesktopGL`
 
 ![Screenshot describing which MyGet Packages to install](./Content/Images/MyGet-InstallPackages.jpg?raw=true "Add all these Packages from MyGet.org, whenever possible newest Alpha Version")
 
