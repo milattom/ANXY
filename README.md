@@ -171,7 +171,7 @@ From [Tiled](https://www.mapeditor.org/) install the newest Version.
     ![Screenshot showing which files from Tiled to save](./Content/Images/Tiled-SaveAs.jpg?raw=true "Save both files, \".tmx\" and \".tsx\", in the Game/Content folder")
 
 1. ### Delete bin, obj and Tiled folder in Content
-    Back in the Visual Studio Solution Explorer delete the folders `Content/bin`, `Content/obj` and `Content/Tiled`.
+    Back in the Visual Studio Solution Explorer delete the folders `Content/bin`, `Content/obj` and `Content/Tiled`. I you can't find them all, build your solution first.
 
     ![Screenshot showing which folders to delete](./Content/Images/SolutionExplorer-DeleteFolders-bin-obj-Tiled.jpg?raw=true "Delete bin, obj and Tiled")
 
