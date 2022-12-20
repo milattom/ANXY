@@ -5,7 +5,8 @@ using ANXY.EntityComponent;
 using ANXY.EntityComponent.Components;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-
+using System.Drawing;
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace ANXY.Start
 {
@@ -47,26 +48,25 @@ namespace ANXY.Start
         }
 
          /// <summary>
-         /// Checks all box colliders with the one from the player and sets the isColliding = true if they are.
+         /// Checks all box colliders with the one from the player and sets Colliding correspondingly.
          /// </summary>
          public void CheckCollisions()
          { 
              var playerCollider = EntityManager.Instance.FindEntityByType<Player>()[0].GetComponent<BoxCollider>();
-             playerCollider.isColliding = false;
+             playerCollider.Colliding = false;
              playerCollider.Dehighlight();
              foreach (var boxCollider in _boxColliders)
             { 
                 boxCollider.Dehighlight(); 
-                boxCollider.isColliding=false;
+                boxCollider.Colliding =false;
                 if (!boxCollider.LayerMask.Equals(playerCollider.LayerMask)) 
                 {
                    if (playerCollider.IsColliding(boxCollider))
                    {
                        boxCollider.Highlight();
-                       boxCollider.isColliding = true;
+                       boxCollider.Colliding = true;
                        playerCollider.Highlight();
-                       playerCollider.isColliding = true;
-                       continue;
+                       playerCollider.Colliding = true;
                    }
                    else
                    {

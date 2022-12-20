@@ -154,9 +154,9 @@ public class ANXYGame : Game
 
         //Box3
         var boxEntity3 = new Entity();
-        boxEntity3.Position = new Vector2(1000, 400);
+        boxEntity3.Position = new Vector2(0, windowHeight-150);
         EntityManager.Instance.AddEntity(boxEntity3);
-        var boxCollider3 = new BoxCollider(new Vector2(60, 60), "Ground");
+        var boxCollider3 = new BoxCollider(new Vector2(windowWidth, 40), "Ground");
         boxEntity3.AddComponent(boxCollider3);
         BoxColliderSystem.Instance.AddBoxCollider(boxCollider3);
     }
