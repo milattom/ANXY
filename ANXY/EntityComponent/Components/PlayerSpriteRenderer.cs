@@ -4,6 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace ANXY.EntityComponent.Components;
 
+/// <summary>
+/// PlayerSpriteRenderer renders the image of the Player. It switches between different frames depending on the current movement type, direction, etc.
+/// </summary>
 public class PlayerSpriteRenderer : Component
 {
     public const int XOffsetRectangle = 33;
@@ -16,10 +19,10 @@ public class PlayerSpriteRenderer : Component
     private int _timeSinceLastFrame;
     public Rectangle CurrentPlayerRectangle;
     private SpriteEffects spriteEffect;
-
+    public Texture2D PlayerAtlas { get; }
 
     /// <summary>
-    ///     TODO
+    ///     set the playerAtlas with all Player Movement Frames
     /// </summary>
     public PlayerSpriteRenderer(Texture2D playerAtlas)
     {
@@ -27,9 +30,10 @@ public class PlayerSpriteRenderer : Component
         CurrentPlayerRectangle = StartPlayerRectangle;
     }
 
-    public Texture2D PlayerAtlas { get; }
-
-
+    /// <summary>
+    /// Update the Player Frame to the current Frame. shifts to the next Animation frame if needed.
+    /// </summary>
+    /// <param name="gameTime">gameTime</param>
     public override void Update(GameTime gameTime)
     {
         //Animation Update
@@ -39,47 +43,60 @@ public class PlayerSpriteRenderer : Component
         if (_timeSinceLastFrame > _millisecondsPerFrame) _updateAnimation();
     }
 
+    /// <summary>
+    /// Drawing the chosen Player Animation Frame at the Player Position
+    /// </summary>
+    /// <param name="gameTime"></param>
+    /// <param name="spriteBatch"></param>
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
         spriteBatch.Draw(PlayerAtlas, _outputRectangle, CurrentPlayerRectangle, Color.White, 0f, new Vector2(0, 0),
             spriteEffect, 0f);
     }
 
+    /// <summary>
+    /// Get the parent Player Entity.
+    /// Set the _outputRectangle, where to draw the Animation Frame.
+    /// </summary>
     public override void Initialize()
     {
         _player = Entity.GetComponent<Player>();
         _outputRectangle = new Rectangle((int)Entity.Position.X, (int)Entity.Position.Y, 33, 70);
     }
 
+    /// <summary>
+    /// TODO implement destroy
+    /// </summary>
+    /// <exception cref="NotImplementedException"></exception>
     public override void Destroy()
     {
         throw new NotImplementedException();
     }
 
-    // Methods
-
     /// <summary>
-    ///     TODO
+    /// TODO future ideas, changing the walking direction here.
     /// </summary>
     public void WalkingLeft()
     {
     }
 
     /// <summary>
-    ///     TODO
-    ///     walking left but flipped
+    /// TODO set the walking Direction here
     /// </summary>
     public void WalkingRight()
     {
     }
 
     /// <summary>
-    ///     TODO
+    /// TODO set the jumping animation here
     /// </summary>
     public void Jumping()
     {
     }
 
+    /// <summary>
+    /// Update the Animation frame to the next frame.
+    /// </summary>
     private void _updateAnimation()
     {
         _timeSinceLastFrame = 0;

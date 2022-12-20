@@ -254,15 +254,17 @@ From [Tiled](https://www.mapeditor.org/) install the newest Version.
 Many thanks for all these great tools which made it possible to develop anxY!
 
 - [Visual Studio Community 2022](https://visualstudio.microsoft.com/vs/)
+- [ReSharper](https://www.jetbrains.com/resharper/)
+- [sonarlint](https://www.sonarsource.com/products/sonarlint/features/visual-studio/)
+- [MonoGame](https://www.monogame.net/)
+- [MonoGame Extended Content Pipeline](https://github.com/craftworkgames/MonoGame.Extended)
+- [MonoGame Extended Content Pipeline Alpha](https://www.nuget.org/packages/MonoGame.Extended/3.9.0-alpha0084)
+- [GameBundle](https://github.com/Ellpeck/GameBundle)
 - [Git Fork](https://git-fork.com/)
 - [GitHub](https://github.com/)
 - [GitHub Actions](https://github.com/features/actions)
 - [Jira](https://www.atlassian.com/software/jira)
 - [LucidChart](https://www.lucidchart.com/pages/)
-- [MonoGame](https://www.monogame.net/)
-- [MonoGame Extended Content Pipeline](https://github.com/craftworkgames/MonoGame.Extended)
-- [MonoGame Extended Content Pipeline Alpha](https://www.nuget.org/packages/MonoGame.Extended/3.9.0-alpha0084)
-- [GameBundle](https://github.com/Ellpeck/GameBundle)
 
 <a id="About-Builds"></a>
 ## Builds

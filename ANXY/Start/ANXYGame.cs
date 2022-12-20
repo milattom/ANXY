@@ -81,7 +81,7 @@ public class ANXYGame : Game
         playerEntity.AddComponent(playerCollider);
         BoxColliderSystem.Instance.AddBoxCollider(playerCollider);
 
-        backgroundEntity.GetComponent<Background>().playerEntity = playerEntity;
+        backgroundEntity.GetComponent<Background>().PlayerEntity = playerEntity;
 
 
         //Level
