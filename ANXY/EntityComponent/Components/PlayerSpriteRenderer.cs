@@ -100,13 +100,13 @@ public class PlayerSpriteRenderer : Component
     private void _updateAnimation()
     {
         _timeSinceLastFrame = 0;
-        if (_currentFrame < _numberOfFrames && _player.Inputdirection.X > 0)
+        if (_currentFrame < _numberOfFrames && _player.InputDirection.X > 0)
         {
             CurrentPlayerRectangle.X = XOffsetRectangle * _currentFrame;
             spriteEffect = SpriteEffects.None;
             _currentFrame++;
         }
-        else if (_currentFrame < _numberOfFrames && _player.Inputdirection.X < 0)
+        else if (_currentFrame < _numberOfFrames && _player.InputDirection.X < 0)
         {
             CurrentPlayerRectangle.X = XOffsetRectangle * _currentFrame;
             spriteEffect = SpriteEffects.FlipHorizontally;

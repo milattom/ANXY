@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.ConstrainedExecution;
 using System.Text;
 using Microsoft.Xna.Framework;
@@ -15,8 +16,12 @@ public class BoxCollider : Component
     public Vector2 Offset { get; }
     public string LayerMask { get; }
     public bool Colliding { get; set; } = false;
-
+    
     public Edge CollidingEdge { get; set; }
+
+
+    public List<(Edge, Vector2)> CollidingEdges { get; set; } = new List<(Edge, Vector2)>();
+
     private readonly Color _activeColor = Color.Green;
     private readonly Color _inactiveColor = Color.Blue;
     private Color _highlightColor;
@@ -37,10 +42,21 @@ public class BoxCollider : Component
         LayerMask = layerMask;
     }
 
-    public BoxCollider(Vector2 dimensions, string layerMask)
+    public Vector2 GetCollisionPosition(Edge edge)
     {
-        Dimensions = dimensions - Offset;
-        LayerMask = layerMask;
+        switch (edge)
+        {
+            case Edge.Bottom: //returns the top
+                return new Vector2(Pivot.X, Pivot.Y);
+            case Edge.Top: //returns the bottom 
+                return new Vector2(Pivot.X, Pivot.Y + Dimensions.Y);
+            case Edge.Right: //returns the left
+                return new Vector2(Pivot.X, Pivot.Y);
+            case Edge.Left: // returns the right
+                return new Vector2(Pivot.X+Dimensions.X, Pivot.Y+Dimensions.Y);
+            default:
+                throw new ArgumentException("No edge to get position from!");
+        }
     }
 
     public override void Update(GameTime gameTime)

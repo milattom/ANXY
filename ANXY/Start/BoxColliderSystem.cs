@@ -117,7 +117,7 @@ namespace ANXY.Start
 
             if (Compare(d.ToAbsoluteSize(), dMax) < 0)
             {
-                EdgeDetection(player, d, dMax);
+                EdgeDetection(player, other, d, dMax);
                 return true;
             }
             return false;
@@ -130,23 +130,38 @@ namespace ANXY.Start
         /// <param name="player"></param>
         /// <param name="d">current distance of two centers</param>
         /// <param name="dMax">max distance between two centers</param>
-        private static void EdgeDetection(BoxCollider player, Vector2 d, Vector2 dMax)
+        private static void EdgeDetection(BoxCollider player, BoxCollider other, Vector2 d, Vector2 dMax)
         {
+            //player.CollidingEdges.Clear();
             var crossWidth = dMax.X * d.Y;
             var crossHeight = dMax.Y * d.X;
-            if (crossWidth < crossHeight) 
+
+            if (crossWidth < crossHeight && crossWidth >= (-crossHeight))
             {
-                player.CollidingEdge = 
-                    (crossWidth < (-crossHeight)) 
-                        ? BoxCollider.Edge.Bottom 
-                        : BoxCollider.Edge.Left;
+                player.CollidingEdge = BoxCollider.Edge.Left;
+                player.CollidingEdges.Add((BoxCollider.Edge.Left, other.GetCollisionPosition(BoxCollider.Edge.Left)));
+                //player.CollidingEdgePosition = other.GetCollisionPosition(BoxCollider.Edge.Left);
             }
-            else
+
+            if (crossWidth >= crossHeight && crossWidth < (-crossHeight))
             {
-                player.CollidingEdge = 
-                    (crossWidth <-(crossHeight)) 
-                        ? BoxCollider.Edge.Right 
-                        : BoxCollider.Edge.Top;
+                player.CollidingEdge = BoxCollider.Edge.Right;
+                player.CollidingEdges.Add((BoxCollider.Edge.Right, other.GetCollisionPosition(BoxCollider.Edge.Right)));
+                //player.CollidingEdgePosition = other.GetCollisionPosition(BoxCollider.Edge.Right);
+            }
+
+            if (crossWidth >= crossHeight && crossWidth >= (-crossHeight))
+            {
+                player.CollidingEdge = BoxCollider.Edge.Top;
+                player.CollidingEdges.Add((BoxCollider.Edge.Top, other.GetCollisionPosition(BoxCollider.Edge.Top)));
+                //player.CollidingEdgePosition = other.GetCollisionPosition(BoxCollider.Edge.Top);
+            }
+
+            if (crossWidth < crossHeight && crossWidth < (-crossHeight))
+            {
+                player.CollidingEdge = BoxCollider.Edge.Bottom;
+                player.CollidingEdges.Add((BoxCollider.Edge.Bottom, other.GetCollisionPosition(BoxCollider.Edge.Bottom)));
+                //player.CollidingEdgePosition = other.GetCollisionPosition(BoxCollider.Edge.Bottom);
             }
         }
 
@@ -157,9 +172,9 @@ namespace ANXY.Start
         /// <param name="v1"></param>
         /// <param name="v2"></param>
         /// <returns>
-        /// -1 if x_1 < x_2 && y_1 < y_2
-        /// 0 if x_1 == x_2 && y_1 == y_2
+        /// -1 if x_1 <= x_2 && y_1 <= y_2
         /// 1 if x_1 > x_2 && y_1 > y_2
+        /// 0 else
         /// </returns>
         private static int Compare(Vector2 v1, Vector2 v2)
         {
