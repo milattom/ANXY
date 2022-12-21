@@ -88,11 +88,11 @@ public class Player : Component
 
         if (boxCollider.Colliding)
         {
-            var edges = new List<(BoxCollider.Edge, Vector2)>(boxCollider.CollidingEdges);
+            var edges = new Dictionary<BoxCollider.Edge, Vector2>(boxCollider.CollidingEdges);
             foreach (var edgeCase in edges)
             {
-                var edge = edgeCase.Item1;
-                var pos = edgeCase.Item2;
+                var edge = edgeCase.Key;
+                var pos = edgeCase.Value;
                 switch (edge)
                 {
                     case BoxCollider.Edge.Top:
@@ -101,35 +101,31 @@ public class Player : Component
                         Entity.Position = new Vector2(Entity.Position.X, pos.Y);
                         break;
                     case BoxCollider.Edge.Left:
-                        if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right)) InputDirection = new Vector2( 1, InputDirection.Y);
                         Entity.Position = new Vector2(pos.X, Entity.Position.Y);
-                        InputDirection = new Vector2(0, 1); //gravity
+                        if(!edges.ContainsKey(BoxCollider.Edge.Bottom)) InputDirection = new Vector2(0, 1); //gravity}
                         break;
                     case BoxCollider.Edge.Right:
-                        if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left)) InputDirection = new Vector2( -1, InputDirection.Y);
                         Entity.Position = new Vector2(pos.X-boxCollider.Dimensions.X, Entity.Position.Y);
-                        InputDirection = new Vector2(0, 1); //gravity
+                        if(!edges.ContainsKey(BoxCollider.Edge.Bottom)) InputDirection = new Vector2(0, 1); //gravity}
                         break;
                     case BoxCollider.Edge.Bottom:
                         Entity.Position = new Vector2(Entity.Position.X, pos.Y-boxCollider.Dimensions.Y);
                         Velocity = new Vector2(Velocity.X, 0); //stop gravity
-                        if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right)) InputDirection = new Vector2( 1, InputDirection.Y);
-                        if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left)) InputDirection = new Vector2( -1, InputDirection.Y);
                         if (state.IsKeyDown(Keys.Space))
                         {
                             InputDirection = new Vector2( InputDirection.X, -JumpForce/Gravity);
                         }
                         break;
                 }
-                boxCollider.CollidingEdges.Remove(edgeCase);
+                boxCollider.CollidingEdges.Remove(edge);
             }
         }
         else
         {
             InputDirection = new Vector2(0, 1); //gravity
-            if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right)) InputDirection = new Vector2( 1, InputDirection.Y);
-            if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left)) InputDirection = new Vector2( -1, InputDirection.Y);
         }
+        if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right)) InputDirection = new Vector2( 1, InputDirection.Y);
+        if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left)) InputDirection = new Vector2( -1, InputDirection.Y);
 
         //velocity update
         var xVelocity = InputDirection.X * acceleration.X;
