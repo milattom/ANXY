@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 
 namespace ANXY.EntityComponent.Components;
@@ -88,11 +89,19 @@ public class Player : Component
 
         if (boxCollider.Colliding)
         {
-            var edges = new Dictionary<BoxCollider.Edge, Vector2>(boxCollider.CollidingEdges);
-            foreach (var edgeCase in edges)
+            var edgeCases = new List<(BoxCollider.Edge, Vector2)>(boxCollider.CollidingEdges);
+
+            var edges = new List<BoxCollider.Edge>();
+            foreach (var e in edgeCases)
             {
-                var edge = edgeCase.Key;
-                var pos = edgeCase.Value;
+                edges.Add(e.Item1);
+            }
+            var lastCase = boxCollider.CollidingEdges.Last();
+
+            foreach (var edgeCase in edgeCases)
+            {
+                var edge = edgeCase.Item1;
+                var pos = edgeCase.Item2;
                 switch (edge)
                 {
                     case BoxCollider.Edge.Top:
@@ -102,11 +111,11 @@ public class Player : Component
                         break;
                     case BoxCollider.Edge.Left:
                         Entity.Position = new Vector2(pos.X, Entity.Position.Y);
-                        if(!edges.ContainsKey(BoxCollider.Edge.Bottom)) InputDirection = new Vector2(0, 1); //gravity}
+                        if(!edges.Contains(BoxCollider.Edge.Bottom)) InputDirection = new Vector2(0, 1); //gravity}
                         break;
                     case BoxCollider.Edge.Right:
                         Entity.Position = new Vector2(pos.X-boxCollider.Dimensions.X, Entity.Position.Y);
-                        if(!edges.ContainsKey(BoxCollider.Edge.Bottom)) InputDirection = new Vector2(0, 1); //gravity}
+                        if(!edges.Contains(BoxCollider.Edge.Bottom)) InputDirection = new Vector2(0, 1); //gravity}
                         break;
                     case BoxCollider.Edge.Bottom:
                         Entity.Position = new Vector2(Entity.Position.X, pos.Y-boxCollider.Dimensions.Y);
@@ -117,13 +126,15 @@ public class Player : Component
                         }
                         break;
                 }
-                boxCollider.CollidingEdges.Remove(edge);
+                boxCollider.CollidingEdges.Clear();
             }
         }
         else
         {
             InputDirection = new Vector2(0, 1); //gravity
         }
+        boxCollider.Colliding = false;
+
         if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right)) InputDirection = new Vector2( 1, InputDirection.Y);
         if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left)) InputDirection = new Vector2( -1, InputDirection.Y);
 

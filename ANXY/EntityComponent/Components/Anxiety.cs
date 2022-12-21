@@ -5,16 +5,16 @@ using Microsoft.Xna.Framework.Graphics;
 namespace ANXY.EntityComponent.Components
 {
     /// <summary>
-    /// TODO implement AnxietyManager with Anxiety Score
+    /// TODO implement Anxiety with Anxiety Score
     /// </summary>
-    public class AnxietyManager : Component
+    public class Anxiety : Component
     {
         public double AnxietyScore { get; set; }
 
         /// <summary>
         /// TODO implement Anxiety Score. Starting Score, Death/Game Over Score. Steps per time, increase of Steps-Length
         /// </summary>
-        public AnxietyManager()
+        public Anxiety()
         {
 
         }

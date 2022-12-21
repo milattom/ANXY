@@ -52,6 +52,8 @@ namespace ANXY.Start
             {
                 if (IsColliding(box, otherBox))
                 {
+                    otherBox.Colliding = true;
+                    box.Colliding = true;
                     colliders.Add(otherBox);
                 }
             }
@@ -66,11 +68,16 @@ namespace ANXY.Start
              var playerCollider = EntityManager.Instance.FindEntityByType<Player>()[0].GetComponent<BoxCollider>();
              foreach (var boxCollider in _boxColliders)
             {
-                boxCollider.Colliding =false;
                 if (boxCollider.LayerMask.Equals(playerCollider.LayerMask)) continue;
-                if (!IsColliding(playerCollider, boxCollider)) continue;
-                boxCollider.Colliding = true;
-                playerCollider.Colliding = true;
+                if (!IsColliding(playerCollider, boxCollider))
+                {
+                    boxCollider.Colliding = false;
+                }
+                else
+                {
+                    boxCollider.Colliding = true;
+                    playerCollider.Colliding = true;
+                }
             }
             
          }
@@ -138,25 +145,25 @@ namespace ANXY.Start
             if (crossWidth < crossHeight && crossWidth >= (-crossHeight))
             {
                 player.CollidingEdge = BoxCollider.Edge.Left;
-                player.CollidingEdges[BoxCollider.Edge.Left] = other.GetCollisionPosition(BoxCollider.Edge.Left);
+                player.CollidingEdges.Add((BoxCollider.Edge.Left, other.GetCollisionPosition(BoxCollider.Edge.Left)));
             }
 
             if (crossWidth >= crossHeight && crossWidth < (-crossHeight))
             {
                 player.CollidingEdge = BoxCollider.Edge.Right;
-                player.CollidingEdges[BoxCollider.Edge.Right] =  other.GetCollisionPosition(BoxCollider.Edge.Right);
+                player.CollidingEdges.Add((BoxCollider.Edge.Right, other.GetCollisionPosition(BoxCollider.Edge.Right)));
             }
 
             if (crossWidth >= crossHeight && crossWidth >= (-crossHeight))
             {
                 player.CollidingEdge = BoxCollider.Edge.Top;
-                player.CollidingEdges[BoxCollider.Edge.Top] =  other.GetCollisionPosition(BoxCollider.Edge.Top);
+                player.CollidingEdges.Add((BoxCollider.Edge.Top, other.GetCollisionPosition(BoxCollider.Edge.Top)));
             }
 
             if (crossWidth < crossHeight && crossWidth < (-crossHeight))
             {
                 player.CollidingEdge = BoxCollider.Edge.Bottom;
-                player.CollidingEdges[BoxCollider.Edge.Bottom] =  other.GetCollisionPosition(BoxCollider.Edge.Bottom);
+                player.CollidingEdges.Add((BoxCollider.Edge.Bottom, other.GetCollisionPosition(BoxCollider.Edge.Bottom)));
             }
         }
 
