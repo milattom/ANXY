@@ -80,41 +80,44 @@ public class Player : Component
     {
         //input
         var boxCollider = Entity.GetComponent<BoxCollider>();
-        //var colliding = boxCollider.Colliding;
-        _ = boxCollider.CollidingEdge;
         var state = Keyboard.GetState();
         var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
         var acceleration = new Vector2(WalkForce, Gravity);
         Inputdirection = Vector2.Zero;
 
-        if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right)) Inputdirection = new Vector2( 1, Inputdirection.Y);
-        if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left)) Inputdirection = new Vector2( -1, Inputdirection.Y);
-
-        // TODO Not working properly!!!! doesn't get the right state
-        switch (boxCollider.CollidingEdge)
+        if (boxCollider.Colliding)
         {
-            case BoxCollider.Edge.None:
-                Inputdirection = new Vector2(Inputdirection.X, 1);
-                break;
-            case BoxCollider.Edge.Top:
-
-                break;
-            case BoxCollider.Edge.Left:
-
-                break;
-            case BoxCollider.Edge.Right:
-
-                break;
-            case BoxCollider.Edge.Bottom:
-                Velocity = new Vector2(Velocity.X, 0); //stop gravity
-                //Inputdirection = new Vector2(Inputdirection.X, 0);
-                if (state.IsKeyDown(Keys.Space))
-                {
-                    Inputdirection = new Vector2( Inputdirection.X, -JumpForce/Gravity);
-                } 
-                break;
+            switch (boxCollider.CollidingEdge)
+            {
+                case BoxCollider.Edge.Top:
+                    Velocity = new Vector2(Velocity.X, 0);
+                    Inputdirection = new Vector2(Inputdirection.X, 1); //gravity
+                    break;
+                case BoxCollider.Edge.Left:
+                    if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right)) Inputdirection = new Vector2( 1, Inputdirection.Y);
+                    break;
+                case BoxCollider.Edge.Right:
+                    if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left)) Inputdirection = new Vector2( -1, Inputdirection.Y);
+                    break;
+                case BoxCollider.Edge.Bottom:
+                    Velocity = new Vector2(Velocity.X, 0); //stop gravity
+                    if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right)) Inputdirection = new Vector2( 1, Inputdirection.Y);
+                    if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left)) Inputdirection = new Vector2( -1, Inputdirection.Y);
+                    if (state.IsKeyDown(Keys.Space))
+                    {
+                        Inputdirection = new Vector2( Inputdirection.X, -JumpForce/Gravity);
+                    }
+                    break;
+            }
         }
-        
+        else
+        {
+            Inputdirection = new Vector2(0, 1); //gravity
+            if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right)) Inputdirection = new Vector2( 1, Inputdirection.Y);
+            if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left)) Inputdirection = new Vector2( -1, Inputdirection.Y);
+        }
+
+
         //velocity update
         var xVelocity = Inputdirection.X * acceleration.X;
         var yVelocity = Velocity.Y + (Inputdirection.Y * acceleration.Y);
