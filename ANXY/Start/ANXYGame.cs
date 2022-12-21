@@ -69,21 +69,6 @@ public class ANXYGame : Game
         backgroundEntity.AddComponent(new Background(windowWidth, windowHeight));
         backgroundEntity.AddComponent(new SingleSpriteRenderer(_backgroundSprite));
 
-        //Player
-        var playerEntity = new Entity();
-        playerEntity.Position = new Vector2((int)Math.Round(windowWidth / 2.0), (int)Math.Round(windowHeight / 2.0));
-        EntityManager.Instance.AddEntity(playerEntity);
-        var player = new Player(windowWidth, windowHeight);
-        playerEntity.AddComponent(player);
-        var playerSpriteRenderer = new PlayerSpriteRenderer(_playerSprite);
-        playerEntity.AddComponent(playerSpriteRenderer);
-        var playerCollider = new BoxCollider(new Rectangle(0, 0, 33, 70), "Player");
-        playerEntity.AddComponent(playerCollider);
-        BoxColliderSystem.Instance.AddBoxCollider(playerCollider);
-
-        backgroundEntity.GetComponent<Background>().PlayerEntity = playerEntity;
-
-
         //Level
         Debug.WriteLine("This here is the tiles");
         var tiles = _levelTileMap.TileLayers[0].Tiles;
@@ -136,6 +121,24 @@ public class ANXYGame : Game
             }
         }
 
+        //Player
+        var playerEntity = new Entity();
+        playerEntity.Position = new Vector2((int)Math.Round(windowWidth / 2.0), (int)Math.Round(windowHeight / 2.0));
+        EntityManager.Instance.AddEntity(playerEntity);
+        var player = new Player(windowWidth, windowHeight);
+        playerEntity.AddComponent(player);
+        var playerSpriteRenderer = new PlayerSpriteRenderer(_playerSprite);
+        playerEntity.AddComponent(playerSpriteRenderer);
+        var playerCollider = new BoxCollider(new Rectangle(0, 0, 33, 70), "Player");
+        playerEntity.AddComponent(playerCollider);
+        BoxColliderSystem.Instance.AddBoxCollider(playerCollider);
+
+        backgroundEntity.GetComponent<Background>().PlayerEntity = playerEntity;
+
+
+        
+
+        
         //Box1
         var boxEntity = new Entity();
         boxEntity.Position = new Vector2(1200, 800);
@@ -159,6 +162,7 @@ public class ANXYGame : Game
         var boxCollider3 = new BoxCollider(new Rectangle(0, 0, windowWidth, 40), "Ground");
         boxEntity3.AddComponent(boxCollider3);
         BoxColliderSystem.Instance.AddBoxCollider(boxCollider3);
+        
     }
 
     /// <summary>
@@ -172,7 +176,8 @@ public class ANXYGame : Game
 
         _playerSprite = Content.Load<Texture2D>("playerAtlas");
         _backgroundSprite = Content.Load<Texture2D>("Background-2");
-        _levelTileMap = Content.Load<TiledMap>("TileMapSet2");
+        //_levelTileMap = Content.Load<TiledMap>("TileMapSet2");
+        _levelTileMap = Content.Load<TiledMap>("JumpNRun-1");
     }
 
     /// <summary>

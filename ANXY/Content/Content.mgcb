@@ -11,6 +11,7 @@
 #-------------------------------- References --------------------------------#
 
 /reference:..\..\..\..\.nuget\packages\monogame.extended.content.pipeline\3.9.0-alpha0084\tools\MonoGame.Extended.Content.Pipeline.dll
+/reference:..\..\..\..\..\..\.nuget\packages\monogame.extended.content.pipeline\3.9.0-alpha0084\tools\MonoGame.Extended.Content.Pipeline.dll
 
 #---------------------------------- Content ---------------------------------#
 
@@ -49,6 +50,11 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Background.jpg
+
+#begin JumpNRun-1.tmx
+/importer:TiledMapImporter
+/processor:TiledMapProcessor
+/build:JumpNRun-1.tmx
 
 #begin PlayerAtlas.jpg
 /importer:TextureImporter
