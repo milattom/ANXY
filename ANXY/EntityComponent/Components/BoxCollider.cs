@@ -19,8 +19,8 @@ public class BoxCollider : Component
     
     public Edge CollidingEdge { get; set; }
 
-
-    public List<(Edge, Vector2)> CollidingEdges { get; set; } = new List<(Edge, Vector2)>();
+    public Dictionary<Edge, Vector2> CollidingEdges { get; set; } = new Dictionary<Edge, Vector2>();
+    //public List<(Edge, Vector2)> CollidingEdges { get; set; } = new List<(Edge, Vector2)>();
 
     private readonly Color _activeColor = Color.Green;
     private readonly Color _inactiveColor = Color.Blue;
