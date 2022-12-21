@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.ConstrainedExecution;
+using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -8,21 +10,29 @@ namespace ANXY.EntityComponent.Components;
 public class BoxCollider : Component
 {
     public bool DebugMode;
-    public Vector2 Pivot;
-    public Vector2 Dimensions;
-    public Vector2 Offset;
-    public readonly string LayerMask;
-    public bool isColliding;
+    public Vector2 Pivot { get; set; }
+    public Vector2 Center { get; set; }
+    public Vector2 Dimensions { get; }
+    public Vector2 Offset { get; }
+    public string LayerMask { get; }
+    public bool Colliding { get; set; } = false;
+    
+    public Edge CollidingEdge { get; set; }
 
-    private BBox _bBox;
+
+    public List<(Edge, Vector2)> CollidingEdges { get; set; } = new List<(Edge, Vector2)>();
+
     private readonly Color _activeColor = Color.Green;
     private readonly Color _inactiveColor = Color.Blue;
     private Color _highlightColor;
     private Texture2D _recTexture;
 
-    public struct BBox
+    public enum Edge
     {
-        public float minX, maxX, minY, maxY;
+        Bottom,
+        Top,
+        Left,
+        Right
     }
 
     public BoxCollider(Rectangle rectangle, string layerMask)
@@ -32,26 +42,32 @@ public class BoxCollider : Component
         LayerMask = layerMask;
     }
 
-    public BoxCollider(Vector2 dimensions, string layerMask)
+    public Vector2 GetCollisionPosition(Edge edge)
     {
-        Dimensions = dimensions - Offset;
-        LayerMask = layerMask;
+        switch (edge)
+        {
+            case Edge.Bottom: //returns the top
+                return new Vector2(Pivot.X, Pivot.Y);
+            case Edge.Top: //returns the bottom 
+                return new Vector2(Pivot.X, Pivot.Y + Dimensions.Y);
+            case Edge.Right: //returns the left
+                return new Vector2(Pivot.X, Pivot.Y);
+            case Edge.Left: // returns the right
+                return new Vector2(Pivot.X+Dimensions.X, Pivot.Y+Dimensions.Y);
+            default:
+                throw new ArgumentException("No edge to get position from!");
+        }
     }
 
     public override void Update(GameTime gameTime)
     {
-        Pivot = Entity.Position + Offset;
-        _bBox.minX = Pivot.X;
-        _bBox.maxX = Pivot.X + Dimensions.X;
-        _bBox.minY = Pivot.Y;
-        _bBox.maxY = Pivot.Y + Dimensions.Y;
-    }
-
-    public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-    {
-        if (!DebugMode) return;
-        spriteBatch.Draw(_recTexture, new Rectangle((int)Pivot.X, (int)Pivot.Y, (int)Dimensions.X, (int)Dimensions.Y), _highlightColor);
-
+        SetPivotAndCenter();
+        //Debug
+        Dehighlight();
+        if (Colliding)
+        {
+            Highlight();
+        }
     }
 
     public override void Initialize()
@@ -65,20 +81,29 @@ public class BoxCollider : Component
         throw new NotImplementedException();
     }
 
-    public bool IsColliding(BoxCollider other)
+    /// <summary>
+    /// Sets the pivot point with the position Coordinates of its Entity and the Offset.
+    /// Sets the center point by adding half the dimensions to the pivot point (upper left)
+    /// </summary>
+    private void SetPivotAndCenter()
     {
-        return _bBox.maxX >= other._bBox.minX
-               && _bBox.minX <= other._bBox.maxX
-               && _bBox.maxY >= other._bBox.minY
-               && _bBox.minY <= other._bBox.maxY;
+        Pivot = Entity.Position + Offset;
+        Center = Pivot + Dimensions/2;
     }
 
-    public void setRectangleTexture(Texture2D texture)
+    // -------------------------------------------------------- Debugging ------------------------------------------------------------------
+    public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+    {
+        if (!DebugMode) return;
+        var rect = new Rectangle((int)Pivot.X, (int)Pivot.Y, (int)Dimensions.X, (int)Dimensions.Y);
+        spriteBatch.Draw(_recTexture, rect, _highlightColor);
+
+    }
+    public void SetRectangleTexture(Texture2D texture)
     {
         _recTexture = texture;
     }
 
-    //Debugging
     public void Highlight()
     {
         _highlightColor = _activeColor;

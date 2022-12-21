@@ -77,7 +77,7 @@ public class ANXYGame : Game
         playerEntity.AddComponent(player);
         var playerSpriteRenderer = new PlayerSpriteRenderer(_playerSprite);
         playerEntity.AddComponent(playerSpriteRenderer);
-        var playerCollider = new BoxCollider(new Vector2(33, 70), "Player");
+        var playerCollider = new BoxCollider(new Rectangle(0, 0, 33, 70), "Player");
         playerEntity.AddComponent(playerCollider);
         BoxColliderSystem.Instance.AddBoxCollider(playerCollider);
 
@@ -140,7 +140,7 @@ public class ANXYGame : Game
         var boxEntity = new Entity();
         boxEntity.Position = new Vector2(1200, 800);
         EntityManager.Instance.AddEntity(boxEntity);
-        var boxCollider = new BoxCollider(new Vector2(200, 100), "Ground");
+        var boxCollider = new BoxCollider(new Rectangle(0, 0, 200, 100), "Ground");
         boxEntity.AddComponent(boxCollider);
         BoxColliderSystem.Instance.AddBoxCollider(boxCollider);
 
@@ -148,15 +148,15 @@ public class ANXYGame : Game
         var boxEntity2 = new Entity();
         boxEntity2.Position = new Vector2(1300, 600);
         EntityManager.Instance.AddEntity(boxEntity2);
-        var boxCollider2 = new BoxCollider(new Vector2(100, 100), "Ground");
+        var boxCollider2 = new BoxCollider(new Rectangle(0, 0, 100, 50), "Ground");
         boxEntity2.AddComponent(boxCollider2);
         BoxColliderSystem.Instance.AddBoxCollider(boxCollider2);
 
         //Box3
         var boxEntity3 = new Entity();
-        boxEntity3.Position = new Vector2(1000, 400);
+        boxEntity3.Position = new Vector2(0, windowHeight-170);
         EntityManager.Instance.AddEntity(boxEntity3);
-        var boxCollider3 = new BoxCollider(new Vector2(60, 60), "Ground");
+        var boxCollider3 = new BoxCollider(new Rectangle(0, 0, windowWidth, 40), "Ground");
         boxEntity3.AddComponent(boxCollider3);
         BoxColliderSystem.Instance.AddBoxCollider(boxCollider3);
     }
@@ -207,7 +207,6 @@ public class ANXYGame : Game
         _spriteBatch.Begin();
         EntityManager.Instance.DrawEntities(gameTime, _spriteBatch);
         _spriteBatch.End();
-
         //base.Draw(gameTime);
     }
 }

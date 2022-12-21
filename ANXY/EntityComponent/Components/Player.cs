@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace ANXY.EntityComponent.Components;
 
@@ -13,10 +15,9 @@ public class Player : Component
     public Vector2 Velocity { get; private set; } = Vector2.Zero;
     public float ScrollSpeed { get; private set; } = 0;
     public PlayerState State { get; private set; } = PlayerState.Idle;
-    public Vector2 Inputdirection { get; private set; } = Vector2.Zero;
+    public Vector2 InputDirection { get; private set; } = Vector2.Zero;
 
     //TODO remove GroundLevel or reduce it to Window Bottom Edge when Level is fully implemented in Tiled.
-    private const int GroundLevel = 800;
     private const float Gravity = 15;
     private const float WalkForce = 200;
     private const float JumpForce = 550;
@@ -78,34 +79,67 @@ public class Player : Component
     public override void Update(GameTime gameTime)
     {
         //input
-        var colliding = Entity.GetComponent<BoxCollider>().isColliding;
+        var boxCollider = Entity.GetComponent<BoxCollider>();
         var state = Keyboard.GetState();
         var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
         var acceleration = new Vector2(WalkForce, Gravity);
-        Inputdirection = Vector2.Zero;
+        InputDirection = Vector2.Zero;
 
-        //on ground
-        if(Entity.Position.Y >= GroundLevel || colliding)
+
+        if (boxCollider.Colliding)
         {
-            colliding = true;
-            Velocity = new Vector2(Velocity.X, 0);
+            var edges = new List<(BoxCollider.Edge, Vector2)>(boxCollider.CollidingEdges);
+            foreach (var edgeCase in edges)
+            {
+                var edge = edgeCase.Item1;
+                var pos = edgeCase.Item2;
+                switch (edge)
+                {
+                    case BoxCollider.Edge.Top:
+                        Velocity = new Vector2(Velocity.X, 0);
+                        InputDirection = new Vector2(InputDirection.X, 1); //gravity
+                        Entity.Position = new Vector2(Entity.Position.X, pos.Y);
+                        break;
+                    case BoxCollider.Edge.Left:
+                        if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right)) InputDirection = new Vector2( 1, InputDirection.Y);
+                        Entity.Position = new Vector2(pos.X, Entity.Position.Y);
+                        InputDirection = new Vector2(0, 1); //gravity
+                        break;
+                    case BoxCollider.Edge.Right:
+                        if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left)) InputDirection = new Vector2( -1, InputDirection.Y);
+                        Entity.Position = new Vector2(pos.X-boxCollider.Dimensions.X, Entity.Position.Y);
+                        InputDirection = new Vector2(0, 1); //gravity
+                        break;
+                    case BoxCollider.Edge.Bottom:
+                        Entity.Position = new Vector2(Entity.Position.X, pos.Y-boxCollider.Dimensions.Y);
+                        Velocity = new Vector2(Velocity.X, 0); //stop gravity
+                        if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right)) InputDirection = new Vector2( 1, InputDirection.Y);
+                        if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left)) InputDirection = new Vector2( -1, InputDirection.Y);
+                        if (state.IsKeyDown(Keys.Space))
+                        {
+                            InputDirection = new Vector2( InputDirection.X, -JumpForce/Gravity);
+                        }
+                        break;
+                }
+                boxCollider.CollidingEdges.Remove(edgeCase);
+            }
         }
-        //free fall
-        else Inputdirection = new Vector2(0, 1);
-
-        if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right)) Inputdirection = new Vector2( 1, Inputdirection.Y);
-        if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left)) Inputdirection = new Vector2( -1, Inputdirection.Y);
-        if (colliding && state.IsKeyDown(Keys.Space)) Inputdirection = new Vector2( Inputdirection.X, -JumpForce/Gravity);
+        else
+        {
+            InputDirection = new Vector2(0, 1); //gravity
+            if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right)) InputDirection = new Vector2( 1, InputDirection.Y);
+            if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left)) InputDirection = new Vector2( -1, InputDirection.Y);
+        }
 
         //velocity update
-        var xVelocity = Inputdirection.X * acceleration.X;
-        var yVelocity = Velocity.Y + (Inputdirection.Y * acceleration.Y);
+        var xVelocity = InputDirection.X * acceleration.X;
+        var yVelocity = Velocity.Y + (InputDirection.Y * acceleration.Y);
         Velocity = new Vector2(xVelocity, yVelocity);
         ScrollSpeed = Velocity.X;
 
         //ScreenConstraintUpdate
-        if ((Inputdirection.X > 0 && Entity.Position.X >= windowWidth * 3.0 / 4.0)
-            || (Inputdirection.X < 0 && Entity.Position.X <= windowWidth * 1.0 / 4.0))
+        if ((InputDirection.X > 0 && Entity.Position.X >= windowWidth * 3.0 / 4.0)
+            || (InputDirection.X < 0 && Entity.Position.X <= windowWidth * 1.0 / 4.0))
             Velocity *= new Vector2(0, 1);
 
         //position update
