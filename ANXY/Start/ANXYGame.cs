@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Diagnostics;
 using ANXY.EntityComponent;
 using ANXY.EntityComponent.Components;
@@ -21,11 +22,13 @@ public class ANXYGame : Game
     private SpriteBatch _spriteBatch;
     private int _windowHeight;
     private int _windowWidth;
+    private ArrayList _levelTiles = new ArrayList();
+    private Entity _playerEntity;
     //private Texture2D _levelSprite;
     //private TiledMapRenderer _tiledMapRenderer;
     //private string jsonLevelString;
     //private Entity _playerEntity;
-    
+
 
     /// <summary>
     /// This is the constructor for the heart of the game, where everything gets its initial spark.
@@ -65,9 +68,9 @@ public class ANXYGame : Game
         _windowWidth = Window.ClientBounds.Width;
         _windowHeight = Window.ClientBounds.Height;
         var backgroundEntity = InitializeBackground();
+        _playerEntity = InitializePlayer();
         InitializeMap();
-        var playerEntity = InitializePlayer();
-        backgroundEntity.GetComponent<Background>().PlayerEntity = playerEntity;
+        backgroundEntity.GetComponent<Background>().PlayerEntity = _playerEntity;
     }
 
     /// <summary>
@@ -145,19 +148,9 @@ public class ANXYGame : Game
 
     private void InitializeMap()
     {
-        Debug.WriteLine("This here is the tiles");
         var tiles = _levelTileMap.TileLayers[0].Tiles;
-        var index = 0;
         foreach (var singleTile in tiles)
         {
-            Debug.Write(singleTile.GlobalIdentifier + ",");
-            index++;
-            if (index >= _levelTileMap.Width)
-            {
-                Debug.Write("\n");
-                index = 0;
-            }
-
             var newTileEntity = new Entity
             {
                 Position = new Vector2(singleTile.X * _levelTileMap.TileWidth,
@@ -181,6 +174,7 @@ public class ANXYGame : Game
                     }
 
                 if (foundTilesetTile != null)
+                {
                     foreach (var collider in foundTilesetTile.Objects)
                     {
                         var rectangle = new Rectangle((int)Math.Round(collider.Position.X)
@@ -190,11 +184,17 @@ public class ANXYGame : Game
                         var tileBoxCollider = new BoxCollider(rectangle, "Ground");
                         BoxColliderSystem.Instance.AddBoxCollider(tileBoxCollider);
                         newTileEntity.AddComponent(tileBoxCollider);
+                        var levelComponent = new Level();
+                        levelComponent.PlayerEntity = _playerEntity;
+                        newTileEntity.AddComponent(levelComponent);
                     }
-
+                } else {
+                    var levelComponent = new Level();
+                    levelComponent.PlayerEntity = _playerEntity;
+                    newTileEntity.AddComponent(levelComponent);
+                }
                 EntitySystem.Instance.AddEntity(newTileEntity);
             }
-
         }
     }
 }

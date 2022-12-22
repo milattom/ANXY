@@ -10,11 +10,12 @@ namespace ANXY.EntityComponent.Components;
 /// </summary>
 public class Background : Component
 {
-    private Player _playerComponent;
     private Vector2 _screenScrollingDirection;
     private float _screenScrollingSpeed;
     public int WindowHeight { get; }
     public int WindowWidth { get; }
+
+    private Player _playerComponent;
     public Entity PlayerEntity { get; set; }
 
     /// <summary>
