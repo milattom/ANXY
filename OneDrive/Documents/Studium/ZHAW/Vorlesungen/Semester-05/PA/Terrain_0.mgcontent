@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SourceFile>C:/Users/Gamer/OneDrive/Documents/Studium/ZHAW/Vorlesungen/Semester-05/PA/Terrain.tsx</SourceFile>
+  <SourceTime>2022-12-09T11:35:08.4781781+01:00</SourceTime>
+  <DestFile>C:/Users/Gamer/Documents/Git/PA/ANXY/ANXY/Content/bin/DesktopGL/Content/../../../../../../OneDrive/Documents/Studium/ZHAW/Vorlesungen/Semester-05/PA/Terrain_0.xnb</DestFile>
+  <DestTime>2022-12-11T01:28:10.170353+01:00</DestTime>
+  <Importer>TiledMapTilesetImporter</Importer>
+  <ImporterTime>2022-11-20T17:02:02+01:00</ImporterTime>
+  <Processor>TiledMapTilesetProcessor</Processor>
+  <ProcessorTime>2022-11-20T17:02:02+01:00</ProcessorTime>
+  <Dependencies />
+  <BuildAsset>
+    <string>C:/Users/Gamer/Documents/Git/PA/ANXY/ANXY/Content/bin/DesktopGL/Content/../../../../../../OneDrive/Documents/Studium/ZHAW/Vorlesungen/Semester-05/PA/Kings and Pigs/Sprites/14-TileSets/Terrain (32x32)_0.xnb</string>
+  </BuildAsset>
+  <BuildOutput />
+</PipelineBuildEvent>

@@ -396,3 +396,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+ANXY/Content/Content.mgcb
+ANXY/Content/Tiled/TileSet2_0.mgcontent
+ANXY/Content/Tiled/TileSetTest2_0.mgcontent
