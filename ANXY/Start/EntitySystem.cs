@@ -6,17 +6,17 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace ANXY.Start;
 
-public sealed class EntityManager
+public sealed class EntitySystem
 {
     ///Singleton Pattern
-    private static readonly Lazy<EntityManager> lazy = new(() => new EntityManager());
+    private static readonly Lazy<EntitySystem> lazy = new(() => new EntitySystem());
 
     private readonly List<Entity> _gameEntities;
 
     /// <summary>
     ///     TODO
     /// </summary>
-    private EntityManager()
+    private EntitySystem()
     {
         _gameEntities = new List<Entity>();
     }
@@ -24,7 +24,7 @@ public sealed class EntityManager
     /// <summary>
     ///     Singleton Pattern return the only instance there is
     /// </summary>
-    public static EntityManager Instance => lazy.Value;
+    public static EntitySystem Instance => lazy.Value;
 
     /// <summary>
     ///     TODO

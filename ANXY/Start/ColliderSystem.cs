@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ANXY.EntityComponent.Components;
 using Microsoft.Xna.Framework.Graphics;
 using Color = Microsoft.Xna.Framework.Color;
@@ -17,64 +18,60 @@ namespace ANXY.Start
         ///Singleton Pattern
         private static readonly Lazy<BoxColliderSystem> lazy = new(() => new BoxColliderSystem());
 
-        private readonly List<BoxCollider> _boxColliders;
+        private readonly List<BoxCollider> _boxColliderList;
 
         private BoxColliderSystem()
         {
-            _boxColliders = new List<BoxCollider>();
+            _boxColliderList = new List<BoxCollider>();
         }
 
         public static BoxColliderSystem Instance => lazy.Value;
 
         /// <summary>
-        /// Add a box collider to the list of boxColliders
+        /// Add a box collider to the list of boxCollider
         /// </summary>
         /// <param name="boxCollider"></param>
         public void AddBoxCollider(BoxCollider boxCollider)
         {
-            _boxColliders.Add(boxCollider);
+            _boxColliderList.Add(boxCollider);
         }
 
         /// <summary>
-        /// Returns a list of BoxColliders which are colliding with the given box
+        /// Returns a list of BoxCollider which are colliding with the given box
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
         public List<BoxCollider>  GetCollisions(BoxCollider box)
         {
-            List<BoxCollider> colliders = new List<BoxCollider>();
-            foreach (var otherBox in _boxColliders)
+            var collidingBox = new List<BoxCollider>();
+            foreach (var otherBox in _boxColliderList.Where(otherBox => IsColliding(box, otherBox)))
             {
-                if (IsColliding(box, otherBox))
-                {
-                    otherBox.Colliding = true;
-                    box.Colliding = true;
-                    colliders.Add(otherBox);
-                }
+                otherBox.Colliding = true;
+                box.Colliding = true;
+                collidingBox.Add(otherBox);
             }
-            return colliders;
+            return collidingBox;
         }
 
          /// <summary>
-         /// Checks all box colliders with the one from the player and sets Colliding correspondingly.
+         /// Checks all box collider with the one from the player and sets Colliding correspondingly.
          /// </summary>
          public void CheckCollisions()
          { 
-             var playerCollider = EntityManager.Instance.FindEntityByType<Player>()[0].GetComponent<BoxCollider>();
+             var playerCollider = EntitySystem.Instance.FindEntityByType<Player>()[0].GetComponent<BoxCollider>();
              playerCollider.Colliding = false;
-             foreach (var boxCollider in _boxColliders)
-            {
-                if (boxCollider.LayerMask.Equals(playerCollider.LayerMask)) continue;
-                if (IsColliding(playerCollider, boxCollider))
-                {
-                    playerCollider.Colliding = true;
-                    boxCollider.Colliding = true;
-                }
-                else
-                {
-                    boxCollider.Colliding = false;
-                }
-            }
+             foreach (var boxCollider in _boxColliderList.Where(boxCollider => !boxCollider.LayerMask.Equals(playerCollider.LayerMask)))
+             {
+                 if (IsColliding(playerCollider, boxCollider))
+                 {
+                     playerCollider.Colliding = true;
+                     boxCollider.Colliding = true;
+                 }
+                 else
+                 {
+                     boxCollider.Colliding = false;
+                 }
+             }
             
          }
 
@@ -85,7 +82,7 @@ namespace ANXY.Start
          /// <param name="graphics"></param>
         public void EnableDebugMode(GraphicsDevice graphics)
         {
-            foreach (var box in _boxColliders)
+            foreach (var box in _boxColliderList)
             {
                 box.DebugMode = true;
                 Texture2D recTexture = CreateRectangleTexture(graphics, box.Dimensions);
@@ -98,7 +95,7 @@ namespace ANXY.Start
          /// </summary>
         public void DisableDebugMode()
         {
-            foreach (var box in _boxColliders)
+            foreach (var box in _boxColliderList)
             {
                 box.DebugMode = false;
             }
@@ -121,12 +118,9 @@ namespace ANXY.Start
             var dyMax = (player.Dimensions.Y + other.Dimensions.Y) / 2;
             var dMax = new Vector2(dxMax, dyMax);
 
-            if (Compare(d.ToAbsoluteSize(), dMax) < 0)
-            {
-                EdgeDetection(player, other, d, dMax);
-                return true;
-            }
-            return false;
+            if (Compare(d.ToAbsoluteSize(), dMax) >= 0) return false;
+            EdgeDetection(player, other, d, dMax);
+            return true;
         }
 
         /// <summary>
@@ -195,27 +189,27 @@ namespace ANXY.Start
         private static Texture2D CreateRectangleTexture(GraphicsDevice graphics, Vector2 dim)
         {
             Texture2D rect = null;
-            var colours = new List<Color>();
-            for (int y = 0; y < dim.Y; y++)
+            var colors = new List<Color>();
+            for (var y = 0; y < dim.Y; y++)
             {
-                for (int x = 0; x < dim.X; x++)
+                for (var x = 0; x < dim.X; x++)
                 {
                     if (x == 0 ||
                         y == 0 ||
                         x == dim.X - 1 ||
                         y == dim.Y - 1)
                     {
-                        colours.Add(new Color(255, 255, 255, 255));
+                        colors.Add(new Color(255, 255, 255, 255));
                     }
                     else
                     {
-                        colours.Add(new Color(0,0,0,0));
+                        colors.Add(new Color(0,0,0,0));
                     }
                 }
             }
 
             rect = new Texture2D(graphics, (int) dim.X, (int)dim.Y);
-            rect.SetData(colours.ToArray());
+            rect.SetData(colors.ToArray());
             return rect;
         }
     }

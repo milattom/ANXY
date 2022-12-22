@@ -16,26 +16,27 @@ public class ANXYGame : Game
 {
     private readonly GraphicsDeviceManager _graphics;
     private Texture2D _backgroundSprite;
-    private Texture2D _levelSprite;
     private TiledMap _levelTileMap;
     private Texture2D _playerSprite;
     private SpriteBatch _spriteBatch;
-    private TiledMapRenderer _tiledMapRenderer;
-    private string jsonLevelString;
-    private Entity _playerEntity;
     private int _windowHeight;
     private int _windowWidth;
+    //private Texture2D _levelSprite;
+    //private TiledMapRenderer _tiledMapRenderer;
+    //private string jsonLevelString;
+    //private Entity _playerEntity;
+    
 
     /// <summary>
     /// This is the constructor for the heart of the game, where everything gets its initial spark.
     /// </summary>
     public ANXYGame()
     {
-        _graphics = new GraphicsDeviceManager(this);
         //IsMouseVisible = true;
+        //_graphics.ToggleFullScreen();
+        _graphics = new GraphicsDeviceManager(this);
         _graphics.PreferredBackBufferWidth = 1920;
         _graphics.PreferredBackBufferHeight = 1080;
-        //_graphics.ToggleFullScreen();
         Window.AllowUserResizing = true; // makes it possible for the user to change the window size
         _graphics.ApplyChanges();
         Content.RootDirectory = "Content";
@@ -50,11 +51,9 @@ public class ANXYGame : Game
     protected override void Initialize()
     {
         // TODO: Add your initialization logic here
-        _windowWidth = Window.ClientBounds.Width;
-        _windowHeight = Window.ClientBounds.Height;
         base.Initialize();
         InitializeDefaultScene();
-        EntityManager.Instance._InitializeEntities();
+        EntitySystem.Instance._InitializeEntities();
         BoxColliderSystem.Instance.EnableDebugMode(_graphics.GraphicsDevice);  //Debug mode
     }
 
@@ -63,6 +62,8 @@ public class ANXYGame : Game
     /// </summary>
     private void InitializeDefaultScene()
     {
+        _windowWidth = Window.ClientBounds.Width;
+        _windowHeight = Window.ClientBounds.Height;
         var backgroundEntity = InitializeBackground();
         InitializeMap();
         var playerEntity = InitializePlayer();
@@ -99,7 +100,7 @@ public class ANXYGame : Game
     /// <param name="gameTime">Provides a snapshot of timing values.</param>
     protected override void Update(GameTime gameTime)
     {
-        EntityManager.Instance._UpdateEntities(gameTime);
+        EntitySystem.Instance._UpdateEntities(gameTime);
         BoxColliderSystem.Instance.CheckCollisions();
         //base.Update(gameTime);
     }
@@ -112,7 +113,7 @@ public class ANXYGame : Game
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
         _spriteBatch.Begin();
-        EntityManager.Instance.DrawEntities(gameTime, _spriteBatch);
+        EntitySystem.Instance.DrawEntities(gameTime, _spriteBatch);
         _spriteBatch.End();
         //base.Draw(gameTime);
     }
@@ -121,9 +122,8 @@ public class ANXYGame : Game
     {
         var center = new Vector2((int)Math.Round(_windowWidth / 2.0), (int)Math.Round(_windowHeight / 2.0));
         var playerBox = new Rectangle(0, 0, 33, 70);
-        var playerEntity = new Entity();
-        playerEntity.Position = center;
-        EntityManager.Instance.AddEntity(playerEntity);
+        var playerEntity = new Entity { Position = center };
+        EntitySystem.Instance.AddEntity(playerEntity);
         var player = new Player(_windowWidth, _windowHeight);
         playerEntity.AddComponent(player);
         var playerSpriteRenderer = new PlayerSpriteRenderer(_playerSprite);
@@ -137,7 +137,7 @@ public class ANXYGame : Game
     private Entity InitializeBackground()
     {
         var backgroundEntity = new Entity();
-        EntityManager.Instance.AddEntity(backgroundEntity);
+        EntitySystem.Instance.AddEntity(backgroundEntity);
         backgroundEntity.AddComponent(new Background(_windowWidth, _windowHeight));
         backgroundEntity.AddComponent(new SingleSpriteRenderer(_backgroundSprite));
         return backgroundEntity;
@@ -192,7 +192,7 @@ public class ANXYGame : Game
                         newTileEntity.AddComponent(tileBoxCollider);
                     }
 
-                EntityManager.Instance.AddEntity(newTileEntity);
+                EntitySystem.Instance.AddEntity(newTileEntity);
             }
 
         }
