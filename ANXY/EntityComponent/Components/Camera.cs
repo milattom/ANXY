@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace ANXY.EntityComponent.Components
 {
@@ -14,7 +15,9 @@ namespace ANXY.EntityComponent.Components
     /// </summary>
     public class Camera : Component
     {
-        public Player Player { get; set; }
+        public Entity PlayerEntity { get; set; }
+        public Rectangle WindowSize { get; set; }
+        public Vector2 Padding { get; set; }
 
         /// <summary>
         /// TODO implement Update
