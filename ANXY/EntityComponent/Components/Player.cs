@@ -96,7 +96,6 @@ public class Player : Component
             {
                 edges.Add(e.Item1);
             }
-            var lastCase = boxCollider.CollidingEdges.Last();
 
             foreach (var edgeCase in edgeCases)
             {
@@ -133,7 +132,6 @@ public class Player : Component
         {
             InputDirection = new Vector2(0, 1); //gravity
         }
-        boxCollider.Colliding = false;
 
         if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right)) InputDirection = new Vector2( 1, InputDirection.Y);
         if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left)) InputDirection = new Vector2( -1, InputDirection.Y);

@@ -66,17 +66,18 @@ namespace ANXY.Start
          public void CheckCollisions()
          { 
              var playerCollider = EntityManager.Instance.FindEntityByType<Player>()[0].GetComponent<BoxCollider>();
+             playerCollider.Colliding = false;
              foreach (var boxCollider in _boxColliders)
             {
                 if (boxCollider.LayerMask.Equals(playerCollider.LayerMask)) continue;
-                if (!IsColliding(playerCollider, boxCollider))
+                if (IsColliding(playerCollider, boxCollider))
                 {
-                    boxCollider.Colliding = false;
+                    playerCollider.Colliding = true;
+                    boxCollider.Colliding = true;
                 }
                 else
                 {
-                    boxCollider.Colliding = true;
-                    playerCollider.Colliding = true;
+                    boxCollider.Colliding = false;
                 }
             }
             

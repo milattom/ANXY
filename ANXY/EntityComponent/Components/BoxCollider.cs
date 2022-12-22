@@ -67,6 +67,7 @@ public class BoxCollider : Component
         if (Colliding)
         {
             Highlight();
+            //Colliding = false;
         }
     }
 
