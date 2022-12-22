@@ -14,21 +14,20 @@ namespace ANXY.EntityComponent.Components;
 public class Player : Component
 {
     public Vector2 Velocity { get; private set; } = Vector2.Zero;
-    public float ScrollSpeed { get; private set; } = 0;
+    public float ScrollSpeed { get; private set; } = 0f;
     public PlayerState State { get; private set; } = PlayerState.Idle;
     public Vector2 InputDirection { get; private set; } = Vector2.Zero;
 
     //TODO remove GroundLevel or reduce it to Window Bottom Edge when Level is fully implemented in Tiled.
-    private const float Gravity = 15;
+    private const float Gravity = 20;
     private const float WalkForce = 200;
     private const float JumpForce = 550;
 
-    private bool isAlive = true;
-    private PlayerInputController playerInputController;
+    private bool _isAlive = true;
+    private PlayerInputController _playerInputController;
 
-    private int windowHeight;
-
-    private readonly int windowWidth;
+    private readonly int _windowHeight;
+    private readonly int _windowWidth;
 
     /// <summary>
     /// Player Class Constructor
@@ -37,8 +36,8 @@ public class Player : Component
     /// <param name="windowHeight">Current Window size, Height</param>
     public Player(int windowWidth, int windowHeight)
     {
-        this.windowWidth = windowWidth;
-        this.windowHeight = windowHeight;
+        this._windowWidth = windowWidth;
+        this._windowHeight = windowHeight;
     }
 
     /* TODO maybe implement later. Ideas for now
@@ -90,17 +89,10 @@ public class Player : Component
         if (boxCollider.Colliding)
         {
             var edgeCases = new List<(BoxCollider.Edge, Vector2)>(boxCollider.CollidingEdges);
+            var edges = edgeCases.Select(e => e.Item1).ToList();
 
-            var edges = new List<BoxCollider.Edge>();
-            foreach (var e in edgeCases)
+            foreach (var (edge, pos) in edgeCases)
             {
-                edges.Add(e.Item1);
-            }
-
-            foreach (var edgeCase in edgeCases)
-            {
-                var edge = edgeCase.Item1;
-                var pos = edgeCase.Item2;
                 switch (edge)
                 {
                     case BoxCollider.Edge.Top:
@@ -124,6 +116,8 @@ public class Player : Component
                             InputDirection = new Vector2( InputDirection.X, -JumpForce/Gravity);
                         }
                         break;
+                    default:
+                        throw new ArgumentOutOfRangeException("Collision happened but no edge case");
                 }
                 boxCollider.CollidingEdges.Clear();
             }
@@ -143,8 +137,10 @@ public class Player : Component
         ScrollSpeed = Velocity.X;
 
         //ScreenConstraintUpdate
-        if ((InputDirection.X > 0 && Entity.Position.X >= windowWidth * 3.0 / 4.0)
-            || (InputDirection.X < 0 && Entity.Position.X <= windowWidth * 1.0 / 4.0))
+        var constrainRight = _windowWidth * 4.0 / 5.0;
+        var constrainLeft = _windowWidth * 1.0 / 5.0;
+        if ((InputDirection.X > 0 && Entity.Position.X >= constrainRight)
+            || (InputDirection.X < 0 && Entity.Position.X <= constrainLeft))
             Velocity *= new Vector2(0, 1);
 
         //position update

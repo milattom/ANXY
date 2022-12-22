@@ -1,21 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using ANXY.EntityComponent;
 using ANXY.EntityComponent.Components;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
-using System.Drawing;
 using Color = Microsoft.Xna.Framework.Color;
-using System.Numerics;
 using MonoGame.Extended;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace ANXY.Start
 {
     /// <summary>
-    /// The BoxColliderSystem holds a list with all active BoxColliders, detects collisions and manipulates the
-    /// BoxCollider component accordingly.
+    /// The Singleton BoxColliderSystem holds a list with all active BoxColliders, detects collisions and
+    /// manipulates the BoxCollider component accordingly.
     /// </summary>
     internal class BoxColliderSystem
     {
@@ -98,6 +93,9 @@ namespace ANXY.Start
             }
         }
 
+         /// <summary>
+         /// Disables Debug mode in every active boxcollider
+         /// </summary>
         public void DisableDebugMode()
         {
             foreach (var box in _boxColliders)

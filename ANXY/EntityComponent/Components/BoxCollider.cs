@@ -7,6 +7,11 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace ANXY.EntityComponent.Components;
 
+/// <summary>
+/// Represents a Collision box. Holds the pivot, center, Dimensions, Layermask and a boolean which indicates if
+/// it is colliding with another BoxCollider (set by the system). If a collision happens, Colliding is set to true
+/// and a List with all edges from other colliders this box collides with.
+/// </summary>
 public class BoxCollider : Component
 {
     public bool DebugMode;
@@ -16,10 +21,13 @@ public class BoxCollider : Component
     public Vector2 Offset { get; }
     public string LayerMask { get; }
     public bool Colliding { get; set; } = false;
-    
     public Edge CollidingEdge { get; set; }
-
-    //public Dictionary<Edge, Vector2> CollidingEdges { get; set; } = new Dictionary<Edge, Vector2>();
+    /// <summary>
+    /// List of other boxes edges which are colliding with .this and its correspondent edge position
+    /// as a vector. The position of the edge serves as an orientation where the collision happened on
+    /// the map and where the box should be moved next.
+    /// after the collision happens.
+    /// </summary>
     public List<(Edge, Vector2)> CollidingEdges { get; set; } = new List<(Edge, Vector2)>();
 
     private readonly Color _activeColor = Color.Green;
@@ -27,6 +35,9 @@ public class BoxCollider : Component
     private Color _highlightColor;
     private Texture2D _recTexture;
 
+    /// <summary>
+    /// enum to describe an Edge at collision
+    /// </summary>
     public enum Edge
     {
         Bottom,
@@ -35,6 +46,13 @@ public class BoxCollider : Component
         Right
     }
 
+    /// <summary>
+    /// Constructor takes a rectangle with the dimensions of the bounding box
+    /// and the x and y values for its offset. The dimensions + offset will be the edges.
+    /// The layerMask will be needed to have a more complex collision system.
+    /// </summary>
+    /// <param name="rectangle"></param>
+    /// <param name="layerMask"></param>
     public BoxCollider(Rectangle rectangle, string layerMask)
     {
         Dimensions = new Vector2(rectangle.Width, rectangle.Height);
@@ -42,6 +60,15 @@ public class BoxCollider : Component
         LayerMask = layerMask;
     }
 
+    /// <summary>
+    /// Returns the edge of this box which collided with the other (usually player).
+    /// It is the opposite edge, so if the as parameter given edge = bottom
+    /// (means the player is standing on it) it will return the position vector
+    /// of the top edge from this box.
+    /// </summary>
+    /// <param name="edge"></param>
+    /// <returns>Position vector of the edge that was touched</returns>
+    /// <exception cref="ArgumentException"></exception>
     public Vector2 GetCollisionPosition(Edge edge)
     {
         switch (edge)
@@ -59,11 +86,11 @@ public class BoxCollider : Component
         }
     }
 
+    /// <inheritdoc />
     public override void Update(GameTime gameTime)
     {
-        SetPivotAndCenter();
-        //Debug
-        Dehighlight();
+        UpDatePivotAndCenter();
+        Dehighlight(); //Debug
         if (Colliding)
         {
             Highlight();
@@ -71,12 +98,19 @@ public class BoxCollider : Component
         }
     }
 
+    /// <summary>
+    /// Gets called by EntityManager, sets the highlightColor (debug) and the Pivot point
+    /// </summary>
     public override void Initialize()
     {
         _highlightColor = _activeColor;
         Pivot = Entity.Position + Offset;
     }
 
+    /// <summary>
+    /// Should be called when this component isn't active anymore.
+    /// </summary>
+    /// <exception cref="NotImplementedException"></exception>
     public override void Destroy()
     {
         throw new NotImplementedException();
@@ -86,13 +120,15 @@ public class BoxCollider : Component
     /// Sets the pivot point with the position Coordinates of its Entity and the Offset.
     /// Sets the center point by adding half the dimensions to the pivot point (upper left)
     /// </summary>
-    private void SetPivotAndCenter()
+    private void UpDatePivotAndCenter()
     {
         Pivot = Entity.Position + Offset;
         Center = Pivot + Dimensions/2;
     }
 
     // -------------------------------------------------------- Debugging ------------------------------------------------------------------
+    
+    /// <inheritdoc />
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
         if (!DebugMode) return;
