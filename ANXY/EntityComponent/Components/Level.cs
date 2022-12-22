@@ -44,15 +44,25 @@ namespace ANXY.EntityComponent.Components
                 }
                 if (!somePositionChanged)
                 {
-                    Entity.Position += _screenScrollingDirection * _screenScrollingSpeed *
-                               (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    Vector2 addVector = _screenScrollingDirection * _screenScrollingSpeed *
+                                   (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    if (_screenScrollingDirection.X > 0)
+                    {
+                         addVector = new Vector2(Math.Abs(addVector.X), Math.Abs(addVector.Y));
+                    }
+                    Entity.Position += addVector;
                     positionChanged = true;
                 }
             }
             else
             {
-                Entity.Position += _screenScrollingDirection * _screenScrollingSpeed *
-                               (float)gameTime.ElapsedGameTime.TotalSeconds;
+                Vector2 addVector = _screenScrollingDirection * _screenScrollingSpeed *
+                                   (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (_screenScrollingDirection.X > 0)
+                {
+                    addVector = new Vector2(Math.Abs(addVector.X), Math.Abs(addVector.Y));
+                }
+                Entity.Position += addVector;
             }
             
         }
