@@ -11,6 +11,7 @@ public class SingleSpriteRenderer : Component
 {
     private readonly Texture2D _atlas;
     private readonly Rectangle _region;
+    public Entity CameraEntity = new Entity();
 
     //TODO public SpriteAnimation SpriteAnimation;
 

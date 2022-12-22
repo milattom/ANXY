@@ -104,6 +104,13 @@
    <object id="2" x="23" y="23" width="9" height="9"/>
   </objectgroup>
  </tile>
+ <tile id="51">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="9" height="9"/>
+   <object id="2" x="23" y="0" width="9" height="9"/>
+   <object id="3" x="23" y="23" width="9" height="9"/>
+  </objectgroup>
+ </tile>
  <tile id="52">
   <objectgroup draworder="index" id="2">
    <object id="1" x="0" y="0" width="9" height="9"/>
