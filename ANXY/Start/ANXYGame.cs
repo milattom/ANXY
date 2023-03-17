@@ -85,8 +85,6 @@ public class ANXYGame : Game
     /// </summary>
     private void InitializeDefaultScene()
     {
-        InitializeCamera();
-
         _windowWidth = Window.ClientBounds.Width;
         _windowHeight = Window.ClientBounds.Height;
         InitializeBackground();
@@ -97,20 +95,6 @@ public class ANXYGame : Game
         InitializeLevelForegroundLayers();
         AddPlayerToBackground();
         AddPlayerToLevel();
-    }
-
-    private void InitializeCamera()
-    {
-        var cameraEntity = new Entity();
-        EntitySystem.Instance.AddEntity(cameraEntity);
-        var cameraComponent = new Camera();
-        cameraEntity.AddComponent(cameraComponent);
-
-        cameraComponent.PlayerEntity = _playerEntity;
-        cameraComponent.WindowSize = Window.ClientBounds;
-        cameraComponent.Padding = _cameraPadding;
-
-        _cameraEntity = cameraEntity;
     }
 
     /// <summary>
@@ -166,7 +150,6 @@ public class ANXYGame : Game
     private void InitializePlayer()
     {
         var center = new Vector2((int)Math.Round(_windowWidth / 2.0), (int)Math.Round(_windowHeight / 2.0));
-        var playerBox = new Rectangle(0, 0, 33, 70);
         var playerEntity = new Entity { Position = center };
 
         EntitySystem.Instance.AddEntity(playerEntity);
@@ -187,8 +170,6 @@ public class ANXYGame : Game
         EntitySystem.Instance.AddEntity(cameraEntity);
         var camera = new Camera(player, new Vector2(_windowWidth, _windowHeight), new Vector2(0.25f*_windowWidth, 0.5f * _windowHeight), new Vector2(float.PositiveInfinity, 0.85f*_windowHeight));
         cameraEntity.AddComponent(camera);
-
-        return playerEntity;
     }
 
     /// <summary>

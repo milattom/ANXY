@@ -67,7 +67,6 @@ public class Background : Component
     /// </summary>
     public override void Initialize()
     {
-        _playerComponent = PlayerEntity.GetComponent<Player>();
     }
 
     /// <summary>

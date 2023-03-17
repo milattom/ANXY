@@ -74,7 +74,6 @@ namespace ANXY.EntityComponent.Components
             somePositionChanged = false;*/
         }
         public override void Initialize() {
-            _playerComponent = PlayerEntity.GetComponent<Player>();
         }
         public override void Destroy() { 
         }
