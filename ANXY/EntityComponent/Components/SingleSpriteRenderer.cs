@@ -50,7 +50,7 @@ public class SingleSpriteRenderer : Component
     /// <param name="spriteBatch"></param>
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
-        spriteBatch.Draw(_atlas, Entity.Position /*TODO - Camera.Position*/, _region, Color.White);
+        spriteBatch.Draw(_atlas, Entity.Position - Camera.ActiveCamera.DrawOffset, _region, Color.White);
     }
 
     /// <summary>

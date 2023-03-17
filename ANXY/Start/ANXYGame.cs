@@ -165,8 +165,10 @@ public class ANXYGame : Game
     /// </summary>
     private void InitializePlayer()
     {
-        var playerStartingPosition = new Vector2(50, 50);
-        var playerEntity = new Entity { Position = playerStartingPosition };
+        var center = new Vector2((int)Math.Round(_windowWidth / 2.0), (int)Math.Round(_windowHeight / 2.0));
+        var playerBox = new Rectangle(0, 0, 33, 70);
+        var playerEntity = new Entity { Position = center };
+
         EntitySystem.Instance.AddEntity(playerEntity);
 
         var player = new Player(_windowWidth, _windowHeight);
@@ -181,7 +183,12 @@ public class ANXYGame : Game
 
         BoxColliderSystem.Instance.AddBoxCollider(playerCollider);
 
-        _playerEntity = playerEntity;
+        var cameraEntity = new Entity();
+        EntitySystem.Instance.AddEntity(cameraEntity);
+        var camera = new Camera(player, new Vector2(_windowWidth, _windowHeight), new Vector2(0.25f*_windowWidth, 0.5f * _windowHeight), new Vector2(float.PositiveInfinity, 0.85f*_windowHeight));
+        cameraEntity.AddComponent(camera);
+
+        return playerEntity;
     }
 
     /// <summary>
@@ -191,7 +198,7 @@ public class ANXYGame : Game
     {
         var backgroundEntity = new Entity();
         EntitySystem.Instance.AddEntity(backgroundEntity);
-        backgroundEntity.Position -= new Vector2((int)Math.Round(_windowWidth / 4.0, 0));
+        backgroundEntity.Position -= new Vector2(0.5f * _windowWidth, 0.5f * _windowHeight);
         backgroundEntity.AddComponent(new Background(_windowWidth, _windowHeight));
         SingleSpriteRenderer backgroundSprite = new SingleSpriteRenderer(_backgroundSprite);
         backgroundEntity.AddComponent(backgroundSprite);
