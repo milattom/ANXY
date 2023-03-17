@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
+using MonoGame.Extended;
 
 namespace ANXY.EntityComponent.Components
 {
@@ -23,6 +24,7 @@ namespace ANXY.EntityComponent.Components
         public Level() { }
 
         public override void Update(GameTime gameTime) {
+            /*
             var state = Keyboard.GetState();
             _screenScrollingDirection = Vector2.Zero;
             if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right)) _screenScrollingDirection = new Vector2(-1, 0);
@@ -48,7 +50,7 @@ namespace ANXY.EntityComponent.Components
                                    (float)gameTime.ElapsedGameTime.TotalSeconds;
                     if (_screenScrollingDirection.X > 0)
                     {
-                         addVector = new Vector2(Math.Abs(addVector.X), Math.Abs(addVector.Y));
+                        addVector = addVector.ToAbsoluteSize();
                     }
                     Entity.Position += addVector;
                     positionChanged = true;
@@ -60,15 +62,16 @@ namespace ANXY.EntityComponent.Components
                                    (float)gameTime.ElapsedGameTime.TotalSeconds;
                 if (_screenScrollingDirection.X > 0)
                 {
-                    addVector = new Vector2(Math.Abs(addVector.X), Math.Abs(addVector.Y));
+                    addVector = addVector.ToAbsoluteSize();
                 }
                 Entity.Position += addVector;
-            }
+            }*/
             
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch) {
+            /*
             positionChanged = false;
-            somePositionChanged = false;
+            somePositionChanged = false;*/
         }
         public override void Initialize() {
             _playerComponent = PlayerEntity.GetComponent<Player>();

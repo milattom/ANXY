@@ -37,7 +37,7 @@ public class Background : Component
     /// </summary>
     /// <param name="gameTime">gameTime</param>
     public override void Update(GameTime gameTime)
-    {
+    {/*
         var state = Keyboard.GetState();
         _screenScrollingDirection = Vector2.Zero;
         if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right)) _screenScrollingDirection = new Vector2(-1, 0);
@@ -50,7 +50,7 @@ public class Background : Component
 
 
         Entity.Position += _screenScrollingDirection * _screenScrollingSpeed *
-                           (float)gameTime.ElapsedGameTime.TotalSeconds;
+                           (float)gameTime.ElapsedGameTime.TotalSeconds;*/
     }
 
     /// <summary>

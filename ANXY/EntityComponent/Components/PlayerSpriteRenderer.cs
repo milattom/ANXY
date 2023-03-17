@@ -14,7 +14,6 @@ public class PlayerSpriteRenderer : Component
     public readonly Rectangle StartPlayerRectangle = new(0, 0, 33, 70);
     private int _currentFrame;
     private readonly int _millisecondsPerFrame = 40; //the smaller the faster animation
-    private Rectangle _outputRectangle;
     private Player _player;
     private int _timeSinceLastFrame;
     public Rectangle CurrentPlayerRectangle;
@@ -37,8 +36,6 @@ public class PlayerSpriteRenderer : Component
     public override void Update(GameTime gameTime)
     {
         //Animation Update
-        _outputRectangle.X = (int)Entity.Position.X;
-        _outputRectangle.Y = (int)Entity.Position.Y;
         _timeSinceLastFrame += gameTime.ElapsedGameTime.Milliseconds;
         if (_timeSinceLastFrame > _millisecondsPerFrame) _updateAnimation();
     }
@@ -50,7 +47,9 @@ public class PlayerSpriteRenderer : Component
     /// <param name="spriteBatch"></param>
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
-        spriteBatch.Draw(PlayerAtlas, _outputRectangle, CurrentPlayerRectangle, Color.White, 0f, new Vector2(0, 0),
+        var drawRectangle = new Rectangle((int)(Entity.Position.X-Camera.ActiveCamera.DrawOffset.X),(int)(Entity.Position.Y - Camera.ActiveCamera.DrawOffset.Y), 33, 70);
+
+        spriteBatch.Draw(PlayerAtlas, drawRectangle, CurrentPlayerRectangle, Color.White, 0f, new Vector2(0, 0),
             spriteEffect, 0f);
     }
 
@@ -61,7 +60,6 @@ public class PlayerSpriteRenderer : Component
     public override void Initialize()
     {
         _player = Entity.GetComponent<Player>();
-        _outputRectangle = new Rectangle((int)Entity.Position.X, (int)Entity.Position.Y, 33, 70);
     }
 
     /// <summary>

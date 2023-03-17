@@ -111,11 +111,12 @@ public class Player : Component
         ScrollSpeed = Velocity.X;
 
         //ScreenConstraintUpdate
+        /*
         var constrainRight = _windowWidth * 4.0 / 5.0;
         var constrainLeft = _windowWidth * 1.0 / 5.0;
         if ((InputDirection.X > 0 && Entity.Position.X >= constrainRight)
             || (InputDirection.X < 0 && Entity.Position.X <= constrainLeft))
-            Velocity *= new Vector2(0, 1);
+            Velocity *= new Vector2(0, 1);*/
 
         //position update
         Entity.Position += Velocity * dt;

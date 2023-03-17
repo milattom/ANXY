@@ -132,9 +132,8 @@ public class BoxCollider : Component
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
         if (!DebugMode) return;
-        var rect = new Rectangle((int)Pivot.X, (int)Pivot.Y, (int)Dimensions.X, (int)Dimensions.Y);
+        var rect = new Rectangle((int)(Pivot.X-Camera.ActiveCamera.DrawOffset.X), (int)(Pivot.Y- Camera.ActiveCamera.DrawOffset.Y), (int)Dimensions.X, (int)Dimensions.Y);
         spriteBatch.Draw(_recTexture, rect, _highlightColor);
-
     }
     public void SetRectangleTexture(Texture2D texture)
     {

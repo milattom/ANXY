@@ -3,8 +3,9 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "C:/Users/Gamer/Documents/Git/PA/ANXY/ANXY/Content/TileSetTest2.tsx",
+    "activeFile": "",
     "expandedProjectPaths": [
+        "."
     ],
     "fileStates": {
         "C:/Users/Gamer/Documents/Git/PA/ANXY/ANXY/Content/JumpNRun-1.tmx": {
@@ -31,8 +32,8 @@
             "scale": 1,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 519,
-                "y": 308
+                "x": 878,
+                "y": 470
             }
         },
         "TileSetTest2.tsx": {
@@ -47,16 +48,14 @@
     "map.lastUsedFormat": "tmx",
     "map.width": 100,
     "openFiles": [
-        "C:/Users/Gamer/Documents/Git/PA/ANXY/ANXY/Content/TileSetTest2.tsx",
-        "C:/Users/Gamer/Documents/Git/PA/ANXY/ANXY/Content/JumpNRun-1.tmx"
     ],
     "project": "TiledTestProject2.tiled-project",
     "recentFiles": [
+        "TileMapSet2.tmx",
+        "TileSetTest2.tsx",
         "C:/Users/Gamer/Documents/Git/PA/ANXY/ANXY/Content/JumpNRun-1.tmx",
         "C:/Users/Gamer/Documents/Git/PA/ANXY/ANXY/Content/TileSetTest2.tsx",
-        "TileSetTest2.tsx",
-        "C:/Users/Gamer/Documents/Git/PA/ANXY/ANXY/Content/TileMapSet2.tmx",
-        "TileMapSet2.tmx"
+        "C:/Users/Gamer/Documents/Git/PA/ANXY/ANXY/Content/TileMapSet2.tmx"
     ],
     "tileset.lastUsedFormat": "tsx"
 }
