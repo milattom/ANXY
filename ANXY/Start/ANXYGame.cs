@@ -77,7 +77,7 @@ public class ANXYGame : Game
         InitializeDefaultScene();
         EntitySystem.Instance._InitializeEntities();
         //Debug mode
-        BoxColliderSystem.Instance.EnableDebugMode(_graphics.GraphicsDevice);
+        //BoxColliderSystem.Instance.EnableDebugMode(_graphics.GraphicsDevice);
     }
 
     /// <summary>
@@ -108,6 +108,9 @@ public class ANXYGame : Game
         _playerSprite = Content.Load<Texture2D>("playerAtlas");
         _backgroundSprite = Content.Load<Texture2D>("Background-2");
         //_levelTileMap = Content.Load<TiledMap>("TileMapSet2");
+
+        //TODO important level
+        //_levelTileMap = Content.Load<TiledMap>("JumpNRun-1");
         _levelTileMap = Content.Load<TiledMap>("JumpNRun-1");
     }
 
@@ -128,7 +131,7 @@ public class ANXYGame : Game
     protected override void Update(GameTime gameTime)
     {
         EntitySystem.Instance._UpdateEntities(gameTime);
-        BoxColliderSystem.Instance.CheckCollisions();
+        //BoxColliderSystem.Instance.CheckCollisions();
         //base.Update(gameTime);
     }
 
@@ -149,18 +152,17 @@ public class ANXYGame : Game
     /// </summary>
     private void InitializePlayer()
     {
-        var center = new Vector2((int)Math.Round(_windowWidth / 2.0), (int)Math.Round(_windowHeight / 2.0));
-        var playerEntity = new Entity { Position = center };
+        var playerEntity = new Entity { Position = new Vector2(1400,540) };
 
         EntitySystem.Instance.AddEntity(playerEntity);
 
-        var player = new Player(_windowWidth, _windowHeight);
+        var player = new Player();
         playerEntity.AddComponent(player);
 
         var playerSpriteRenderer = new PlayerSpriteRenderer(_playerSprite);
         playerEntity.AddComponent(playerSpriteRenderer);
 
-        var playerBox = new Rectangle(0, 0, 33, 70);
+        var playerBox = new Rectangle(1, 6, 32, 64);
         var playerCollider = new BoxCollider(playerBox, "Player");
         playerEntity.AddComponent(playerCollider);
 

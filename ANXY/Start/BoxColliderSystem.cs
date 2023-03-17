@@ -27,6 +27,7 @@ namespace ANXY.Start
 
         public static BoxColliderSystem Instance => lazy.Value;
 
+
         /// <summary>
         /// Add a box collider to the list of boxCollider
         /// </summary>
@@ -41,45 +42,23 @@ namespace ANXY.Start
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public List<BoxCollider>  GetCollisions(BoxCollider box)
+        public List<BoxCollider> GetCollisions(BoxCollider box)
         {
-            var collidingBox = new List<BoxCollider>();
+            //TODO optimize performance of collider detection, e.g. 30 to left right etc ("e.g. Quadtree")
+            var collidingBoxes = new List<BoxCollider>();
             foreach (var otherBox in _boxColliderList.Where(otherBox => IsColliding(box, otherBox)))
             {
-                otherBox.Colliding = true;
-                box.Colliding = true;
-                collidingBox.Add(otherBox);
+                collidingBoxes.Add(otherBox);
             }
-            return collidingBox;
+
+            return collidingBoxes;
         }
 
-         /// <summary>
-         /// Checks all box collider with the one from the player and sets Colliding correspondingly.
-         /// </summary>
-         public void CheckCollisions()
-         { 
-             var playerCollider = EntitySystem.Instance.FindEntityByType<Player>()[0].GetComponent<BoxCollider>();
-             playerCollider.Colliding = false;
-             foreach (var boxCollider in _boxColliderList.Where(boxCollider => !boxCollider.LayerMask.Equals(playerCollider.LayerMask)))
-             {
-                 if (IsColliding(playerCollider, boxCollider))
-                 {
-                     playerCollider.Colliding = true;
-                     boxCollider.Colliding = true;
-                 }
-                 else
-                 {
-                     boxCollider.Colliding = false;
-                 }
-             }
-            
-         }
-
-         /// <summary>
-         /// Enabled debug mode for Boxcolliders, means Bounding box is drawn and
-         /// gets highlighted when collision is detected
-         /// </summary>
-         /// <param name="graphics"></param>
+        /// <summary>
+        /// Enabled debug mode for Boxcolliders, means Bounding box is drawn and
+        /// gets highlighted when collision is detected
+        /// </summary>
+        /// <param name="graphics"></param>
         public void EnableDebugMode(GraphicsDevice graphics)
         {
             foreach (var box in _boxColliderList)
@@ -90,9 +69,9 @@ namespace ANXY.Start
             }
         }
 
-         /// <summary>
-         /// Disables Debug mode in every active boxcollider
-         /// </summary>
+        /// <summary>
+        /// Disables Debug mode in every active boxcollider
+        /// </summary>
         public void DisableDebugMode()
         {
             foreach (var box in _boxColliderList)
@@ -108,21 +87,25 @@ namespace ANXY.Start
         /// <param name="player"></param>
         /// <param name="other"></param>
         /// <returns>True if two boxes are colliding, False if not</returns>
-        public bool IsColliding(BoxCollider player, BoxCollider other)
+        public bool IsColliding(BoxCollider aCollider, BoxCollider bCollider)
         {
-            var dx = (player.Center.X - other.Center.X);
-            var dy = (player.Center.Y - other.Center.Y);
+            if (aCollider == bCollider)
+            {
+                return false;
+            }
+
+            var dx = (aCollider.Center.X - bCollider.Center.X);
+            var dy = (aCollider.Center.Y - bCollider.Center.Y);
             var d = new Vector2(dx, dy);
 
-            var dxMax = (player.Dimensions.X + other.Dimensions.X) / 2;
-            var dyMax = (player.Dimensions.Y + other.Dimensions.Y) / 2;
+            var dxMax = (aCollider.Dimensions.X + bCollider.Dimensions.X) / 2;
+            var dyMax = (aCollider.Dimensions.Y + bCollider.Dimensions.Y) / 2;
             var dMax = new Vector2(dxMax, dyMax);
 
-            if (Compare(d.ToAbsoluteSize(), dMax) >= 0) return false;
-            EdgeDetection(player, other, d, dMax);
-            return true;
+            return Compare(d.ToAbsoluteSize(), dMax) < 0;
         }
 
+        //TODO remove old doc
         /// <summary>
         /// Detects if the edges of the player BoxCollider crosses the max distance to another boundary box
         /// by cross width and cross length and sets the corresponding Edge in the player BoxCollider.
@@ -130,33 +113,49 @@ namespace ANXY.Start
         /// <param name="player"></param>
         /// <param name="d">current distance of two centers</param>
         /// <param name="dMax">max distance between two centers</param>
-        private static void EdgeDetection(BoxCollider player, BoxCollider other, Vector2 d, Vector2 dMax)
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="aCollider"></param>
+        /// <param name="bCollider"></param>
+        /// <returns>edge of bCollider is returned.</returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public static BoxCollider.Edge DetectEdge(BoxCollider aCollider, BoxCollider bCollider)
         {
+            var dx = (aCollider.Center.X - bCollider.Center.X);
+            var dy = (aCollider.Center.Y - bCollider.Center.Y);
+            var d = new Vector2(dx, dy);
+
+            var dxMax = (aCollider.Dimensions.X + bCollider.Dimensions.X) / 2;
+            var dyMax = (aCollider.Dimensions.Y + bCollider.Dimensions.Y) / 2;
+            var dMax = new Vector2(dxMax, dyMax);
+
             var crossWidth = dMax.X * d.Y;
             var crossHeight = dMax.Y * d.X;
 
             if (crossWidth < crossHeight && crossWidth >= (-crossHeight))
             {
-                player.CollidingEdge = BoxCollider.Edge.Left;
-                player.CollidingEdges.Add((BoxCollider.Edge.Left, other.GetCollisionPosition(BoxCollider.Edge.Left)));
+                return BoxCollider.Edge.Right;
             }
 
-            if (crossWidth >= crossHeight && crossWidth < (-crossHeight))
+            else if (crossWidth >= crossHeight && crossWidth < (-crossHeight))
             {
-                player.CollidingEdge = BoxCollider.Edge.Right;
-                player.CollidingEdges.Add((BoxCollider.Edge.Right, other.GetCollisionPosition(BoxCollider.Edge.Right)));
+                return BoxCollider.Edge.Left;
             }
 
-            if (crossWidth >= crossHeight && crossWidth >= (-crossHeight))
+            else if (crossWidth >= crossHeight && crossWidth >= (-crossHeight))
             {
-                player.CollidingEdge = BoxCollider.Edge.Top;
-                player.CollidingEdges.Add((BoxCollider.Edge.Top, other.GetCollisionPosition(BoxCollider.Edge.Top)));
+                return BoxCollider.Edge.Bottom;
             }
 
-            if (crossWidth < crossHeight && crossWidth < (-crossHeight))
+            else if (crossWidth < crossHeight && crossWidth < (-crossHeight))
             {
-                player.CollidingEdge = BoxCollider.Edge.Bottom;
-                player.CollidingEdges.Add((BoxCollider.Edge.Bottom, other.GetCollisionPosition(BoxCollider.Edge.Bottom)));
+                return BoxCollider.Edge.Top;
+            }
+            else
+            {
+                throw new InvalidOperationException("This should never happen.");
             }
         }
 
@@ -173,9 +172,9 @@ namespace ANXY.Start
         /// </returns>
         private static int Compare(Vector2 v1, Vector2 v2)
         {
-            if (v1.X <= v2.X 
+            if (v1.X <= v2.X
                 && v1.Y <= v2.Y) return -1;
-            if (v1.X > v2.X 
+            if (v1.X > v2.X
                 && v1.Y > v2.Y) return 1;
             return 0;
         }
@@ -203,12 +202,12 @@ namespace ANXY.Start
                     }
                     else
                     {
-                        colors.Add(new Color(0,0,0,0));
+                        colors.Add(new Color(0, 0, 0, 0));
                     }
                 }
             }
 
-            rect = new Texture2D(graphics, (int) dim.X, (int)dim.Y);
+            rect = new Texture2D(graphics, (int)dim.X, (int)dim.Y);
             rect.SetData(colors.ToArray());
             return rect;
         }

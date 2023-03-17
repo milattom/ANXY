@@ -15,13 +15,11 @@ namespace ANXY.EntityComponent.Components;
 public class BoxCollider : Component
 {
     public bool DebugMode;
-    public Vector2 Pivot { get; set; }
-    public Vector2 Center { get; set; }
+    public Vector2 Pivot => Entity.Position + Offset;
+    public Vector2 Center => Pivot + Dimensions / 2;
     public Vector2 Dimensions { get; }
-    public Vector2 Offset { get; }
+    public Vector2 Offset { get; set; }
     public string LayerMask { get; }
-    public bool Colliding { get; set; } = false;
-    public Edge CollidingEdge { get; set; }
     /// <summary>
     /// List of other boxes edges which are colliding with .this and its correspondent edge position
     /// as a vector. The position of the edge serves as an orientation where the collision happened on
@@ -69,33 +67,22 @@ public class BoxCollider : Component
     /// <param name="edge"></param>
     /// <returns>Position vector of the edge that was touched</returns>
     /// <exception cref="ArgumentException"></exception>
-    public Vector2 GetCollisionPosition(Edge edge)
+    public float GetCollisionPosition(Edge edge)
     {
-        switch (edge)
+        return edge switch
         {
-            case Edge.Bottom: //returns the top
-                return new Vector2(Pivot.X, Pivot.Y);
-            case Edge.Top: //returns the bottom 
-                return new Vector2(Pivot.X, Pivot.Y + Dimensions.Y);
-            case Edge.Right: //returns the left
-                return new Vector2(Pivot.X, Pivot.Y);
-            case Edge.Left: // returns the right
-                return new Vector2(Pivot.X+Dimensions.X, Pivot.Y+Dimensions.Y);
-            default:
-                throw new ArgumentException("No edge to get position from!");
-        }
+            Edge.Top => Pivot.Y,
+            Edge.Bottom => Pivot.Y + Dimensions.Y,
+            Edge.Left => Pivot.X,
+            Edge.Right => Pivot.X + Dimensions.X,
+            _ => throw new ArgumentException("No edge to get position from!")
+        };
     }
 
     /// <inheritdoc />
     public override void Update(GameTime gameTime)
     {
-        UpDatePivotAndCenter();
         Dehighlight(); //Debug
-        if (Colliding)
-        {
-            Highlight();
-            //Colliding = false;
-        }
     }
 
     /// <summary>
@@ -104,7 +91,6 @@ public class BoxCollider : Component
     public override void Initialize()
     {
         _highlightColor = _activeColor;
-        Pivot = Entity.Position + Offset;
     }
 
     /// <summary>
@@ -114,16 +100,6 @@ public class BoxCollider : Component
     public override void Destroy()
     {
         throw new NotImplementedException();
-    }
-
-    /// <summary>
-    /// Sets the pivot point with the position Coordinates of its Entity and the Offset.
-    /// Sets the center point by adding half the dimensions to the pivot point (upper left)
-    /// </summary>
-    private void UpDatePivotAndCenter()
-    {
-        Pivot = Entity.Position + Offset;
-        Center = Pivot + Dimensions/2;
     }
 
     // -------------------------------------------------------- Debugging ------------------------------------------------------------------
