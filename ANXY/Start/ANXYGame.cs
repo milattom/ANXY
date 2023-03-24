@@ -12,21 +12,22 @@ namespace ANXY.Start;
 /// </summary>
 public class ANXYGame : Game
 {
+    public bool DebugMode { get; set; } = true;
     private readonly GraphicsDeviceManager _graphics;
     private Texture2D _backgroundSprite;
     private TiledMap _levelTileMap;
     private Texture2D _playerSprite;
     private SpriteBatch _spriteBatch;
     private readonly Rectangle _screenBounds;
-    private Rectangle _1080pSize = new Rectangle(0, 0, 1920, 1080);
+    private Rectangle _1080pSize = new(0, 0, 1920, 1080);
     private int _windowHeight;
     private int _windowWidth;
     private Entity _playerEntity;
     private Entity _cameraEntity;
     private readonly Vector2 _cameraPadding = new Vector2(1/5,1/4);
-    private readonly String[] _backgroundLayerNames = new String[] { "Ground" };
-    private readonly String[] _foregroundLayerNames = new String[] { "" };
-    private readonly String contentRootDirectory = "Content";
+    private readonly string[] _backgroundLayerNames = { "Ground" };
+    private readonly string[] _foregroundLayerNames = { "" };
+    private readonly string contentRootDirectory = "Content";
     //private Texture2D _levelSprite;
     //private TiledMapRenderer _tiledMapRenderer;
     //private string jsonLevelString;
@@ -77,7 +78,10 @@ public class ANXYGame : Game
         InitializeDefaultScene();
         EntitySystem.Instance._InitializeEntities();
         //Debug mode
-        //BoxColliderSystem.Instance.EnableDebugMode(_graphics.GraphicsDevice);
+        if(DebugMode)
+        {
+            BoxColliderSystem.Instance.EnableDebugMode(_graphics.GraphicsDevice);
+        }
     }
 
     /// <summary>

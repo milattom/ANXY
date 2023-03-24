@@ -14,7 +14,7 @@ namespace ANXY.EntityComponent.Components;
 /// </summary>
 public class BoxCollider : Component
 {
-    public bool DebugMode;
+    public bool DebugEnabled { get; set; } = false;
     public Vector2 Pivot => Entity.Position + Offset;
     public Vector2 Center => Pivot + Dimensions / 2;
     public Vector2 Dimensions { get; }
@@ -27,7 +27,6 @@ public class BoxCollider : Component
     /// after the collision happens.
     /// </summary>
     public List<(Edge, Vector2)> CollidingEdges { get; set; } = new List<(Edge, Vector2)>();
-
     private readonly Color _activeColor = Color.Green;
     private readonly Color _inactiveColor = Color.Blue;
     private Color _highlightColor;
@@ -69,6 +68,7 @@ public class BoxCollider : Component
     /// <exception cref="ArgumentException"></exception>
     public float GetCollisionPosition(Edge edge)
     {
+        if(DebugEnabled) Highlight();
         return edge switch
         {
             Edge.Top => Pivot.Y,
@@ -82,11 +82,11 @@ public class BoxCollider : Component
     /// <inheritdoc />
     public override void Update(GameTime gameTime)
     {
-        Dehighlight(); //Debug
+        if(DebugEnabled) Dehighlight(); //Debug
     }
 
     /// <summary>
-    /// Gets called by EntityManager, sets the highlightColor (debug) and the Pivot point
+    /// Gets called by EntityManager, sets the highlightColor for debugging
     /// </summary>
     public override void Initialize()
     {
@@ -107,8 +107,13 @@ public class BoxCollider : Component
     /// <inheritdoc />
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
-        if (!DebugMode) return;
-        var rect = new Rectangle((int)(Pivot.X-Camera.ActiveCamera.DrawOffset.X), (int)(Pivot.Y- Camera.ActiveCamera.DrawOffset.Y), (int)Dimensions.X, (int)Dimensions.Y);
+        if (!DebugEnabled) return;
+        var rect = new Rectangle(
+            (int)(Pivot.X - Camera.ActiveCamera.DrawOffset.X),
+            (int)(Pivot.Y - Camera.ActiveCamera.DrawOffset.Y), 
+            (int)Dimensions.X, 
+            (int)Dimensions.Y
+            );
         spriteBatch.Draw(_recTexture, rect, _highlightColor);
     }
     public void SetRectangleTexture(Texture2D texture)

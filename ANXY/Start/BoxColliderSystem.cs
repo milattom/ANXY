@@ -16,7 +16,7 @@ namespace ANXY.Start
     internal class BoxColliderSystem
     {
         ///Singleton Pattern
-        private static readonly Lazy<BoxColliderSystem> lazy = new(() => new BoxColliderSystem());
+        private static readonly Lazy<BoxColliderSystem> Lazy = new(() => new BoxColliderSystem());
 
         private readonly List<BoxCollider> _boxColliderList;
 
@@ -25,7 +25,7 @@ namespace ANXY.Start
             _boxColliderList = new List<BoxCollider>();
         }
 
-        public static BoxColliderSystem Instance => lazy.Value;
+        public static BoxColliderSystem Instance => Lazy.Value;
 
 
         /// <summary>
@@ -45,13 +45,7 @@ namespace ANXY.Start
         public List<BoxCollider> GetCollisions(BoxCollider box)
         {
             //TODO optimize performance of collider detection, e.g. 30 to left right etc ("e.g. Quadtree")
-            var collidingBoxes = new List<BoxCollider>();
-            foreach (var otherBox in _boxColliderList.Where(otherBox => IsColliding(box, otherBox)))
-            {
-                collidingBoxes.Add(otherBox);
-            }
-
-            return collidingBoxes;
+            return _boxColliderList.Where(otherBox => IsColliding(box, otherBox)).ToList();
         }
 
         /// <summary>
@@ -63,20 +57,9 @@ namespace ANXY.Start
         {
             foreach (var box in _boxColliderList)
             {
-                box.DebugMode = true;
-                Texture2D recTexture = CreateRectangleTexture(graphics, box.Dimensions);
+                var recTexture = CreateRectangleTexture(graphics, box.Dimensions);
                 box.SetRectangleTexture(recTexture);
-            }
-        }
-
-        /// <summary>
-        /// Disables Debug mode in every active boxcollider
-        /// </summary>
-        public void DisableDebugMode()
-        {
-            foreach (var box in _boxColliderList)
-            {
-                box.DebugMode = false;
+                box.DebugEnabled = true;
             }
         }
 
@@ -86,7 +69,7 @@ namespace ANXY.Start
         /// </summary>
         /// <param name="player"></param>
         /// <param name="other"></param>
-        /// <returns>True if two boxes are colliding, False if not</returns>
+        /// <returns>True if two boxes are colliding, False if not or the colliders are the same</returns>
         public bool IsColliding(BoxCollider aCollider, BoxCollider bCollider)
         {
             if (aCollider == bCollider)
@@ -105,23 +88,41 @@ namespace ANXY.Start
             return Compare(d.ToAbsoluteSize(), dMax) < 0;
         }
 
-        //TODO remove old doc
         /// <summary>
-        /// Detects if the edges of the player BoxCollider crosses the max distance to another boundary box
-        /// by cross width and cross length and sets the corresponding Edge in the player BoxCollider.
-        /// </summary>
-        /// <param name="player"></param>
-        /// <param name="d">current distance of two centers</param>
-        /// <param name="dMax">max distance between two centers</param>
-
-        /// <summary>
-        /// 
+        /// Returns the Edge of the box collider in the second parameter which has collided with object in the first parameter
         /// </summary>
         /// <param name="aCollider"></param>
         /// <param name="bCollider"></param>
         /// <returns>edge of bCollider is returned.</returns>
         /// <exception cref="InvalidOperationException"></exception>
         public static BoxCollider.Edge DetectEdge(BoxCollider aCollider, BoxCollider bCollider)
+        {
+            var (crossWidth, crossHeight) = GetCrossWidthAndHeight(aCollider, bCollider);
+
+
+            if (crossWidth < crossHeight && crossWidth >= (-crossHeight))
+            {
+                return BoxCollider.Edge.Right;
+            }
+
+            if (crossWidth >= crossHeight && crossWidth < (-crossHeight))
+            {
+                return BoxCollider.Edge.Left;
+            }
+
+            if (crossWidth >= crossHeight && crossWidth >= (-crossHeight))
+            {
+                return BoxCollider.Edge.Bottom;
+            }
+
+            if (crossWidth < crossHeight && crossWidth < (-crossHeight))
+            {
+                return BoxCollider.Edge.Top;
+            }
+            throw new InvalidOperationException("This should never happen.");
+        }
+
+        private static (float crossWidth, float crossHeight) GetCrossWidthAndHeight(BoxCollider aCollider, BoxCollider bCollider)
         {
             var dx = (aCollider.Center.X - bCollider.Center.X);
             var dy = (aCollider.Center.Y - bCollider.Center.Y);
@@ -131,34 +132,8 @@ namespace ANXY.Start
             var dyMax = (aCollider.Dimensions.Y + bCollider.Dimensions.Y) / 2;
             var dMax = new Vector2(dxMax, dyMax);
 
-            var crossWidth = dMax.X * d.Y;
-            var crossHeight = dMax.Y * d.X;
-
-            if (crossWidth < crossHeight && crossWidth >= (-crossHeight))
-            {
-                return BoxCollider.Edge.Right;
-            }
-
-            else if (crossWidth >= crossHeight && crossWidth < (-crossHeight))
-            {
-                return BoxCollider.Edge.Left;
-            }
-
-            else if (crossWidth >= crossHeight && crossWidth >= (-crossHeight))
-            {
-                return BoxCollider.Edge.Bottom;
-            }
-
-            else if (crossWidth < crossHeight && crossWidth < (-crossHeight))
-            {
-                return BoxCollider.Edge.Top;
-            }
-            else
-            {
-                throw new InvalidOperationException("This should never happen.");
-            }
+            return (dMax.X * d.Y, dMax.Y * d.X);
         }
-
 
         /// <summary>
         /// Compares two vectors by element.
