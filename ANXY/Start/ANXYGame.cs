@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Drawing;
 using ANXY.EntityComponent;
 using ANXY.EntityComponent.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using MonoGame.Extended.Tiled;
+using Color = Microsoft.Xna.Framework.Color;
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace ANXY.Start;
 
@@ -17,6 +21,7 @@ public class ANXYGame : Game
     private Texture2D _backgroundSprite;
     private TiledMap _levelTileMap;
     private Texture2D _playerSprite;
+    private SpriteFont _arialSpriteFont;
     private SpriteBatch _spriteBatch;
     private readonly Rectangle _screenBounds;
     private Rectangle _1080pSize = new(0, 0, 1920, 1080);
@@ -62,6 +67,9 @@ public class ANXYGame : Game
         Window.AllowUserResizing = true;
         _graphics.ApplyChanges();
 
+        _graphics.SynchronizeWithVerticalRetrace = false;
+        IsFixedTimeStep = false;
+
         Content.RootDirectory = contentRootDirectory;
     }
 
@@ -99,6 +107,8 @@ public class ANXYGame : Game
         InitializeLevelForegroundLayers();
         AddPlayerToBackground();
         AddPlayerToLevel();
+
+        InitializeUI();
     }
 
     /// <summary>
@@ -116,6 +126,9 @@ public class ANXYGame : Game
         //TODO important level
         //_levelTileMap = Content.Load<TiledMap>("JumpNRun-1");
         _levelTileMap = Content.Load<TiledMap>("JumpNRun-1");
+
+        //Load Fonts
+        _arialSpriteFont = Content.Load<SpriteFont>("Arial");
     }
 
     /// <summary>
@@ -320,5 +333,17 @@ public class ANXYGame : Game
         {
             levelEntity.GetComponent<Level>().PlayerEntity = _playerEntity;
         }
+    }
+
+    private void InitializeUI()
+    {
+        var uiEntity = new Entity();
+        EntitySystem.Instance.AddEntity(uiEntity);
+        var fpsCounter = new FpsCounter();
+        uiEntity.AddComponent(fpsCounter);
+        var topLeftPosition = Vector2.One;
+        var textRenderer = new TextRenderer(_arialSpriteFont, FpsCounter.Instance.fpsText, topLeftPosition, Color.LimeGreen);
+        uiEntity.AddComponent(textRenderer);
+
     }
 }

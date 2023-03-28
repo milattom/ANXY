@@ -23,7 +23,7 @@ namespace ANXY.Tests
         {
             Vector2 testVector = new Vector2(2, 0);
             Entity testEntity = new Entity();
-            Component testComponent = new Player(100,100); 
+            Component testComponent = new Player(); 
             testEntity.Position = testVector;
             testEntity.AddComponent(testComponent);
 
