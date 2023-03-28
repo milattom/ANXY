@@ -15,16 +15,20 @@ namespace ANXY.EntityComponent.Components;
 /// </summary>
 public class Player : Component
 {
-    public Vector2 Velocity { get; private set; } = Vector2.Zero;
-    public float ScrollSpeed { get; private set; } = 0f;
+    public Vector2 Velocity => _velocity;
+    private Vector2 _velocity = Vector2.Zero;
     public PlayerState State { get; private set; } = PlayerState.Idle;
     public Vector2 InputDirection { get; private set; } = Vector2.Zero;
 
     //TODO remove GroundLevel or reduce it to Window Bottom Edge when Level is fully implemented in Tiled.
-    private const float Gravity = 20;
-    private const float WalkForce = 200;
-    private const float JumpForce = 550;
+    private const float Gravity = 350;
+    private const float JumpVelocity = 300;
     private bool _midAir = true;
+
+    private const float MaxWalkSpeed = 300;
+    private const float WalkAcceleration = 150;
+    private const float FloorFriction = 25;
+
     private bool _isAlive = true;
     private PlayerInputController _playerInputController;
     
@@ -69,29 +73,30 @@ public class Player : Component
     {
         //keyboard input
         var state = Keyboard.GetState();
-        var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-        var acceleration = new Vector2(WalkForce, Gravity);
         InputDirection = Vector2.Zero;
-        InputDirection = new Vector2(0, 1); //gravity
+        if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right))
+            InputDirection += new Vector2(1,0);
 
-        if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right)) InputDirection = new Vector2(1, InputDirection.Y);
-        if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left)) InputDirection = new Vector2(-1, InputDirection.Y);
-        if (state.IsKeyDown(Keys.Space) && !_midAir)
+        if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left))
+            InputDirection += new Vector2(-1, 0);
+
+        var jumpKey = state.IsKeyDown(Keys.Space);
+
+        //velocity update
+        var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        var acceleration = new Vector2(WalkAcceleration*InputDirection.X, Gravity);
+        _velocity += acceleration * dt;
+        if (jumpKey && !_midAir)
         {
-            InputDirection = new Vector2(InputDirection.X, -JumpForce / Gravity);
+            _velocity.Y = -JumpVelocity;
             _midAir = true;
         }
 
-
-        //velocity update
-        var xVelocity = InputDirection.X * acceleration.X;
-        var yVelocity = Velocity.Y + (InputDirection.Y * acceleration.Y);
-        Velocity = new Vector2(xVelocity, yVelocity);
-        ScrollSpeed = Velocity.X;
+        _velocity.X = InputDirection.X * WalkAcceleration;
 
         //position update
-        Entity.Position += Velocity * dt;
-
+        Entity.Position += _velocity * dt;
+        
         //collisions
         HandleCollisions();
     }
@@ -139,22 +144,22 @@ public class Player : Component
                 if (Velocity.Y >= 0)
                 {
                     _midAir = false;
-                    Velocity = new Vector2(Velocity.X, 0);
+                    _velocity = new Vector2(Velocity.X, 0);
                 }
                 Entity.Position = new Vector2(Entity.Position.X, edgePosition - playerBoxCollider.Dimensions.Y - playerBoxCollider.Offset.Y);
                 break;
             case BoxCollider.Edge.Bottom:
-                Velocity = new Vector2(Velocity.X,
+                _velocity = new Vector2(Velocity.X,
                     Math.Clamp(Velocity.Y, 1, float.PositiveInfinity)); //stop gravity
                 Entity.Position = new Vector2(Entity.Position.X, edgePosition - playerBoxCollider.Offset.Y);
                 //_midAir = CheckSpecialCases(edges);
                 break;
             case BoxCollider.Edge.Left:
-                Velocity = new Vector2(Math.Clamp(Velocity.X, float.NegativeInfinity, 0), Velocity.Y);
+                _velocity = new Vector2(Math.Clamp(Velocity.X, float.NegativeInfinity, 0), Velocity.Y);
                 Entity.Position = new Vector2(edgePosition - playerBoxCollider.Dimensions.X - playerBoxCollider.Offset.X, Entity.Position.Y);
                 break;
             case BoxCollider.Edge.Right:
-                Velocity = new Vector2(Math.Clamp(Velocity.X, 0, float.PositiveInfinity), Velocity.Y);
+                _velocity = new Vector2(Math.Clamp(Velocity.X, 0, float.PositiveInfinity), Velocity.Y);
                 Entity.Position = new Vector2(edgePosition - playerBoxCollider.Offset.X, Entity.Position.Y);
                 break;
             default:

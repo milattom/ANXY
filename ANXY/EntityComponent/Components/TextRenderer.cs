@@ -27,14 +27,6 @@ namespace ANXY.EntityComponent.Components
             _color = color;
         }
 
-        public TextRenderer(SpriteFont font, Pointer textPointer, Vector2 position, Color color)
-        {
-            _font = font;
-            _textPointer = textPointer;
-            _position = position;
-            _color = color;
-        }
-
         public override void Update(GameTime gameTime)
         {
         }

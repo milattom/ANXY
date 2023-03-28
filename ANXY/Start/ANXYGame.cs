@@ -69,6 +69,9 @@ public class ANXYGame : Game
 
         _graphics.SynchronizeWithVerticalRetrace = false;
         IsFixedTimeStep = false;
+        /*
+        int targetFPS = 60;
+        TargetElapsedTime = TimeSpan.FromMilliseconds(1000.0f / targetFPS);*/
 
         Content.RootDirectory = contentRootDirectory;
     }
