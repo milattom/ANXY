@@ -65,10 +65,11 @@ public class ANXYGame : Game
 
         //makes it possible for the user to change the window size
         Window.AllowUserResizing = true;
-        _graphics.ApplyChanges();
 
         _graphics.SynchronizeWithVerticalRetrace = false;
         IsFixedTimeStep = false;
+
+        _graphics.ApplyChanges();
         /*
         int targetFPS = 60;
         TargetElapsedTime = TimeSpan.FromMilliseconds(1000.0f / targetFPS);*/
