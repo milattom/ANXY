@@ -1,10 +1,10 @@
-﻿using System;
+﻿using ANXY.EntityComponent.Components;
+using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using ANXY.EntityComponent.Components;
-using Microsoft.Xna.Framework.Graphics;
 using Color = Microsoft.Xna.Framework.Color;
-using MonoGame.Extended;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace ANXY.Start

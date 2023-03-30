@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Reflection;
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace ANXY.EntityComponent.Components
@@ -32,8 +27,8 @@ namespace ANXY.EntityComponent.Components
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        { 
-            spriteBatch.DrawString(_font,_text, _position, _color);
+        {
+            spriteBatch.DrawString(_font, _text, _position, _color);
         }
 
         public override void Initialize()

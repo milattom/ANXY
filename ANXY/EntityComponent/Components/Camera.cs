@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace ANXY.EntityComponent.Components
 {
@@ -22,7 +16,8 @@ namespace ANXY.EntityComponent.Components
         public readonly Vector2 _minPosition;
         public readonly Vector2 _maxPosition;
 
-        public Camera (Player player, Vector2 windowDimensions, Vector2 minPosition, Vector2 maxPosition){
+        public Camera(Player player, Vector2 windowDimensions, Vector2 minPosition, Vector2 maxPosition)
+        {
             _player = player;
 
             _windowDimensions = windowDimensions;
@@ -39,7 +34,7 @@ namespace ANXY.EntityComponent.Components
         public override void Update(GameTime gameTime)
         {
             var ClampedEntityPosition = Entity.Position;
-            ClampedEntityPosition = Vector2.Clamp(ClampedEntityPosition, _player.Entity.Position - new Vector2(0.25f,0.15f) * _windowDimensions,
+            ClampedEntityPosition = Vector2.Clamp(ClampedEntityPosition, _player.Entity.Position - new Vector2(0.25f, 0.15f) * _windowDimensions,
                 _player.Entity.Position + new Vector2(0.25f, 0.15f) * _windowDimensions);
 
             Entity.Position = Vector2.Clamp(ClampedEntityPosition, _minPosition, _maxPosition);

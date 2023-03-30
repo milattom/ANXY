@@ -1,11 +1,10 @@
-﻿using System;
-using System.Drawing;
-using ANXY.EntityComponent;
+﻿using ANXY.EntityComponent;
 using ANXY.EntityComponent.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended;
+using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Tiled;
+using System;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
@@ -29,14 +28,11 @@ public class ANXYGame : Game
     private int _windowWidth;
     private Entity _playerEntity;
     private Entity _cameraEntity;
-    private readonly Vector2 _cameraPadding = new Vector2(1/5,1/4);
+    private readonly Vector2 _cameraPadding = new Vector2(1 / 5, 1 / 4);
     private readonly string[] _backgroundLayerNames = { "Ground" };
     private readonly string[] _foregroundLayerNames = { "" };
     private readonly string contentRootDirectory = "Content";
-    //private Texture2D _levelSprite;
-    //private TiledMapRenderer _tiledMapRenderer;
-    //private string jsonLevelString;
-    //private Entity _playerEntity;
+    private KeyboardState oldState;
 
 
     /// <summary>
@@ -70,9 +66,6 @@ public class ANXYGame : Game
         IsFixedTimeStep = false;
 
         _graphics.ApplyChanges();
-        /*
-        int targetFPS = 60;
-        TargetElapsedTime = TimeSpan.FromMilliseconds(1000.0f / targetFPS);*/
 
         Content.RootDirectory = contentRootDirectory;
     }
@@ -90,10 +83,12 @@ public class ANXYGame : Game
         InitializeDefaultScene();
         EntitySystem.Instance._InitializeEntities();
         //Debug mode
-        if(DebugMode)
+        if (DebugMode)
         {
             BoxColliderSystem.Instance.EnableDebugMode(_graphics.GraphicsDevice);
         }
+
+        oldState = Keyboard.GetState();
     }
 
     /// <summary>
@@ -112,7 +107,7 @@ public class ANXYGame : Game
         AddPlayerToBackground();
         AddPlayerToLevel();
 
-        InitializeUI();
+        InitializeUi();
     }
 
     /// <summary>
@@ -152,7 +147,16 @@ public class ANXYGame : Game
     protected override void Update(GameTime gameTime)
     {
         EntitySystem.Instance._UpdateEntities(gameTime);
-        //BoxColliderSystem.Instance.CheckCollisions();
+        var state = Keyboard.GetState();
+        if (state.IsKeyDown(Keys.F) && oldState.IsKeyUp(Keys.F))
+        {
+            _graphics.SynchronizeWithVerticalRetrace = !_graphics.SynchronizeWithVerticalRetrace;
+            IsFixedTimeStep = !IsFixedTimeStep;
+
+            _graphics.ApplyChanges();
+        }
+
+        oldState = state;
         //base.Update(gameTime);
     }
 
@@ -173,7 +177,7 @@ public class ANXYGame : Game
     /// </summary>
     private void InitializePlayer()
     {
-        var playerEntity = new Entity { Position = new Vector2(1400,540) };
+        var playerEntity = new Entity { Position = new Vector2(1200, 540) };
 
         EntitySystem.Instance.AddEntity(playerEntity);
 
@@ -191,7 +195,7 @@ public class ANXYGame : Game
 
         var cameraEntity = new Entity();
         EntitySystem.Instance.AddEntity(cameraEntity);
-        var camera = new Camera(player, new Vector2(_windowWidth, _windowHeight), new Vector2(0.25f*_windowWidth, 0.5f * _windowHeight), new Vector2(float.PositiveInfinity, 0.85f*_windowHeight));
+        var camera = new Camera(player, new Vector2(_windowWidth, _windowHeight), new Vector2(0.25f * _windowWidth, 0.5f * _windowHeight), new Vector2(float.PositiveInfinity, 0.85f * _windowHeight));
         cameraEntity.AddComponent(camera);
     }
 
@@ -339,7 +343,7 @@ public class ANXYGame : Game
         }
     }
 
-    private void InitializeUI()
+    private void InitializeUi()
     {
         var uiEntity = new Entity();
         EntitySystem.Instance.AddEntity(uiEntity);

@@ -1,11 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ANXY.Start;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
-using ANXY.Start;
 using static ANXY.EntityComponent.Components.BoxCollider;
 
 namespace ANXY.EntityComponent.Components;
@@ -31,7 +30,7 @@ public class Player : Component
 
     private bool _isAlive = true;
     private PlayerInputController _playerInputController;
-    
+
 
     /* TODO maybe implement later. Ideas for now
     public bool Crouch()
@@ -65,7 +64,6 @@ public class Player : Component
     /// TODO remove input from here and move it to PlayerInputController
     /// - checks input, moves the player accordingly.
     /// - creates gravity and checks for collisions.
-    /// TODO remove screen constraints for background movement to camera
     /// - updates position of Player Entity
     /// </summary>
     /// <param name="gameTime"></param>
@@ -75,7 +73,7 @@ public class Player : Component
         var state = Keyboard.GetState();
         InputDirection = Vector2.Zero;
         if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right))
-            InputDirection += new Vector2(1,0);
+            InputDirection += new Vector2(1, 0);
 
         if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left))
             InputDirection += new Vector2(-1, 0);
@@ -84,7 +82,7 @@ public class Player : Component
 
         //velocity update
         var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-        var acceleration = new Vector2(WalkAcceleration*InputDirection.X, Gravity);
+        var acceleration = new Vector2(WalkAcceleration * InputDirection.X, Gravity);
         _velocity += acceleration * dt;
         if (jumpKey && !_midAir)
         {
@@ -96,7 +94,7 @@ public class Player : Component
 
         //position update
         Entity.Position += _velocity * dt;
-        
+
         //collisions
         HandleCollisions();
     }
@@ -108,10 +106,11 @@ public class Player : Component
     {
         var playerBoxCollider = Entity.GetComponent<BoxCollider>();
         var colliders = BoxColliderSystem.Instance.GetCollisions(playerBoxCollider);
+
         var leftRightColliders = colliders.Where(col =>
         {
-            var detetedEdge = BoxColliderSystem.DetectEdge(playerBoxCollider, col);
-            return detetedEdge == Edge.Left || detetedEdge == Edge.Right;
+            var detectedEdge = BoxColliderSystem.DetectEdge(playerBoxCollider, col);
+            return detectedEdge == Edge.Left || detectedEdge == Edge.Right;
         });
         foreach (var collider in leftRightColliders)
         {
@@ -123,6 +122,10 @@ public class Player : Component
 
         var restColliders = BoxColliderSystem.Instance.GetCollisions(playerBoxCollider);
 
+        if (restColliders.Count == 0)
+        {
+            _midAir = true;
+        }
 
         foreach (var collider in restColliders)
         {
@@ -146,6 +149,7 @@ public class Player : Component
                     _midAir = false;
                     _velocity = new Vector2(Velocity.X, 0);
                 }
+
                 Entity.Position = new Vector2(Entity.Position.X, edgePosition - playerBoxCollider.Dimensions.Y - playerBoxCollider.Offset.Y);
                 break;
             case BoxCollider.Edge.Bottom:

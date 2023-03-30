@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.ConstrainedExecution;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
 
 namespace ANXY.EntityComponent.Components;
 
@@ -68,7 +66,7 @@ public class BoxCollider : Component
     /// <exception cref="ArgumentException"></exception>
     public float GetCollisionPosition(Edge edge)
     {
-        if(DebugEnabled) Highlight();
+        if (DebugEnabled) Highlight();
         return edge switch
         {
             Edge.Top => Pivot.Y,
@@ -82,7 +80,7 @@ public class BoxCollider : Component
     /// <inheritdoc />
     public override void Update(GameTime gameTime)
     {
-        if(DebugEnabled) Dehighlight(); //Debug
+        if (DebugEnabled) Dehighlight(); //Debug
     }
 
     /// <summary>
@@ -103,15 +101,15 @@ public class BoxCollider : Component
     }
 
     // -------------------------------------------------------- Debugging ------------------------------------------------------------------
-    
+
     /// <inheritdoc />
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
         if (!DebugEnabled) return;
         var rect = new Rectangle(
             (int)(Pivot.X - Camera.ActiveCamera.DrawOffset.X),
-            (int)(Pivot.Y - Camera.ActiveCamera.DrawOffset.Y), 
-            (int)Dimensions.X, 
+            (int)(Pivot.Y - Camera.ActiveCamera.DrawOffset.Y),
+            (int)Dimensions.X,
             (int)Dimensions.Y
             );
         spriteBatch.Draw(_recTexture, rect, _highlightColor);

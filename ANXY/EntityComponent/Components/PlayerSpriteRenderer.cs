@@ -1,6 +1,6 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace ANXY.EntityComponent.Components;
 
@@ -13,7 +13,7 @@ public class PlayerSpriteRenderer : Component
     private readonly int _numberOfFrames = 7;
     public readonly Rectangle StartPlayerRectangle = new(0, 0, 33, 70);
     private int _currentFrame;
-    private readonly int _millisecondsPerFrame = 40; //the smaller the faster animation
+    private readonly int _millisecondsPerFrame = 80; //the smaller the faster animation. 42ms ~= 24fps
     private Player _player;
     private int _timeSinceLastFrame;
     public Rectangle CurrentPlayerRectangle;
@@ -47,7 +47,7 @@ public class PlayerSpriteRenderer : Component
     /// <param name="spriteBatch"></param>
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
-        var drawRectangle = new Rectangle((int)(Entity.Position.X-Camera.ActiveCamera.DrawOffset.X),(int)(Entity.Position.Y - Camera.ActiveCamera.DrawOffset.Y), 33, 70);
+        var drawRectangle = new Rectangle((int)(Entity.Position.X - Camera.ActiveCamera.DrawOffset.X), (int)(Entity.Position.Y - Camera.ActiveCamera.DrawOffset.Y), 33, 70);
 
         spriteBatch.Draw(PlayerAtlas, drawRectangle, CurrentPlayerRectangle, Color.White, 0f, new Vector2(0, 0),
             spriteEffect, 0f);

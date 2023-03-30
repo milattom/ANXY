@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using ANXY.EntityComponent;
+﻿using ANXY.EntityComponent;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
 
 namespace ANXY.Start;
 
