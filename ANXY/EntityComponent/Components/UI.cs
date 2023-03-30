@@ -4,19 +4,19 @@ using System;
 
 namespace ANXY.EntityComponent.Components
 {
-    internal class SpriteAnimationFrame : Component
+    internal class UI : Component
     {
-        //public Texture2D spriteAtlas{ get; set; }
-        //public float TimeStamp;
-        //public Rectangle SpriteRectangle;
+        private float fps = 0;
+
         public override void Update(GameTime gameTime)
         {
-            throw new NotImplementedException();
+            var fps = 1.0f / (float)gameTime.ElapsedGameTime.TotalSeconds;
+
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            throw new NotImplementedException();
+            //spriteBatch.DrawString(spriteFont, fps, new Vector2(1, 1), Color.Green);
         }
 
         public override void Initialize()

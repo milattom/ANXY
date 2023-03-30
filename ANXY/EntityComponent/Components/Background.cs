@@ -1,7 +1,6 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace ANXY.EntityComponent.Components;
 
@@ -10,12 +9,8 @@ namespace ANXY.EntityComponent.Components;
 /// </summary>
 public class Background : Component
 {
-    private Vector2 _screenScrollingDirection;
-    private float _screenScrollingSpeed;
     public int WindowHeight { get; }
     public int WindowWidth { get; }
-
-    private Player _playerComponent;
     public Entity PlayerEntity { get; set; }
 
     /// <summary>
@@ -37,20 +32,7 @@ public class Background : Component
     /// </summary>
     /// <param name="gameTime">gameTime</param>
     public override void Update(GameTime gameTime)
-    {/*
-        var state = Keyboard.GetState();
-        _screenScrollingDirection = Vector2.Zero;
-        if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right)) _screenScrollingDirection = new Vector2(-1, 0);
-        if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left)) _screenScrollingDirection = new Vector2(1, 0);
-
-        if (_playerComponent.Velocity.X == 0 && _playerComponent.InputDirection.X != 0)
-            _screenScrollingSpeed = Math.Abs(_playerComponent.ScrollSpeed);
-        else
-            _screenScrollingSpeed = 0;
-
-
-        Entity.Position += _screenScrollingDirection * _screenScrollingSpeed *
-                           (float)gameTime.ElapsedGameTime.TotalSeconds;*/
+    {
     }
 
     /// <summary>

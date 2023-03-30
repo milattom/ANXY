@@ -1,9 +1,12 @@
-﻿using System;
-using ANXY.EntityComponent;
+﻿using ANXY.EntityComponent;
 using ANXY.EntityComponent.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Tiled;
+using System;
+using Color = Microsoft.Xna.Framework.Color;
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace ANXY.Start;
 
@@ -12,25 +15,24 @@ namespace ANXY.Start;
 /// </summary>
 public class ANXYGame : Game
 {
+    public bool DebugMode { get; set; } = true;
     private readonly GraphicsDeviceManager _graphics;
     private Texture2D _backgroundSprite;
     private TiledMap _levelTileMap;
     private Texture2D _playerSprite;
+    private SpriteFont _arialSpriteFont;
     private SpriteBatch _spriteBatch;
     private readonly Rectangle _screenBounds;
-    private Rectangle _1080pSize = new Rectangle(0, 0, 1920, 1080);
+    private Rectangle _1080pSize = new(0, 0, 1920, 1080);
     private int _windowHeight;
     private int _windowWidth;
     private Entity _playerEntity;
     private Entity _cameraEntity;
-    private readonly Vector2 _cameraPadding = new Vector2(1/5,1/4);
-    private readonly String[] _backgroundLayerNames = new String[] { "Ground" };
-    private readonly String[] _foregroundLayerNames = new String[] { "" };
-    private readonly String contentRootDirectory = "Content";
-    //private Texture2D _levelSprite;
-    //private TiledMapRenderer _tiledMapRenderer;
-    //private string jsonLevelString;
-    //private Entity _playerEntity;
+    private readonly Vector2 _cameraPadding = new Vector2(1 / 5, 1 / 4);
+    private readonly string[] _backgroundLayerNames = { "Ground" };
+    private readonly string[] _foregroundLayerNames = { "" };
+    private readonly string contentRootDirectory = "Content";
+    private KeyboardState oldState;
 
 
     /// <summary>
@@ -59,6 +61,10 @@ public class ANXYGame : Game
 
         //makes it possible for the user to change the window size
         Window.AllowUserResizing = true;
+
+        _graphics.SynchronizeWithVerticalRetrace = false;
+        IsFixedTimeStep = false;
+
         _graphics.ApplyChanges();
 
         Content.RootDirectory = contentRootDirectory;
@@ -77,7 +83,12 @@ public class ANXYGame : Game
         InitializeDefaultScene();
         EntitySystem.Instance._InitializeEntities();
         //Debug mode
-        BoxColliderSystem.Instance.EnableDebugMode(_graphics.GraphicsDevice);
+        if (DebugMode)
+        {
+            BoxColliderSystem.Instance.EnableDebugMode(_graphics.GraphicsDevice);
+        }
+
+        oldState = Keyboard.GetState();
     }
 
     /// <summary>
@@ -95,6 +106,8 @@ public class ANXYGame : Game
         InitializeLevelForegroundLayers();
         AddPlayerToBackground();
         AddPlayerToLevel();
+
+        InitializeUi();
     }
 
     /// <summary>
@@ -108,7 +121,13 @@ public class ANXYGame : Game
         _playerSprite = Content.Load<Texture2D>("playerAtlas");
         _backgroundSprite = Content.Load<Texture2D>("Background-2");
         //_levelTileMap = Content.Load<TiledMap>("TileMapSet2");
+
+        //TODO important level
+        //_levelTileMap = Content.Load<TiledMap>("JumpNRun-1");
         _levelTileMap = Content.Load<TiledMap>("JumpNRun-1");
+
+        //Load Fonts
+        _arialSpriteFont = Content.Load<SpriteFont>("Arial");
     }
 
     /// <summary>
@@ -128,7 +147,16 @@ public class ANXYGame : Game
     protected override void Update(GameTime gameTime)
     {
         EntitySystem.Instance._UpdateEntities(gameTime);
-        BoxColliderSystem.Instance.CheckCollisions();
+        var state = Keyboard.GetState();
+        if (state.IsKeyDown(Keys.F) && oldState.IsKeyUp(Keys.F))
+        {
+            _graphics.SynchronizeWithVerticalRetrace = !_graphics.SynchronizeWithVerticalRetrace;
+            IsFixedTimeStep = !IsFixedTimeStep;
+
+            _graphics.ApplyChanges();
+        }
+
+        oldState = state;
         //base.Update(gameTime);
     }
 
@@ -149,18 +177,17 @@ public class ANXYGame : Game
     /// </summary>
     private void InitializePlayer()
     {
-        var center = new Vector2((int)Math.Round(_windowWidth / 2.0), (int)Math.Round(_windowHeight / 2.0));
-        var playerEntity = new Entity { Position = center };
+        var playerEntity = new Entity { Position = new Vector2(1200, 540) };
 
         EntitySystem.Instance.AddEntity(playerEntity);
 
-        var player = new Player(_windowWidth, _windowHeight);
+        var player = new Player();
         playerEntity.AddComponent(player);
 
         var playerSpriteRenderer = new PlayerSpriteRenderer(_playerSprite);
         playerEntity.AddComponent(playerSpriteRenderer);
 
-        var playerBox = new Rectangle(0, 0, 33, 70);
+        var playerBox = new Rectangle(1, 6, 32, 64);
         var playerCollider = new BoxCollider(playerBox, "Player");
         playerEntity.AddComponent(playerCollider);
 
@@ -168,7 +195,7 @@ public class ANXYGame : Game
 
         var cameraEntity = new Entity();
         EntitySystem.Instance.AddEntity(cameraEntity);
-        var camera = new Camera(player, new Vector2(_windowWidth, _windowHeight), new Vector2(0.25f*_windowWidth, 0.5f * _windowHeight), new Vector2(float.PositiveInfinity, 0.85f*_windowHeight));
+        var camera = new Camera(player, new Vector2(_windowWidth, _windowHeight), new Vector2(0.25f * _windowWidth, 0.5f * _windowHeight), new Vector2(float.PositiveInfinity, 0.85f * _windowHeight));
         cameraEntity.AddComponent(camera);
     }
 
@@ -314,5 +341,17 @@ public class ANXYGame : Game
         {
             levelEntity.GetComponent<Level>().PlayerEntity = _playerEntity;
         }
+    }
+
+    private void InitializeUi()
+    {
+        var uiEntity = new Entity();
+        EntitySystem.Instance.AddEntity(uiEntity);
+        var fpsCounter = new FpsCounter();
+        uiEntity.AddComponent(fpsCounter);
+        var topLeftPosition = Vector2.One;
+        var textRenderer = new TextRenderer(_arialSpriteFont, FpsCounter.Instance.fpsText, topLeftPosition, Color.LimeGreen);
+        uiEntity.AddComponent(textRenderer);
+
     }
 }

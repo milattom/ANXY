@@ -1,10 +1,11 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ANXY.Start;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
+using static ANXY.EntityComponent.Components.BoxCollider;
 
 namespace ANXY.EntityComponent.Components;
 
@@ -13,32 +14,23 @@ namespace ANXY.EntityComponent.Components;
 /// </summary>
 public class Player : Component
 {
-    public Vector2 Velocity { get; private set; } = Vector2.Zero;
-    public float ScrollSpeed { get; private set; } = 0f;
+    public Vector2 Velocity => _velocity;
+    private Vector2 _velocity = Vector2.Zero;
     public PlayerState State { get; private set; } = PlayerState.Idle;
     public Vector2 InputDirection { get; private set; } = Vector2.Zero;
 
     //TODO remove GroundLevel or reduce it to Window Bottom Edge when Level is fully implemented in Tiled.
-    private const float Gravity = 20;
-    private const float WalkForce = 200;
-    private const float JumpForce = 550;
+    private const float Gravity = 350;
+    private const float JumpVelocity = 300;
     private bool _midAir = true;
+
+    private const float MaxWalkSpeed = 300;
+    private const float WalkAcceleration = 150;
+    private const float FloorFriction = 25;
+
     private bool _isAlive = true;
     private PlayerInputController _playerInputController;
 
-    private readonly int _windowHeight;
-    private readonly int _windowWidth;
-
-    /// <summary>
-    /// Player Class Constructor
-    /// </summary>
-    /// <param name="windowWidth">Current Window size, Width</param>
-    /// <param name="windowHeight">Current Window size, Height</param>
-    public Player(int windowWidth, int windowHeight)
-    {
-        this._windowWidth = windowWidth;
-        this._windowHeight = windowHeight;
-    }
 
     /* TODO maybe implement later. Ideas for now
     public bool Crouch()
@@ -72,85 +64,123 @@ public class Player : Component
     /// TODO remove input from here and move it to PlayerInputController
     /// - checks input, moves the player accordingly.
     /// - creates gravity and checks for collisions.
-    /// TODO remove screen constraints for background movement to camera
     /// - updates position of Player Entity
     /// </summary>
     /// <param name="gameTime"></param>
     public override void Update(GameTime gameTime)
     {
-        //input
-        var boxCollider = Entity.GetComponent<BoxCollider>();
+        //keyboard input
         var state = Keyboard.GetState();
-        var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-        var acceleration = new Vector2(WalkForce, Gravity);
         InputDirection = Vector2.Zero;
+        if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right))
+            InputDirection += new Vector2(1, 0);
 
+        if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left))
+            InputDirection += new Vector2(-1, 0);
 
-        if (boxCollider.Colliding)
-        {
-            ResolveCollision(boxCollider);
-        }
-        else
-        {
-            InputDirection = new Vector2(0, 1); //gravity
-        }
-
-        if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right)) InputDirection = new Vector2( 1, InputDirection.Y);
-        if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left)) InputDirection = new Vector2( -1, InputDirection.Y);
-        if (state.IsKeyDown(Keys.Space) && !_midAir)
-        {
-            InputDirection = new Vector2( InputDirection.X, -JumpForce/Gravity);
-            _midAir = true;
-        }
-        
+        var jumpKey = state.IsKeyDown(Keys.Space);
 
         //velocity update
-        var xVelocity = InputDirection.X * acceleration.X;
-        var yVelocity = Velocity.Y + (InputDirection.Y * acceleration.Y);
-        Velocity = new Vector2(xVelocity, yVelocity);
-        ScrollSpeed = Velocity.X;
+        var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        var acceleration = new Vector2(WalkAcceleration * InputDirection.X, Gravity);
+        _velocity += acceleration * dt;
+        if (jumpKey && !_midAir)
+        {
+            _velocity.Y = -JumpVelocity;
+            _midAir = true;
+        }
 
-        //ScreenConstraintUpdate
-        /*
-        var constrainRight = _windowWidth * 4.0 / 5.0;
-        var constrainLeft = _windowWidth * 1.0 / 5.0;
-        if ((InputDirection.X > 0 && Entity.Position.X >= constrainRight)
-            || (InputDirection.X < 0 && Entity.Position.X <= constrainLeft))
-            Velocity *= new Vector2(0, 1);*/
+        _velocity.X = InputDirection.X * WalkAcceleration;
 
         //position update
-        Entity.Position += Velocity * dt;
+        Entity.Position += _velocity * dt;
+
+        //collisions
+        HandleCollisions();
+    }
+
+    /// <summary>
+    /// TODO
+    /// </summary>
+    private void HandleCollisions()
+    {
+        var playerBoxCollider = Entity.GetComponent<BoxCollider>();
+        var colliders = BoxColliderSystem.Instance.GetCollisions(playerBoxCollider);
+
+        var leftRightColliders = colliders.Where(col =>
+        {
+            var detectedEdge = BoxColliderSystem.DetectEdge(playerBoxCollider, col);
+            return detectedEdge == Edge.Left || detectedEdge == Edge.Right;
+        });
+        foreach (var collider in leftRightColliders)
+        {
+            if (BoxColliderSystem.Instance.IsColliding(playerBoxCollider, collider))
+            {
+                ActOnCollider(collider);
+            }
+        }
+
+        var restColliders = BoxColliderSystem.Instance.GetCollisions(playerBoxCollider);
+
+        if (restColliders.Count == 0)
+        {
+            _midAir = true;
+        }
+
+        foreach (var collider in restColliders)
+        {
+            if (BoxColliderSystem.Instance.IsColliding(playerBoxCollider, collider))
+            {
+                ActOnCollider(collider);
+            }
+        }
+    }
+
+    private void ActOnCollider(BoxCollider collider)
+    {
+        var playerBoxCollider = Entity.GetComponent<BoxCollider>();
+        var detetedEdge = BoxColliderSystem.DetectEdge(playerBoxCollider, collider);
+        var edgePosition = collider.GetCollisionPosition(detetedEdge);
+        switch (detetedEdge)
+        {
+            case BoxCollider.Edge.Top:
+                if (Velocity.Y >= 0)
+                {
+                    _midAir = false;
+                    _velocity = new Vector2(Velocity.X, 0);
+                }
+
+                Entity.Position = new Vector2(Entity.Position.X, edgePosition - playerBoxCollider.Dimensions.Y - playerBoxCollider.Offset.Y);
+                break;
+            case BoxCollider.Edge.Bottom:
+                _velocity = new Vector2(Velocity.X,
+                    Math.Clamp(Velocity.Y, 1, float.PositiveInfinity)); //stop gravity
+                Entity.Position = new Vector2(Entity.Position.X, edgePosition - playerBoxCollider.Offset.Y);
+                //_midAir = CheckSpecialCases(edges);
+                break;
+            case BoxCollider.Edge.Left:
+                _velocity = new Vector2(Math.Clamp(Velocity.X, float.NegativeInfinity, 0), Velocity.Y);
+                Entity.Position = new Vector2(edgePosition - playerBoxCollider.Dimensions.X - playerBoxCollider.Offset.X, Entity.Position.Y);
+                break;
+            case BoxCollider.Edge.Right:
+                _velocity = new Vector2(Math.Clamp(Velocity.X, 0, float.PositiveInfinity), Velocity.Y);
+                Entity.Position = new Vector2(edgePosition - playerBoxCollider.Offset.X, Entity.Position.Y);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException("Collision happened but no edge case");
+        }
     }
 
     private void ResolveCollision(BoxCollider boxCollider)
     {
         var edgeCases = new List<(BoxCollider.Edge, Vector2)>(boxCollider.CollidingEdges);
         var edges = edgeCases.Select(e => e.Item1).ToList();
-        if(!edges.Contains(BoxCollider.Edge.Bottom)) MidAir();
+        if (!edges.Contains(BoxCollider.Edge.Bottom)) MidAir();
 
         foreach (var (edge, pos) in edgeCases)
         {
-            switch (edge)
-            {
-                case BoxCollider.Edge.Top:
-                    Velocity = new Vector2(Velocity.X, 0);
-                    Entity.Position = new Vector2(Entity.Position.X, pos.Y);
-                    break;
-                case BoxCollider.Edge.Left:
-                    Entity.Position = new Vector2(pos.X, Entity.Position.Y);
-                    break;
-                case BoxCollider.Edge.Right:
-                    Entity.Position = new Vector2(pos.X-boxCollider.Dimensions.X, Entity.Position.Y);
-                    break;
-                case BoxCollider.Edge.Bottom:
-                    Entity.Position = new Vector2(Entity.Position.X, pos.Y-boxCollider.Dimensions.Y);
-                    Velocity = new Vector2(Velocity.X, 0); //stop gravity
-                    _midAir = CheckSpecialCases(edges);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException("Collision happened but no edge case");
-            }
         }
+
         boxCollider.CollidingEdges.Clear();
     }
 

@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.ConstrainedExecution;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
 
 namespace ANXY.EntityComponent.Components;
 
@@ -14,14 +12,12 @@ namespace ANXY.EntityComponent.Components;
 /// </summary>
 public class BoxCollider : Component
 {
-    public bool DebugMode;
-    public Vector2 Pivot { get; set; }
-    public Vector2 Center { get; set; }
+    public bool DebugEnabled { get; set; } = false;
+    public Vector2 Pivot => Entity.Position + Offset;
+    public Vector2 Center => Pivot + Dimensions / 2;
     public Vector2 Dimensions { get; }
-    public Vector2 Offset { get; }
+    public Vector2 Offset { get; set; }
     public string LayerMask { get; }
-    public bool Colliding { get; set; } = false;
-    public Edge CollidingEdge { get; set; }
     /// <summary>
     /// List of other boxes edges which are colliding with .this and its correspondent edge position
     /// as a vector. The position of the edge serves as an orientation where the collision happened on
@@ -29,7 +25,6 @@ public class BoxCollider : Component
     /// after the collision happens.
     /// </summary>
     public List<(Edge, Vector2)> CollidingEdges { get; set; } = new List<(Edge, Vector2)>();
-
     private readonly Color _activeColor = Color.Green;
     private readonly Color _inactiveColor = Color.Blue;
     private Color _highlightColor;
@@ -69,42 +64,31 @@ public class BoxCollider : Component
     /// <param name="edge"></param>
     /// <returns>Position vector of the edge that was touched</returns>
     /// <exception cref="ArgumentException"></exception>
-    public Vector2 GetCollisionPosition(Edge edge)
+    public float GetCollisionPosition(Edge edge)
     {
-        switch (edge)
+        if (DebugEnabled) Highlight();
+        return edge switch
         {
-            case Edge.Bottom: //returns the top
-                return new Vector2(Pivot.X, Pivot.Y);
-            case Edge.Top: //returns the bottom 
-                return new Vector2(Pivot.X, Pivot.Y + Dimensions.Y);
-            case Edge.Right: //returns the left
-                return new Vector2(Pivot.X, Pivot.Y);
-            case Edge.Left: // returns the right
-                return new Vector2(Pivot.X+Dimensions.X, Pivot.Y+Dimensions.Y);
-            default:
-                throw new ArgumentException("No edge to get position from!");
-        }
+            Edge.Top => Pivot.Y,
+            Edge.Bottom => Pivot.Y + Dimensions.Y,
+            Edge.Left => Pivot.X,
+            Edge.Right => Pivot.X + Dimensions.X,
+            _ => throw new ArgumentException("No edge to get position from!")
+        };
     }
 
     /// <inheritdoc />
     public override void Update(GameTime gameTime)
     {
-        UpDatePivotAndCenter();
-        Dehighlight(); //Debug
-        if (Colliding)
-        {
-            Highlight();
-            //Colliding = false;
-        }
+        if (DebugEnabled) Dehighlight(); //Debug
     }
 
     /// <summary>
-    /// Gets called by EntityManager, sets the highlightColor (debug) and the Pivot point
+    /// Gets called by EntityManager, sets the highlightColor for debugging
     /// </summary>
     public override void Initialize()
     {
         _highlightColor = _activeColor;
-        Pivot = Entity.Position + Offset;
     }
 
     /// <summary>
@@ -116,23 +100,18 @@ public class BoxCollider : Component
         throw new NotImplementedException();
     }
 
-    /// <summary>
-    /// Sets the pivot point with the position Coordinates of its Entity and the Offset.
-    /// Sets the center point by adding half the dimensions to the pivot point (upper left)
-    /// </summary>
-    private void UpDatePivotAndCenter()
-    {
-        Pivot = Entity.Position + Offset;
-        Center = Pivot + Dimensions/2;
-    }
-
     // -------------------------------------------------------- Debugging ------------------------------------------------------------------
-    
+
     /// <inheritdoc />
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
-        if (!DebugMode) return;
-        var rect = new Rectangle((int)(Pivot.X-Camera.ActiveCamera.DrawOffset.X), (int)(Pivot.Y- Camera.ActiveCamera.DrawOffset.Y), (int)Dimensions.X, (int)Dimensions.Y);
+        if (!DebugEnabled) return;
+        var rect = new Rectangle(
+            (int)(Pivot.X - Camera.ActiveCamera.DrawOffset.X),
+            (int)(Pivot.Y - Camera.ActiveCamera.DrawOffset.Y),
+            (int)Dimensions.X,
+            (int)Dimensions.Y
+            );
         spriteBatch.Draw(_recTexture, rect, _highlightColor);
     }
     public void SetRectangleTexture(Texture2D texture)

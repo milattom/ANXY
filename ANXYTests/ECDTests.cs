@@ -1,7 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.Xna.Framework;
-using ANXY.EntityComponent;
+﻿using ANXY.EntityComponent;
 using ANXY.EntityComponent.Components;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Xna.Framework;
 
 namespace ANXY.Tests
 {
@@ -15,7 +15,7 @@ namespace ANXY.Tests
             Entity testEntity = new Entity();
             testEntity.Position = testVector;
             Console.WriteLine("testEntity ID: " + testEntity.ID);
-            Assert.AreEqual( testVector, testEntity.Position);
+            Assert.AreEqual(testVector, testEntity.Position);
         }
 
         [TestMethod()]
@@ -23,13 +23,13 @@ namespace ANXY.Tests
         {
             Vector2 testVector = new Vector2(2, 0);
             Entity testEntity = new Entity();
-            Component testComponent = new Player(100,100); 
+            Component testComponent = new Player();
             testEntity.Position = testVector;
             testEntity.AddComponent(testComponent);
 
             Thread.Sleep(2000);
 
-            Assert.AreEqual( testComponent, testEntity.GetComponent<Player>());
+            Assert.AreEqual(testComponent, testEntity.GetComponent<Player>());
         }
     }
 }
