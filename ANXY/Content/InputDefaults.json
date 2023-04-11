@@ -8,13 +8,13 @@
     "Jump": {
         "Key": "Space"
     },
-    "MainMenu": {
+    "Menu": {
         "Key": "Escape"
     },
-    "ShowFPS": {
+    "ShowFps": {
         "Key": "F1"
     },
-    "CapFPS": {
+    "CapFps": {
         "Key": "F4"
     }
 }

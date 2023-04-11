@@ -101,6 +101,7 @@ public class ANXYGame : Game
         InitializeBackground();
         InitializeLevelBackgroundLayers();
 
+        InitializeInputController();
         InitializePlayer();
 
         InitializeLevelForegroundLayers();
@@ -147,8 +148,8 @@ public class ANXYGame : Game
     protected override void Update(GameTime gameTime)
     {
         EntitySystem.Instance._UpdateEntities(gameTime);
-        var state = Keyboard.GetState();
-        if (state.IsKeyDown(Keys.F) && oldState.IsKeyUp(Keys.F))
+
+        if (PlayerInputController.Instance.IsCapFpsKeyPressed())
         {
             _graphics.SynchronizeWithVerticalRetrace = !_graphics.SynchronizeWithVerticalRetrace;
             IsFixedTimeStep = !IsFixedTimeStep;
@@ -156,7 +157,12 @@ public class ANXYGame : Game
             _graphics.ApplyChanges();
         }
 
-        oldState = state;
+        if (PlayerInputController.Instance.IsShowFpsKeyPressed())
+        {
+            var fpsEntity = EntitySystem.Instance.FindEntityByType<FpsCounter>()[0];
+            fpsEntity.isActive = !fpsEntity.isActive;
+        }
+
         //base.Update(gameTime);
     }
 
@@ -172,6 +178,13 @@ public class ANXYGame : Game
         _spriteBatch.End();
     }
 
+    private void InitializeInputController()
+    {
+        var playerInputControllerEntity = new Entity();
+        EntitySystem.Instance.AddEntity(playerInputControllerEntity);
+        playerInputControllerEntity.AddComponent(PlayerInputController.Instance);
+    }
+
     /// <summary>
     /// creates the Player Entity. Sets position, Sprite, BoxCollider.
     /// </summary>
@@ -181,7 +194,10 @@ public class ANXYGame : Game
 
         EntitySystem.Instance.AddEntity(playerEntity);
 
-        var player = new Player();
+        var player = new Player
+        {
+            _playerInputController = EntitySystem.Instance.FindEntityByType<PlayerInputController>()[0].GetComponent<PlayerInputController>()
+        };
         playerEntity.AddComponent(player);
 
         var playerSpriteRenderer = new PlayerSpriteRenderer(_playerSprite);

@@ -1,20 +1,20 @@
 {
-    "Movement": {
-        "Up": "W",
-        "Down": "S",
-        "Left": "A",
-        "Right": "D"
-    },
-    "Jump": {
-        "Key": "Space"
-    },
-    "MainMenu": {
-        "Key": "Escape"
-    },
-    "ShowFPS": {
-        "Key": "F1"
-    },
-    "CapFPS": {
-        "Key": "F4"
-    }
+  "Movement": {
+    "Up": "W",
+    "Down": "S",
+    "Left": "A",
+    "Right": "D"
+  },
+  "Jump": {
+    "Key": "Space"
+  },
+  "Menu": {
+    "Key": "Escape"
+  },
+  "ShowFps": {
+    "Key": "F1"
+  },
+  "CapFps": {
+    "Key": "F4"
+  }
 }

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using static ANXY.EntityComponent.Components.BoxCollider;
 
@@ -29,7 +30,7 @@ public class Player : Component
     private const float FloorFriction = 25;
 
     private bool _isAlive = true;
-    private PlayerInputController _playerInputController;
+    public PlayerInputController _playerInputController;
 
 
     /* TODO maybe implement later. Ideas for now
@@ -70,21 +71,19 @@ public class Player : Component
     public override void Update(GameTime gameTime)
     {
         //keyboard input
-        var state = Keyboard.GetState();
         InputDirection = Vector2.Zero;
-        if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right))
+
+        if(_playerInputController.IsWalkingRight())
             InputDirection += new Vector2(1, 0);
 
-        if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left))
+        if (_playerInputController.IsWalkingLeft())
             InputDirection += new Vector2(-1, 0);
-
-        var jumpKey = state.IsKeyDown(Keys.Space);
 
         //velocity update
         var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
         var acceleration = new Vector2(WalkAcceleration * InputDirection.X, Gravity);
         _velocity += acceleration * dt;
-        if (jumpKey && !_midAir)
+        if (_playerInputController.IsJumping() && !_midAir)
         {
             _velocity.Y = -JumpVelocity;
             _midAir = true;
