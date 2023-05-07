@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices.ComTypes;
-using System.Xml.Serialization;
 using ANXY.Start;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json;
-using static ANXY.EntityComponent.Components.PlayerInputController;
 
 namespace ANXY.EntityComponent.Components
 {
@@ -20,6 +14,10 @@ namespace ANXY.EntityComponent.Components
     /// </summary>
     public class PlayerInputController : Component
     {
+        public event Action LimitFpsKeyPressed;
+        public event Action<bool> GamePausedChanged;
+        public bool GamePaused { get; private set; }
+
         public class InputSettings
         {
             public MovementSettings Movement { get; set; }
@@ -43,16 +41,17 @@ namespace ANXY.EntityComponent.Components
         }
 
         private KeyboardState currentKeyboardState;
+        private KeyboardState lastKeyboardState;
         private InputSettings inputSettings;
-        private Keys upKey, downKey, leftKey, rightKey, jumpKey, menuKey, showFpsKey, capFpsKey;
+        private Keys upKey, downKey, leftKey, rightKey, jumpKey, menuKey, showFpsKey, limitFpsKey;
         private String userValuePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Content\\InputUserValues.json");
         private String defaultValuePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Content\\InputDefaults.json");
-        private Dictionary<Keys, bool> lastKeyState;
 
+        private PlayerInputController() { }
 
         ///Singleton Pattern
         private static readonly Lazy<PlayerInputController> lazy = new(() => new PlayerInputController());
-        
+
 
         /// <summary>
         ///     Singleton Pattern return the only instance there is
@@ -61,12 +60,32 @@ namespace ANXY.EntityComponent.Components
 
         public override void Update(GameTime gameTime)
         {
-            currentKeyboardState = Keyboard.GetState();
-            if (IsMenuKeyPressed())
+            if (IsLimitFpsKeyPressed())
             {
-                EntitySystem.Instance.FindEntityByType<Player>()[0].GetComponent<Player>().IsActive =
-                    !EntitySystem.Instance.FindEntityByType<Player>()[0].GetComponent<Player>().IsActive;
+                LimitFpsKeyPressed?.Invoke();
             }
+
+            if (IsMenuKeyPressed)
+            {
+                GamePaused = !GamePaused;
+                GamePausedChanged?.Invoke(GamePaused);
+            }
+
+            if (PlayerInputController.Instance.IsShowFpsKeyPressed())
+            {
+                var fpsEntity = EntitySystem.Instance.FindEntityByType<FpsCounter>()[0];
+                fpsEntity.isActive = !fpsEntity.isActive;
+            }
+        }
+
+        public void SetCurrentState()
+        {
+            currentKeyboardState = Keyboard.GetState();
+        }
+
+        public void SetLastState()
+        {
+            lastKeyboardState = currentKeyboardState;
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -86,13 +105,6 @@ namespace ANXY.EntityComponent.Components
                 UpdateKeys();
             }
 
-            lastKeyState = new Dictionary<Keys, bool>();
-            Keys[] keys = { leftKey, rightKey, jumpKey, menuKey, showFpsKey, capFpsKey };
-            foreach (var key in keys)
-            {
-                lastKeyState.Add(key, false);
-            }
-            Debug.WriteLine("Hello");
         }
 
         public override void Destroy()
@@ -125,7 +137,7 @@ namespace ANXY.EntityComponent.Components
             Enum.TryParse(inputSettings.Jump.Key, out jumpKey);
             Enum.TryParse(inputSettings.Menu.Key, out menuKey);
             Enum.TryParse(inputSettings.ShowFps.Key, out showFpsKey);
-            Enum.TryParse(inputSettings.CapFps.Key, out capFpsKey);
+            Enum.TryParse(inputSettings.CapFps.Key, out limitFpsKey);
         }
 
         public bool IsWalkingRight()
@@ -143,34 +155,21 @@ namespace ANXY.EntityComponent.Components
             return currentKeyboardState.IsKeyDown(jumpKey);
         }
 
-        public bool IsMenuKeyPressed()
-        {
-            return IsKeyPressed(menuKey);
-        }
+        public bool IsMenuKeyPressed => IsKeyPressed(menuKey);
 
         public bool IsShowFpsKeyPressed()
         {
             return IsKeyPressed(showFpsKey);
         }
 
-        public bool IsCapFpsKeyPressed()
+        public bool IsLimitFpsKeyPressed()
         {
-            return IsKeyPressed(capFpsKey);
+            return IsKeyPressed(limitFpsKey);
         }
 
         private bool IsKeyPressed(Keys key)
         {
-            var currentState = currentKeyboardState.IsKeyDown(key);
-
-            var oldState = false;
-            lastKeyState.TryGetValue(key, out oldState);
-            if (currentState && !oldState)
-            {
-                lastKeyState[key] = currentState;
-                return true;
-            }
-            lastKeyState[key] = currentState;
-            return false;
+            return currentKeyboardState.IsKeyDown(key) && !lastKeyboardState.IsKeyDown(key);
         }
     }
 }

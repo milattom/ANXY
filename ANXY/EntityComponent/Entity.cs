@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace ANXY.EntityComponent;
@@ -83,8 +84,9 @@ public sealed class Entity
     public void Initialize()
     {
         foreach (var component in _components)
-            if (component.IsActive)
-                component.Initialize();
+        {
+            component.Initialize();
+        }
     }
 
     public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -94,7 +96,9 @@ public sealed class Entity
             return;
         }
         foreach (var component in _components)
+        {
             if (component.IsActive)
                 component.Draw(gameTime, spriteBatch);
+        }
     }
 }

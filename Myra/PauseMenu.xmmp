@@ -1,0 +1,9 @@
+<Project>
+  <Project.ExportOptions Namespace="ANXY" Class="BasicUI" OutputPath="C:\Users\Gamer\Desktop" />
+  <VerticalStackPanel Spacing="10" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="15" Background="#FE3930FF" >   
+    <TextButton Text="Reset" Padding="10"/>
+    <TextButton Text="Controls" Padding="10"/>
+    <TextButton Text="Credits" Padding="10"/>
+    <TextButton Text="Exit Game" Padding="10"/>
+  </VerticalStackPanel>
+</Project>

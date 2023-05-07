@@ -30,7 +30,6 @@ public class Player : Component
     private const float FloorFriction = 25;
 
     private bool _isAlive = true;
-    public PlayerInputController _playerInputController;
 
 
     /* TODO maybe implement later. Ideas for now
@@ -49,6 +48,7 @@ public class Player : Component
     /// </summary>
     public override void Initialize()
     {
+        PlayerInputController.Instance.GamePausedChanged += OnGamePausedChanged;
     }
 
     /// <summary>
@@ -73,17 +73,17 @@ public class Player : Component
         //keyboard input
         InputDirection = Vector2.Zero;
 
-        if(_playerInputController.IsWalkingRight())
+        if (PlayerInputController.Instance.IsWalkingRight())
             InputDirection += new Vector2(1, 0);
 
-        if (_playerInputController.IsWalkingLeft())
+        if (PlayerInputController.Instance.IsWalkingLeft())
             InputDirection += new Vector2(-1, 0);
 
         //velocity update
         var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
         var acceleration = new Vector2(WalkAcceleration * InputDirection.X, Gravity);
         _velocity += acceleration * dt;
-        if (_playerInputController.IsJumping() && !_midAir)
+        if (PlayerInputController.Instance.IsJumping() && !_midAir)
         {
             _velocity.Y = -JumpVelocity;
             _midAir = true;
@@ -96,6 +96,11 @@ public class Player : Component
 
         //collisions
         HandleCollisions();
+    }
+
+    private void OnGamePausedChanged(bool gamePaused)
+    {
+        IsActive = !gamePaused;
     }
 
     /// <summary>
