@@ -1,9 +1,11 @@
 <Project>
   <Project.ExportOptions Namespace="ANXY" Class="BasicUI" OutputPath="C:\Users\Gamer\Desktop" />
-  <VerticalStackPanel Spacing="10" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="15" Background="#FE3930FF" >   
-    <TextButton Text="Reset" Padding="10"/>
-    <TextButton Text="Controls" Padding="10"/>
-    <TextButton Text="Credits" Padding="10"/>
-    <TextButton Text="Exit Game" Padding="10"/>
+  <VerticalStackPanel Spacing="20" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="500" Padding="50" Background="#0000FF44">    
+    <TextBox Text="PAUSE" TextColor="#66FF00FF" BlinkIntervalInMs="1200" Readonly="True" TextVerticalAlignment="Center" HorizontalAlignment="Center" Height="50" Padding="10" VerticalAlignment="Center" Background="#00000000" />    
+    <TextButton Text="Resume Game" Padding="10" HorizontalAlignment="Stretch" />
+    <TextButton Text="Reset / New Game" Padding="10" HorizontalAlignment="Stretch" />
+    <TextButton Text="Controls" Padding="10" HorizontalAlignment="Stretch" />
+    <TextButton Text="Credits" Padding="10" HorizontalAlignment="Stretch" />
+    <TextButton Text="Exit Game" Padding="10" HorizontalAlignment="Stretch" />
   </VerticalStackPanel>
 </Project>

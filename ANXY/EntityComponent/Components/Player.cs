@@ -1,4 +1,5 @@
 ﻿using ANXY.Start;
+using ANXY.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -47,6 +48,7 @@ public class Player : Component
     public override void Initialize()
     {
         PlayerInputController.Instance.GamePausedChanged += OnGamePausedChanged;
+        UIManager.Instance.PauseToggeled += OnGamePausedChanged;
     }
 
     /// <summary>
@@ -98,7 +100,11 @@ public class Player : Component
 
     private void OnGamePausedChanged(bool gamePaused)
     {
-        IsActive = !gamePaused;
+        IsActive = !IsActive;
+    }
+    private void OnGamePausedChanged()
+    {
+        IsActive = !IsActive;
     }
 
     /// <summary>

@@ -35,14 +35,13 @@ public class ANXYGame : Game
     private readonly string[] _foregroundLayerNames = { "" };
     private readonly string contentRootDirectory = "Content";
     private KeyboardState oldState;
-    private UIManager _uiManager;
 
     /// <summary>
     /// This is the constructor for the heart of the game, where everything gets its initial spark.
     /// </summary>
     public ANXYGame()
     {
-        IsMouseVisible = true;
+        IsMouseVisible = false;
         //_graphics.ToggleFullScreen();
         _screenBounds = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.TitleSafeArea;
 
@@ -91,7 +90,6 @@ public class ANXYGame : Game
             BoxColliderSystem.Instance.EnableDebugMode(_graphics.GraphicsDevice);
         }
 
-        _uiManager = new UIManager();
 
         oldState = Keyboard.GetState();
     }
@@ -106,6 +104,7 @@ public class ANXYGame : Game
         InitializeBackground();
 
         InitializeLevelBackgroundLayers();
+        var i = UIManager.Instance;
 
         InitializeInputController();
         InitializePlayer();
@@ -172,7 +171,7 @@ public class ANXYGame : Game
         EntitySystem.Instance.DrawEntities(gameTime, _spriteBatch);
         _spriteBatch.End();
 
-        _uiManager.Draw();
+        UIManager.Instance.Draw();
     }
 
     private void InitializeInputController()
@@ -181,6 +180,8 @@ public class ANXYGame : Game
         EntitySystem.Instance.AddEntity(playerInputControllerEntity);
         playerInputControllerEntity.AddComponent(PlayerInputController.Instance);
         PlayerInputController.Instance.LimitFpsKeyPressed += ToggleFpsLimit;
+        PlayerInputController.Instance.GamePausedChanged += ToggleMouseCursorShow;
+        UIManager.Instance.PauseToggeled += TogglePlayerActiveState;
     }
 
     /// <summary>
@@ -374,6 +375,18 @@ public class ANXYGame : Game
         _graphics.SynchronizeWithVerticalRetrace = !_graphics.SynchronizeWithVerticalRetrace;
         IsFixedTimeStep = !IsFixedTimeStep;
 
+        _graphics.ApplyChanges();
+    }
+
+    private void TogglePlayerActiveState()
+    {
+        IsMouseVisible = !IsMouseVisible;
+        _graphics.ApplyChanges();
+    }
+
+    private void ToggleMouseCursorShow(bool gamePaused)
+    {
+        IsMouseVisible = !IsMouseVisible;
         _graphics.ApplyChanges();
     }
 }
