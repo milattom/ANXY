@@ -1,11 +1,6 @@
-﻿using ANXY.EntityComponent;
-using ANXY.EntityComponent.Components;
-using ANXY.Start;
+﻿using ANXY.EntityComponent.Components;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Myra;
 using Myra.Graphics2D.UI;
-using System;
 
 namespace ANXY.UI
 {
@@ -31,7 +26,7 @@ namespace ANXY.UI
             _pauseMenu = new PauseMenu();
             _pauseMenu.ResumePressed += OnResumeBtnPressed;
             _desktop.Root = _pauseMenu;
-            _pauseMenu.Visible= false;
+            _pauseMenu.Visible = false;
             PlayerInputController.Instance.GamePausedChanged += OnGamePausedChanged;
         }
 

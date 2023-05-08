@@ -1,16 +1,7 @@
-﻿using ANXY.EntityComponent.Components;
-using Cyotek.Drawing.BitmapFont;
+﻿using Myra.Graphics2D;
+using Myra.Graphics2D.Brushes;
 using Myra.Graphics2D.UI;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Myra;
-using Myra.Graphics2D;
-using Myra.Graphics2D.Brushes;
-using System.ComponentModel.Design;
-using System.Diagnostics.Tracing;
 
 namespace ANXY.UI
 {
@@ -39,7 +30,6 @@ namespace ANXY.UI
             var textButton4 = new TextButton();
             textButton4.Text = "Exit Game";
             textButton4.Padding = new Thickness(10);
-
 
             Spacing = 10;
             HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment.Center;

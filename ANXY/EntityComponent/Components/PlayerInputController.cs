@@ -1,10 +1,10 @@
-﻿using System;
-using System.IO;
-using ANXY.Start;
+﻿using ANXY.Start;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json;
+using System;
+using System.IO;
 
 namespace ANXY.EntityComponent.Components
 {

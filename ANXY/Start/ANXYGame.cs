@@ -1,15 +1,14 @@
 ﻿using ANXY.EntityComponent;
 using ANXY.EntityComponent.Components;
+using ANXY.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Tiled;
+using Myra;
 using System;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
-using Myra;
-using Myra.Graphics2D.UI;
-using ANXY.UI;
 
 namespace ANXY.Start;
 

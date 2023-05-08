@@ -1,10 +1,8 @@
 ﻿using ANXY.Start;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using static ANXY.EntityComponent.Components.BoxCollider;
 
