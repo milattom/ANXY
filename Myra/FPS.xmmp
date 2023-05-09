@@ -1,0 +1,6 @@
+<Project>
+  <Project.ExportOptions Namespace="ANXY" Class="FPS" OutputPath="C:\Users\Gamer\Desktop" />
+  <Panel>
+    <Label Text="FPS" TextColor="#FE3930FF" />
+  </Panel>
+</Project>

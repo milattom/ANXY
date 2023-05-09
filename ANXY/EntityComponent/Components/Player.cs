@@ -48,7 +48,7 @@ public class Player : Component
     public override void Initialize()
     {
         PlayerInputController.Instance.GamePausedChanged += OnGamePausedChanged;
-        UIManager.Instance.PauseToggeled += OnGamePausedChanged;
+        UIManager.Instance.PauseToggled += OnGamePausedChanged;
     }
 
     /// <summary>

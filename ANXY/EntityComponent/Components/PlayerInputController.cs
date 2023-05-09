@@ -1,5 +1,4 @@
-﻿using ANXY.Start;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json;
@@ -14,6 +13,7 @@ namespace ANXY.EntityComponent.Components
     /// </summary>
     public class PlayerInputController : Component
     {
+        public event Action ShowFpsKeyPressed;
         public event Action LimitFpsKeyPressed;
         public event Action<bool> GamePausedChanged;
         public bool GamePaused { get; private set; }
@@ -71,10 +71,9 @@ namespace ANXY.EntityComponent.Components
                 GamePausedChanged?.Invoke(GamePaused);
             }
 
-            if (PlayerInputController.Instance.IsShowFpsKeyPressed())
+            if (IsShowFpsKeyPressed())
             {
-                var fpsEntity = EntitySystem.Instance.FindEntityByType<FpsCounter>()[0];
-                fpsEntity.isActive = !fpsEntity.isActive;
+                ShowFpsKeyPressed?.Invoke();
             }
         }
 

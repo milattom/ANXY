@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ANXY.EntityComponent.Components
 {
-    internal class FpsCounter : Component
+    internal class FpsCounterComponent : Component
     {
         private readonly String fps = "FPS: ";
         public String fpsText { get; private set; }
@@ -13,9 +13,9 @@ namespace ANXY.EntityComponent.Components
         private StringBuilder stringBuilder = new StringBuilder();
 
         ///Singleton Pattern
-        private static readonly Lazy<FpsCounter> lazy = new(() => new FpsCounter());
+        private static readonly Lazy<FpsCounterComponent> lazy = new(() => new FpsCounterComponent());
 
-        public static FpsCounter Instance => lazy.Value;
+        public static FpsCounterComponent Instance => lazy.Value;
 
         public override void Update(GameTime gameTime)
         {

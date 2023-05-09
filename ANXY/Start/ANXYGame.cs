@@ -171,6 +171,7 @@ public class ANXYGame : Game
         EntitySystem.Instance.DrawEntities(gameTime, _spriteBatch);
         _spriteBatch.End();
 
+        UIManager.Instance.UpdateFPS(gameTime);
         UIManager.Instance.Draw();
     }
 
@@ -181,7 +182,7 @@ public class ANXYGame : Game
         playerInputControllerEntity.AddComponent(PlayerInputController.Instance);
         PlayerInputController.Instance.LimitFpsKeyPressed += ToggleFpsLimit;
         PlayerInputController.Instance.GamePausedChanged += ToggleMouseCursorShow;
-        UIManager.Instance.PauseToggeled += TogglePlayerActiveState;
+        UIManager.Instance.PauseToggled += TogglePlayerActiveState;
     }
 
     /// <summary>
@@ -359,6 +360,7 @@ public class ANXYGame : Game
     private void InitializeUi()
     {
         //FPS counter
+        /*
         var uiEntity = new Entity();
         EntitySystem.Instance.AddEntity(uiEntity);
         var fpsCounter = new FpsCounter();
@@ -366,7 +368,7 @@ public class ANXYGame : Game
         var topLeftPosition = Vector2.One;
         var textRenderer = new TextRenderer(_arialSpriteFont, FpsCounter.Instance.fpsText, topLeftPosition, Color.LimeGreen);
         uiEntity.AddComponent(textRenderer);
-
+        */
         //Myra UI
     }
 
