@@ -14,7 +14,7 @@ namespace ANXY.Start
     /// The Singleton BoxColliderSystem holds a list with all active BoxColliders, detects collisions and
     /// manipulates the BoxCollider component accordingly.
     /// </summary>
-    internal class BoxColliderSystem : System<BoxCollider>
+    internal class BoxColliderSystem : ComponentSystem<BoxCollider>
     {
         ///Singleton Pattern
         private static readonly Lazy<BoxColliderSystem> Lazy = new(() => new BoxColliderSystem());

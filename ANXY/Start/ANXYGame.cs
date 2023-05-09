@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Tiled;
 using System;
+using System.Collections.Generic;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
@@ -82,6 +83,8 @@ public class ANXYGame : Game
         base.Initialize();
         InitializeDefaultScene();
         EntitySystem.Instance._InitializeEntities();
+        //TODO
+        SystemManager.Instance.InitializeSystems();
         //Debug mode
         if (DebugMode)
         {
@@ -207,10 +210,15 @@ public class ANXYGame : Game
         var backgroundEntity = new Entity();
         EntitySystem.Instance.AddEntity(backgroundEntity);
         backgroundEntity.Position -= new Vector2(0.5f * _windowWidth, 0.5f * _windowHeight);
-        backgroundEntity.AddComponent(new Background(_windowWidth, _windowHeight));
+        Background background = new Background(_windowWidth, _windowHeight);
+        backgroundEntity.AddComponent(background);
         SingleSpriteRenderer backgroundSprite = new SingleSpriteRenderer(_backgroundSprite);
         backgroundEntity.AddComponent(backgroundSprite);
         backgroundSprite.CameraEntity = _cameraEntity;
+        //TODO
+        //BackgroundSystem.Instance.Register(background);
+        //SpriteSystem.Instance.Register(backgroundSprite);
+
     }
 
 
@@ -294,8 +302,12 @@ public class ANXYGame : Game
                         , (int)Math.Round(collider.Size.Height)
                         );
                     var tileBoxCollider = new BoxCollider(rectangle, layerName);
-                    BoxColliderSystem.Instance.AddBoxCollider(tileBoxCollider);
+                    //BoxColliderSystem.Instance.AddBoxCollider(tileBoxCollider);
                     newTileEntity.AddComponent(tileBoxCollider);
+                    //TODO
+                    BoxColliderSystem.Instance.Register(tileBoxCollider);
+                    SystemManager<BoxColliderSystem, BoxCollider>.Instance.AddSystem(BoxColliderSystem.Instance);
+                   
                 }
             }
         }
@@ -352,6 +364,10 @@ public class ANXYGame : Game
         var topLeftPosition = Vector2.One;
         var textRenderer = new TextRenderer(_arialSpriteFont, FpsCounter.Instance.fpsText, topLeftPosition, Color.LimeGreen);
         uiEntity.AddComponent(textRenderer);
-
+        //TODO
+        TextRendererSystem.Instance.Register(textRenderer);
+        FpsSystem.Instance.Register(fpsCounter);
+        //SystemManager<TextRendererSystem<SingleSpriteRenderer>, SingleSpriteRenderer>.Instance.AddSystem(TextRendererSystem.Instance);
+        //SystemManager.Instance.AddSystem(FpsSystem.Instance);
     }
 }

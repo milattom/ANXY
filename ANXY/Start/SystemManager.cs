@@ -7,14 +7,15 @@ using System.Linq;
 
 namespace ANXY.Start
 {
-    public sealed class SystemManager
+    public sealed class SystemManager<T,C> where T : ComponentSystem<C> where C : Component
     {
-        private static readonly Lazy<SystemManager> _lazy = new(() => new SystemManager());
+        private static readonly Lazy<SystemManager<T, C>> _lazy = new(() => new SystemManager<T, C>);
 
-        private readonly List<System<Component>> _systems;
-        public static SystemManager Instance => _lazy.Value;
+        public static SystemManager<T,C> Instance => _lazy.Value;
 
-        public void AddSystem(System<Component> system)
+        private readonly List<T> _systems = new();
+
+        public void AddSystem(T system)
         {
             _systems.Add(system);
         }
@@ -22,7 +23,7 @@ namespace ANXY.Start
         /// <summary>
         ///     TODO
         /// </summary>
-        public bool RemoveSystem(System<Component> system)
+        public bool RemoveSystem(T system)
         {
             if(_systems.Contains(system))
             {
@@ -57,7 +58,7 @@ namespace ANXY.Start
         /// <summary>
         ///     TODO
         /// </summary>
-        internal void _InitializeEntities()
+        internal void InitializeSystems()
         {
             foreach(var system in _systems) system.Initialize();
         }
@@ -65,7 +66,7 @@ namespace ANXY.Start
         /// <summary>
         ///     TODO
         /// </summary>
-        internal void DrawEntities(GameTime gameTime, SpriteBatch spriteBatch)
+        internal void DrawSystems(GameTime gameTime, SpriteBatch spriteBatch)
         {
             foreach(var system in _systems) system.Draw(gameTime, spriteBatch);
         }
@@ -73,9 +74,9 @@ namespace ANXY.Start
         /// <summary>
         ///     TODO
         /// </summary>
-        public System<Component> FindSystemByType<T>() where T : Component
+        public ComponentSystem<Component> FindSystemByType<T>() where T : Component
         {
-            return _systems.FirstOrDefault(s => s.GetType() == typeof(System<T>));
+            return _systems.FirstOrDefault(s => s.GetType() == typeof(ComponentSystem<T>));
         }
     }
 }
