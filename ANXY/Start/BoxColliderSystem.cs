@@ -1,4 +1,5 @@
-﻿using ANXY.EntityComponent.Components;
+﻿using ANXY.EntityComponent;
+using ANXY.EntityComponent.Components;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using System;
@@ -13,17 +14,10 @@ namespace ANXY.Start
     /// The Singleton BoxColliderSystem holds a list with all active BoxColliders, detects collisions and
     /// manipulates the BoxCollider component accordingly.
     /// </summary>
-    internal class BoxColliderSystem
+    internal class BoxColliderSystem : System<BoxCollider>
     {
         ///Singleton Pattern
         private static readonly Lazy<BoxColliderSystem> Lazy = new(() => new BoxColliderSystem());
-
-        private readonly List<BoxCollider> _boxColliderList;
-
-        private BoxColliderSystem()
-        {
-            _boxColliderList = new List<BoxCollider>();
-        }
 
         public static BoxColliderSystem Instance => Lazy.Value;
 
@@ -34,7 +28,7 @@ namespace ANXY.Start
         /// <param name="boxCollider"></param>
         public void AddBoxCollider(BoxCollider boxCollider)
         {
-            _boxColliderList.Add(boxCollider);
+            components.Add(boxCollider);
         }
 
         /// <summary>
@@ -45,7 +39,7 @@ namespace ANXY.Start
         public List<BoxCollider> GetCollisions(BoxCollider box)
         {
             //TODO optimize performance of collider detection, e.g. 30 to left right etc ("e.g. Quadtree")
-            return _boxColliderList.Where(otherBox => IsColliding(box, otherBox)).ToList();
+            return components.Where(otherBox => IsColliding(box, otherBox)).ToList();
         }
 
         /// <summary>
@@ -55,7 +49,7 @@ namespace ANXY.Start
         /// <param name="graphics"></param>
         public void EnableDebugMode(GraphicsDevice graphics)
         {
-            foreach (var box in _boxColliderList)
+            foreach (var box in components)
             {
                 var recTexture = CreateRectangleTexture(graphics, box.Dimensions);
                 box.SetRectangleTexture(recTexture);
