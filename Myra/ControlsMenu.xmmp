@@ -18,16 +18,19 @@
     <TextButton Text="Right" MinWidth="100" Padding="10" VerticalAlignment="Center" GridColumn="3" GridRow="3" Id="btnMoveRightAlternate" />
     <Label Text="Jump" VerticalAlignment="Center" GridColumn="1" GridRow="4" />
     <TextButton Text="Space" MinWidth="100" Padding="10" VerticalAlignment="Center" GridColumn="2" GridRow="4" Id="btnJump" />
-    <TextButton Text="W" MinWidth="100" Padding="10" VerticalAlignment="Center" GridColumn="3" GridRow="4" Id="btnJumpAlternate" />
+    <TextButton Text="Up" MinWidth="100" Padding="10" VerticalAlignment="Center" GridColumn="3" GridRow="4" Id="btnJumpAlternate" />
     <Label Text="General" VerticalAlignment="Center" GridRow="5" />
-    <Label Text="Show FPS" VerticalAlignment="Center" GridColumn="1" GridRow="6" />
-    <TextButton Text="F1" MinWidth="100" Padding="10" VerticalAlignment="Center" GridColumn="2" GridRow="6" Id="btnShowFps" />
-    <TextButton MinWidth="100" Padding="10" VerticalAlignment="Center" GridColumn="3" GridRow="6" Id="btnShowFpsAlternate" />
-    <Label Text="V Sync (FPS cap)" VerticalAlignment="Center" GridColumn="1" GridRow="7" />
-    <TextButton Text="F4" MinWidth="100" Padding="10" VerticalAlignment="Center" GridColumn="2" GridRow="7" Id="btnCapFPS" />
-    <TextButton MinWidth="100" Padding="10" VerticalAlignment="Center" GridColumn="3" GridRow="7" Id="btnCapFPSAlternate" />
-    <TextButton Text="Return" MinWidth="100" Padding="10" VerticalAlignment="Center" GridRow="9" Id="btnReturnFromControls" />
-    <TextButton Text="Load Defaults" MinWidth="100" Padding="10" VerticalAlignment="Center" GridColumn="2" GridRow="9" Id="btnLoadDefaults" />
-    <TextButton Text="Save Changes" MinWidth="100" Padding="10" VerticalAlignment="Center" GridColumn="3" GridRow="9" Id="btnSaveChanges" />
+    <Label Text="Menu" VerticalAlignment="Center" GridColumn="1" GridRow="6" />
+    <TextButton Text="ESC" MinWidth="100" Padding="10" VerticalAlignment="Center" GridColumn="2" GridRow="6" Id="btnMenu" />
+    <TextButton MinWidth="100" Padding="10" VerticalAlignment="Center" GridColumn="3" GridRow="6" Id="btnMenuAlternate" />
+    <Label Text="Show FPS" VerticalAlignment="Center" GridColumn="1" GridRow="7" />
+    <TextButton Text="F1" MinWidth="100" Padding="10" VerticalAlignment="Center" GridColumn="2" GridRow="7" Id="btnShowFps" />
+    <TextButton MinWidth="100" Padding="10" VerticalAlignment="Center" GridColumn="3" GridRow="7" Id="btnShowFpsAlternate" />
+    <Label Text="V Sync (FPS cap)" VerticalAlignment="Center" GridColumn="1" GridRow="8" />
+    <TextButton Text="F4" MinWidth="100" Padding="10" VerticalAlignment="Center" GridColumn="2" GridRow="8" Id="btnCapFPS" />
+    <TextButton MinWidth="100" Padding="10" VerticalAlignment="Center" GridColumn="3" GridRow="8" Id="btnCapFPSAlternate" />
+    <TextButton Text="Return" MinWidth="100" Padding="10" VerticalAlignment="Center" GridRow="10" Id="btnReturnFromControls" />
+    <TextButton Text="Load Defaults" MinWidth="100" Padding="10" VerticalAlignment="Center" GridColumn="2" GridRow="10" Id="btnLoadDefaults" />
+    <TextButton Text="Save Changes" MinWidth="100" Padding="10" VerticalAlignment="Center" GridColumn="3" GridRow="10" Id="btnSaveChanges" />
   </Grid>
 </Project>
