@@ -101,13 +101,12 @@ public class ANXYGame : Game
         InitializeBackground();
         InitializeLevelBackgroundLayers();
 
+        //InitializeInputController();
         InitializePlayer();
 
         InitializeLevelForegroundLayers();
         AddPlayerToBackground();
         AddPlayerToLevel();
-
-        InitializeUi();
     }
 
     /// <summary>
@@ -147,16 +146,16 @@ public class ANXYGame : Game
     protected override void Update(GameTime gameTime)
     {
         EntitySystem.Instance._UpdateEntities(gameTime);
-        var state = Keyboard.GetState();
-        if (state.IsKeyDown(Keys.F) && oldState.IsKeyUp(Keys.F))
+        _ = PlayerInputController.Instance;
+        if(false)
+        //if (PlayerInputController.Instance.IsCapFpsKeyPressed())
         {
-            _graphics.SynchronizeWithVerticalRetrace = !_graphics.SynchronizeWithVerticalRetrace;
-            IsFixedTimeStep = !IsFixedTimeStep;
+            //_graphics.SynchronizeWithVerticalRetrace = !_graphics.SynchronizeWithVerticalRetrace;
+            //IsFixedTimeStep = !IsFixedTimeStep;
 
-            _graphics.ApplyChanges();
+            //_graphics.ApplyChanges();
         }
 
-        oldState = state;
         //base.Update(gameTime);
     }
 
@@ -170,6 +169,13 @@ public class ANXYGame : Game
         _spriteBatch.Begin();
         EntitySystem.Instance.DrawEntities(gameTime, _spriteBatch);
         _spriteBatch.End();
+    }
+
+    private void InitializeInputController()
+    {
+        var playerInputControllerEntity = new Entity();
+        EntitySystem.Instance.AddEntity(playerInputControllerEntity);
+        playerInputControllerEntity.AddComponent(PlayerInputController.Instance);
     }
 
     /// <summary>
@@ -341,17 +347,5 @@ public class ANXYGame : Game
         {
             levelEntity.GetComponent<Level>().PlayerEntity = _playerEntity;
         }
-    }
-
-    private void InitializeUi()
-    {
-        var uiEntity = new Entity();
-        EntitySystem.Instance.AddEntity(uiEntity);
-        var fpsCounter = new FpsCounter();
-        uiEntity.AddComponent(fpsCounter);
-        var topLeftPosition = Vector2.One;
-        var textRenderer = new TextRenderer(_arialSpriteFont, FpsCounter.Instance.fpsText, topLeftPosition, Color.LimeGreen);
-        uiEntity.AddComponent(textRenderer);
-
     }
 }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Xml.Serialization;
 using ANXY.Start;
@@ -45,14 +46,17 @@ namespace ANXY.EntityComponent.Components
         private KeyboardState currentKeyboardState;
         private InputSettings inputSettings;
         private Keys upKey, downKey, leftKey, rightKey, jumpKey, menuKey, showFpsKey, capFpsKey;
-        private String userValuePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Content\\InputUserValues.json");
-        private String defaultValuePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Content\\InputDefaults.json");
+
+
+        /*
+        private String userValuePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Contents\\Resources\\Content\\InputUserValues.json");
+        private String defaultValuePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Contents\\Resources\\Content\\InputDefaults.json");*/
         private Dictionary<Keys, bool> lastKeyState;
 
 
         ///Singleton Pattern
         private static readonly Lazy<PlayerInputController> lazy = new(() => new PlayerInputController());
-        
+        private PlayerInputController() { Initialize(); }
 
         /// <summary>
         ///     Singleton Pattern return the only instance there is
@@ -75,6 +79,25 @@ namespace ANXY.EntityComponent.Components
 
         public override void Initialize()
         {
+            // Get the base directory path of the application
+            string baseDirectory = AppContext.BaseDirectory;
+
+            // Check if running on macOS
+            bool isRunningOnWindows = OperatingSystem.IsWindows();
+
+            // Access a file within the app bundle
+            string filePath = Path.Combine(baseDirectory.ToString());
+            if (!isRunningOnWindows) 
+            {
+                filePath = Path.Combine(filePath, "Contents", "Resources"); 
+            }
+            filePath = Path.Combine(filePath, "Content", "InputUserValues.json");
+
+            // Read the contents of the file
+            Load(filePath);
+            UpdateKeys();
+
+            /*
             if (File.Exists(userValuePath))
             {
                 Load(userValuePath);
@@ -84,7 +107,7 @@ namespace ANXY.EntityComponent.Components
             {
                 Load(defaultValuePath);
                 UpdateKeys();
-            }
+            }*/
 
             lastKeyState = new Dictionary<Keys, bool>();
             Keys[] keys = { leftKey, rightKey, jumpKey, menuKey, showFpsKey, capFpsKey };
