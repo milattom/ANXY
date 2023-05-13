@@ -1,9 +1,11 @@
 ﻿using ANXY.EntityComponent.Components;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Myra.Graphics2D;
 using Myra.Graphics2D.Brushes;
 using Myra.Graphics2D.UI;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ANXY.UI
@@ -214,11 +216,19 @@ namespace ANXY.UI
         public TextButton btnLoadDefaults;
         public TextButton btnSaveChanges;
         public Label lblWaitingForKeyPress;
-        private string oldSenderId;
+        private TextButton oldSenderTextButton;
 
         private void OnSaveChangesClicked(object sender, EventArgs e)
         {
-            SaveChangesPressed?.Invoke();
+            if (!CheckMultiple())
+            {
+                btnSaveChanges.TextColor = Color.White;
+                SaveChangesPressed?.Invoke();
+            }
+            else
+            {
+                btnSaveChanges.TextColor= Color.Red;
+            }
         }
 
         private void OnLoadDefaultsClicked(object sender, EventArgs e)
@@ -235,45 +245,89 @@ namespace ANXY.UI
         private void OnInputButtonClicked(object sender, EventArgs e)
         {
             TextButton senderTextButton = sender as TextButton;
-            if (senderTextButton.Id == oldSenderId && Widgets.Contains(lblWaitingForKeyPress))
+            if (oldSenderTextButton != null && senderTextButton.Id == oldSenderTextButton.Id && Widgets.Contains(lblWaitingForKeyPress))
             {
-                Widgets.Remove(lblWaitingForKeyPress);
+                Widgets.Remove(lblWaitingForKeyPress); PlayerInputController.Instance.AnyKeyPress -= OnAnyKeyPress;
                 return;
-            }else if (!Widgets.Contains(lblWaitingForKeyPress))
+            }
+            else if (!Widgets.Contains(lblWaitingForKeyPress))
             {
                 Widgets.Add(lblWaitingForKeyPress);
             }
-            oldSenderId = senderTextButton.Id;
+            oldSenderTextButton = senderTextButton;
 
+            bool keyPressReceived = false;
+            Keys keyPressed = Keys.None;
+            PlayerInputController.Instance.AnyKeyPress += OnAnyKeyPress;
+        }
+        private void OnAnyKeyPress(Keys key)
+        {
+            oldSenderTextButton.Text = key.ToString();
+            Widgets.Remove(lblWaitingForKeyPress);
+            PlayerInputController.Instance.AnyKeyPress -= OnAnyKeyPress;
+            CheckMultiple();
         }
 
+        private bool CheckMultiple()
+        {
+            var result = false;
+
+            Dictionary<string, int> dict = new();
+            foreach (TextButton txtBtn in Widgets.OfType<TextButton>())
+            {
+                if (!dict.ContainsKey(txtBtn.Text))
+                {
+                    dict.Add(txtBtn.Text, 1);
+                }
+                else
+                {
+                    dict[txtBtn.Text]++;
+                    result = true;
+                }
+            }
+
+            foreach (TextButton txtBtn in Widgets.OfType<TextButton>())
+            {
+                dict.TryGetValue(txtBtn.Text, out var i);
+                if (i > 1)
+                {
+                    txtBtn.TextColor = Color.Red;
+                }
+                else
+                {
+                    txtBtn.TextColor = Color.White;
+                }
+            }
+
+            return result;
+        }
         public void LoadButtonLayout()
         {
             var inputSettings = PlayerInputController.Instance.inputSettings;
 
-            foreach (TextButton btn in Widgets.OfType<TextButton>())
+            foreach (TextButton txtBtn in Widgets.OfType<TextButton>())
             {
-                if (btn.Id == null)
+                if (txtBtn.Id == null)
                     continue;
-                switch (btn.Id)
+                switch (txtBtn.Id)
                 {
                     case "btnMovementLeft":
-                        btn.Text = inputSettings.Movement.Left.ToString();
+                        txtBtn.Text = inputSettings.Movement.Left.ToString();
                         break;
                     case "btnMovementRight":
-                        btn.Text = inputSettings.Movement.Right.ToString();
+                        txtBtn.Text = inputSettings.Movement.Right.ToString();
                         break;
                     case "btnJump":
-                        btn.Text = inputSettings.Movement.Jump.ToString();
+                        txtBtn.Text = inputSettings.Movement.Jump.ToString();
                         break;
                     case "btnMenu":
-                        btn.Text = inputSettings.Menu.Key.ToString();
+                        txtBtn.Text = inputSettings.Menu.Key.ToString();
                         break;
                     case "btnShowFps":
-                        btn.Text = inputSettings.ShowFps.Key.ToString();
+                        txtBtn.Text = inputSettings.ShowFps.Key.ToString();
                         break;
                     case "btnCapFps":
-                        btn.Text = inputSettings.CapFps.Key.ToString();
+                        txtBtn.Text = inputSettings.CapFps.Key.ToString();
                         break;
                     default:
                         continue;

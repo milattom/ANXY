@@ -1,9 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Myra.Graphics2D.UI;
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ANXY.EntityComponent.Components
 {
@@ -16,6 +19,8 @@ namespace ANXY.EntityComponent.Components
         public event Action ShowFpsKeyPressed;
         public event Action LimitFpsKeyPressed;
         public event Action<bool> GamePausedChanged;
+        public event Action<Keys> AnyKeyPress;
+
         public bool GamePaused { get; private set; }
 
         public class InputSettings
@@ -60,6 +65,12 @@ namespace ANXY.EntityComponent.Components
 
         public override void Update(GameTime gameTime)
         {
+            if (currentKeyboardState.GetPressedKeys().Length > 0 && !lastKeyboardState.IsKeyDown(currentKeyboardState.GetPressedKeys()[0]))
+            {
+                // Raise the key press event
+                KeyPressed(currentKeyboardState.GetPressedKeys()[0]);
+            }
+
             if (IsLimitFpsKeyPressed())
             {
                 LimitFpsKeyPressed?.Invoke();
@@ -85,6 +96,11 @@ namespace ANXY.EntityComponent.Components
         public void SetLastState()
         {
             lastKeyboardState = currentKeyboardState;
+        }
+
+        private void KeyPressed(Keys key)
+        {
+            AnyKeyPress?.Invoke(key);
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
