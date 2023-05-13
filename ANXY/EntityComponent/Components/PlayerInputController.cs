@@ -1,12 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Myra.Graphics2D.UI;
 using Newtonsoft.Json;
 using System;
 using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ANXY.EntityComponent.Components
 {
@@ -82,7 +79,7 @@ namespace ANXY.EntityComponent.Components
                 GamePausedChanged?.Invoke(GamePaused);
             }
 
-            if (IsShowFpsKeyPressed() )
+            if (IsShowFpsKeyPressed())
             {
                 ShowFpsKeyPressed?.Invoke();
             }

@@ -27,6 +27,16 @@ namespace ANXY.UI
             label3.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
             label3.GridRow = 1;
 
+            lblMultipleIdenticalKeys = new Label();
+            lblMultipleIdenticalKeys.Text = "Multiple identical Keys";
+            lblMultipleIdenticalKeys.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
+            lblMultipleIdenticalKeys.HorizontalAlignment = HorizontalAlignment.Center;
+            lblMultipleIdenticalKeys.Left = -40;
+            lblMultipleIdenticalKeys.GridColumn = 2;
+            lblMultipleIdenticalKeys.GridRow = 1;
+            lblMultipleIdenticalKeys.TextColor = Color.Red;
+            lblMultipleIdenticalKeys.Id = "lblMultipleIdenticalKeys";
+
             var label4 = new Label();
             label4.Text = "Move Left";
             label4.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
@@ -83,7 +93,7 @@ namespace ANXY.UI
             lblWaitingForKeyPress = new Label();
             lblWaitingForKeyPress.Text = "Waiting for Key Press";
             lblWaitingForKeyPress.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
-            lblWaitingForKeyPress.HorizontalAlignment = HorizontalAlignment.Right;
+            lblWaitingForKeyPress.HorizontalAlignment = HorizontalAlignment.Center;
             lblWaitingForKeyPress.Left = -40;
             lblWaitingForKeyPress.GridColumn = 2;
             lblWaitingForKeyPress.GridRow = 5;
@@ -171,7 +181,7 @@ namespace ANXY.UI
 
             ColumnSpacing = 10;
             RowSpacing = 5;
-            MinWidth = 500;
+            MinWidth = 550;
             ColumnsProportions.Add(new Proportion
             {
                 Type = Myra.Graphics2D.UI.ProportionType.Auto,
@@ -205,7 +215,6 @@ namespace ANXY.UI
             Widgets.Add(btnSaveChanges);
         }
 
-
         public TextButton btnMoveLeft;
         public TextButton btnMoveRight;
         public TextButton btnJump;
@@ -216,18 +225,14 @@ namespace ANXY.UI
         public TextButton btnLoadDefaults;
         public TextButton btnSaveChanges;
         public Label lblWaitingForKeyPress;
+        public Label lblMultipleIdenticalKeys;
         private TextButton oldSenderTextButton;
 
         private void OnSaveChangesClicked(object sender, EventArgs e)
         {
             if (!CheckMultiple())
             {
-                btnSaveChanges.TextColor = Color.White;
                 SaveChangesPressed?.Invoke();
-            }
-            else
-            {
-                btnSaveChanges.TextColor= Color.Red;
             }
         }
 
@@ -257,8 +262,6 @@ namespace ANXY.UI
             }
             oldSenderTextButton = senderTextButton;
 
-            bool keyPressReceived = false;
-            Keys keyPressed = Keys.None;
             PlayerInputController.Instance.AnyKeyPress += OnAnyKeyPress;
         }
         private void OnAnyKeyPress(Keys key)
@@ -272,6 +275,8 @@ namespace ANXY.UI
         private bool CheckMultiple()
         {
             var result = false;
+            Widgets.Remove(lblMultipleIdenticalKeys);
+            btnSaveChanges.TextColor = Color.White;
 
             Dictionary<string, int> dict = new();
             foreach (TextButton txtBtn in Widgets.OfType<TextButton>())
@@ -298,6 +303,12 @@ namespace ANXY.UI
                 {
                     txtBtn.TextColor = Color.White;
                 }
+            }
+
+            if (result)
+            {
+                Widgets.Add(lblMultipleIdenticalKeys);
+                btnSaveChanges.TextColor = Color.Red;
             }
 
             return result;
