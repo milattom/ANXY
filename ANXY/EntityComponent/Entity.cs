@@ -10,6 +10,7 @@ namespace ANXY.EntityComponent;
 /// </summary>
 public sealed class Entity
 {
+    public bool isActive = true;
     public static int previousID;
     private readonly List<Component> _components = new();
     public int ID { get; set; } = previousID++;
@@ -70,6 +71,10 @@ public sealed class Entity
 
     public void Update(GameTime gameTime)
     {
+        if (!isActive)
+        {
+            return;
+        }
         foreach (var component in _components)
             if (component.IsActive)
                 component.Update(gameTime);
@@ -84,6 +89,10 @@ public sealed class Entity
 
     public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
+        if (!isActive)
+        {
+            return;
+        }
         foreach (var component in _components)
             if (component.IsActive)
                 component.Draw(gameTime, spriteBatch);

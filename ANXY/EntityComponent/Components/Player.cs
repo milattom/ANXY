@@ -29,7 +29,7 @@ public class Player : Component
     private const float FloorFriction = 25;
 
     private bool _isAlive = true;
-    private PlayerInputController _playerInputController;
+    public PlayerInputController _playerInputController;
 
 
     /* TODO maybe implement later. Ideas for now
