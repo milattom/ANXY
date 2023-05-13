@@ -12,6 +12,7 @@ namespace ANXY.UI
         private PauseMenu _pauseMenu;
         private ControlsMenu _controlsMenu;
         private FpsOverlay _fpsOverlay;
+        private Credits _credits;
         private float _fps;
         private Desktop _desktop;
 
@@ -31,6 +32,7 @@ namespace ANXY.UI
             _pauseMenu = new PauseMenu();
             _pauseMenu.ResumePressed += OnResumeBtnPressed;
             _pauseMenu.ControlsPressed += OnControlsBtnPressed;
+            _pauseMenu.CreditsPressed += OnCreditsBtnPressed;
             _pauseMenu.ExitGamePressed += OnExitGamePressed;
 
             _controlsMenu = new ControlsMenu();
@@ -44,6 +46,9 @@ namespace ANXY.UI
             PlayerInputController.Instance.ShowFpsKeyPressed += OnShowFpsKeyPressed;
 
             _fpsOverlay = new FpsOverlay();
+
+            _credits = new Credits();
+            _credits.ReturnPressed += OnReturnClicked;
         }
 
         public void UpdateFPS(GameTime gameTime)
@@ -90,6 +95,11 @@ namespace ANXY.UI
         {
             _controlsMenu.LoadButtonLayout();
             _desktop.Root = _controlsMenu;
+        }
+
+        public void OnCreditsBtnPressed()
+        {
+            _desktop.Root = _credits;
         }
 
         public void OnGamePausedChanged(bool gamePaused)
