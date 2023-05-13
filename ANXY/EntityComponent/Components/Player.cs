@@ -3,7 +3,6 @@ using ANXY.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using static ANXY.EntityComponent.Components.BoxCollider;
 
@@ -164,7 +163,6 @@ public class Player : Component
                 _velocity = new Vector2(Velocity.X,
                     Math.Clamp(Velocity.Y, 1, float.PositiveInfinity)); //stop gravity
                 Entity.Position = new Vector2(Entity.Position.X, edgePosition - playerBoxCollider.Offset.Y);
-                //_midAir = CheckSpecialCases(edges);
                 break;
             case BoxCollider.Edge.Left:
                 _velocity = new Vector2(Math.Clamp(Velocity.X, float.NegativeInfinity, 0), Velocity.Y);
@@ -179,38 +177,11 @@ public class Player : Component
         }
     }
 
-    private void ResolveCollision(BoxCollider boxCollider)
-    {
-        var edgeCases = new List<(BoxCollider.Edge, Vector2)>(boxCollider.CollidingEdges);
-        var edges = edgeCases.Select(e => e.Item1).ToList();
-        if (!edges.Contains(BoxCollider.Edge.Bottom)) MidAir();
-
-        foreach (var (edge, pos) in edgeCases)
-        {
-        }
-
-        boxCollider.CollidingEdges.Clear();
-    }
-
-    private void MidAir()
-    {
-        InputDirection = new Vector2(0, 1); //Gravity
-        _midAir = true;
-    }
-
-    private bool CheckSpecialCases(List<BoxCollider.Edge> edges)
-    {
-        //wall climbing
-        return (edges.FindAll(b => b != BoxCollider.Edge.Bottom).Count > 2);
-    }
-
     // ########################################################## future TO DO section #####################################################################
     /// <summary>
     /// Draw
     /// </summary>
-    public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-    {
-    }
+    public override void Draw(GameTime gameTime, SpriteBatch spriteBatch) { }
 
     /// <summary>
     /// TODO implementation idea for DoubleJump
@@ -218,24 +189,6 @@ public class Player : Component
     /// </summary>
     /// <returns>true if jumped.</returns>
     public bool DoubleJump()
-    {
-        return true;
-    }
-
-    /// <summary>
-    /// TODO idea for future for cancelling jump and immediately starting to drop. No more Jumping or Double jumping. Set Player State to either Drop or Falling
-    /// </summary>
-    /// <returns>true if dropping possible and started</returns>
-    public bool Drop()
-    {
-        return true;
-    }
-
-    /// <summary>
-    /// TODO idea for future of player health or death. Will die when anxiety score is too high. Game Over. Try Again.
-    /// </summary>
-    /// <returns>true when dying possible.</returns>
-    public bool Die()
     {
         return true;
     }

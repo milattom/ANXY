@@ -47,13 +47,10 @@ namespace ANXY.EntityComponent.Components
         private String userValuePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Content\\InputUserValues.json");
         private String defaultValuePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Content\\InputDefaults.json");
 
-        private PlayerInputController()
-        {
-        }
+        private PlayerInputController() { }
 
         ///Singleton Pattern
         private static readonly Lazy<PlayerInputController> lazy = new(() => new PlayerInputController());
-
 
         /// <summary>
         ///     Singleton Pattern return the only instance there is
@@ -100,9 +97,7 @@ namespace ANXY.EntityComponent.Components
             AnyKeyPress?.Invoke(key);
         }
 
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-        }
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch) { }
 
         public override void Initialize()
         {
@@ -116,12 +111,9 @@ namespace ANXY.EntityComponent.Components
                 Load(defaultValuePath);
                 UpdateKeys();
             }
-
         }
 
-        public override void Destroy()
-        {
-        }
+        public override void Destroy() { }
 
         public void setInputSettings(InputSettings inputSettings)
         {
@@ -149,7 +141,6 @@ namespace ANXY.EntityComponent.Components
 
         public void ResetToDefaults()
         {
-            //File.Copy(defaultValuePath, userValuePath, true);
             Load(defaultValuePath);
             UpdateKeys();
         }

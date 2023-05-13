@@ -3,7 +3,6 @@ using ANXY.EntityComponent.Components;
 using ANXY.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Tiled;
 using Myra;
 using System;
@@ -34,7 +33,6 @@ public class ANXYGame : Game
     private readonly string[] _backgroundLayerNames = { "Ground" };
     private readonly string[] _foregroundLayerNames = { "" };
     private readonly string contentRootDirectory = "Content";
-    private KeyboardState oldState;
     private bool GamePlaying = true;
 
     ///Singleton Pattern
@@ -98,8 +96,6 @@ public class ANXYGame : Game
         {
             BoxColliderSystem.Instance.EnableDebugMode(_graphics.GraphicsDevice);
         }
-
-        oldState = Keyboard.GetState();
     }
 
     /// <summary>
@@ -112,7 +108,6 @@ public class ANXYGame : Game
         InitializeBackground();
 
         InitializeLevelBackgroundLayers();
-        var i = UIManager.Instance;
 
         InitializeInputController();
         InitializePlayer();

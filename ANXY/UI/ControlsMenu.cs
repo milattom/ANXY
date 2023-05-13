@@ -15,205 +15,6 @@ namespace ANXY.UI
         public event Action ReturnPressed;
         public event Action LoadDefaultsPressed;
         public event Action SaveChangesPressed;
-        public ControlsMenu()
-        {
-            var label1 = new Label();
-            label1.Text = "Key";
-            label1.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
-            label1.GridColumn = 2;
-
-            var label3 = new Label();
-            label3.Text = "Movement";
-            label3.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
-            label3.GridRow = 1;
-
-            lblMultipleIdenticalKeys = new Label();
-            lblMultipleIdenticalKeys.Text = "Multiple identical Keys";
-            lblMultipleIdenticalKeys.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
-            lblMultipleIdenticalKeys.HorizontalAlignment = HorizontalAlignment.Center;
-            lblMultipleIdenticalKeys.Left = -40;
-            lblMultipleIdenticalKeys.GridColumn = 2;
-            lblMultipleIdenticalKeys.GridRow = 1;
-            lblMultipleIdenticalKeys.TextColor = Color.Red;
-            lblMultipleIdenticalKeys.Id = "lblMultipleIdenticalKeys";
-
-            var label4 = new Label();
-            label4.Text = "Move Left";
-            label4.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
-            label4.GridColumn = 1;
-            label4.GridRow = 2;
-
-            btnMovementLeft = new TextButton();
-            btnMovementLeft.Text = "A";
-            btnMovementLeft.MinWidth = 100;
-            btnMovementLeft.Padding = new Thickness(10);
-            btnMovementLeft.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
-            btnMovementLeft.GridColumn = 2;
-            btnMovementLeft.GridRow = 2;
-            btnMovementLeft.Id = "btnMovementLeft";
-            btnMovementLeft.Click += OnInputButtonClicked;
-
-            var label5 = new Label();
-            label5.Text = "Move Right";
-            label5.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
-            label5.GridColumn = 1;
-            label5.GridRow = 3;
-
-            btnMovementRight = new TextButton();
-            btnMovementRight.Text = "D";
-            btnMovementRight.MinWidth = 100;
-            btnMovementRight.Padding = new Thickness(10);
-            btnMovementRight.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
-            btnMovementRight.GridColumn = 2;
-            btnMovementRight.GridRow = 3;
-            btnMovementRight.Id = "btnMovementRight";
-            btnMovementRight.Click += OnInputButtonClicked;
-
-            var label6 = new Label();
-            label6.Text = "Jump";
-            label6.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
-            label6.GridColumn = 1;
-            label6.GridRow = 4;
-
-            btnMovementJump = new TextButton();
-            btnMovementJump.Text = "Space";
-            btnMovementJump.MinWidth = 100;
-            btnMovementJump.Padding = new Thickness(10);
-            btnMovementJump.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
-            btnMovementJump.GridColumn = 2;
-            btnMovementJump.GridRow = 4;
-            btnMovementJump.Id = "btnMovementJump";
-            btnMovementJump.Click += OnInputButtonClicked;
-
-            var label7 = new Label();
-            label7.Text = "General";
-            label7.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
-            label7.GridRow = 5;
-
-            lblWaitingForKeyPress = new Label();
-            lblWaitingForKeyPress.Text = "Waiting for Key Press";
-            lblWaitingForKeyPress.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
-            lblWaitingForKeyPress.HorizontalAlignment = HorizontalAlignment.Center;
-            lblWaitingForKeyPress.Left = -40;
-            lblWaitingForKeyPress.GridColumn = 2;
-            lblWaitingForKeyPress.GridRow = 5;
-            lblWaitingForKeyPress.TextColor = Color.Red;
-            lblWaitingForKeyPress.Id = "lblWaitingForKeyPress";
-
-            var label9 = new Label();
-            label9.Text = "Menu";
-            label9.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
-            label9.GridColumn = 1;
-            label9.GridRow = 6;
-
-            btnMenu = new TextButton();
-            btnMenu.Text = "Menu Key TESTING";
-            btnMenu.MinWidth = 100;
-            btnMenu.Padding = new Thickness(10);
-            btnMenu.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
-            btnMenu.GridColumn = 2;
-            btnMenu.GridRow = 6;
-            btnMenu.Id = "btnMenu";
-            btnMenu.Click += OnInputButtonClicked;
-
-            var label10 = new Label();
-            label10.Text = "Show FPS";
-            label10.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
-            label10.GridColumn = 1;
-            label10.GridRow = 7;
-
-            btnShowFps = new TextButton();
-            btnShowFps.Text = "F1";
-            btnShowFps.MinWidth = 100;
-            btnShowFps.Padding = new Thickness(10);
-            btnShowFps.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
-            btnShowFps.GridColumn = 2;
-            btnShowFps.GridRow = 7;
-            btnShowFps.Id = "btnShowFps";
-            btnShowFps.Click += OnInputButtonClicked;
-
-            var label11 = new Label();
-            label11.Text = "V Sync (FPS cap)";
-            label11.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
-            label11.GridColumn = 1;
-            label11.GridRow = 8;
-
-            btnCapFps = new TextButton();
-            btnCapFps.Text = "F4";
-            btnCapFps.MinWidth = 100;
-            btnCapFps.Padding = new Thickness(10);
-            btnCapFps.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
-            btnCapFps.GridColumn = 2;
-            btnCapFps.GridRow = 8;
-            btnCapFps.Id = "btnCapFps";
-            btnCapFps.Click += OnInputButtonClicked;
-
-            btnReturnFromControls = new TextButton();
-            btnReturnFromControls.Text = "Return";
-            btnReturnFromControls.MinWidth = 100;
-            btnReturnFromControls.Padding = new Thickness(10);
-            btnReturnFromControls.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
-            btnReturnFromControls.GridRow = 10;
-            btnReturnFromControls.Id = "btnReturnFromControls";
-            btnReturnFromControls.Click += OnReturnClicked;
-
-            btnLoadDefaults = new TextButton();
-            btnLoadDefaults.Text = "Load Defaults";
-            btnLoadDefaults.MinWidth = 100;
-            btnLoadDefaults.Padding = new Thickness(10);
-            btnLoadDefaults.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
-            btnLoadDefaults.HorizontalAlignment = HorizontalAlignment.Right;
-            btnLoadDefaults.GridColumn = 1;
-            btnLoadDefaults.GridRow = 10;
-            btnLoadDefaults.Id = "btnLoadDefaults";
-            btnLoadDefaults.Click += OnLoadDefaultsClicked;
-
-            btnSaveChanges = new TextButton();
-            btnSaveChanges.Text = "Save Changes";
-            btnSaveChanges.MinWidth = 100;
-            btnSaveChanges.Padding = new Thickness(10);
-            btnSaveChanges.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
-            btnSaveChanges.HorizontalAlignment = HorizontalAlignment.Left;
-            btnSaveChanges.GridColumn = 2;
-            btnSaveChanges.GridRow = 10;
-            btnSaveChanges.Id = "btnSaveChanges";
-            btnSaveChanges.Click += OnSaveChangesClicked;
-
-            ColumnSpacing = 10;
-            RowSpacing = 5;
-            MinWidth = 550;
-            ColumnsProportions.Add(new Proportion
-            {
-                Type = Myra.Graphics2D.UI.ProportionType.Auto,
-            });
-            RowsProportions.Add(new Proportion
-            {
-                Type = Myra.Graphics2D.UI.ProportionType.Auto,
-            });
-            HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment.Center;
-            VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
-            Margin = new Thickness(10);
-            Padding = new Thickness(10);
-            Background = new SolidBrush("#0000FF22");
-            Widgets.Add(label1);
-            Widgets.Add(label3);
-            Widgets.Add(label4);
-            Widgets.Add(btnMovementLeft);
-            Widgets.Add(label5);
-            Widgets.Add(btnMovementRight);
-            Widgets.Add(label6);
-            Widgets.Add(btnMovementJump);
-            Widgets.Add(label7);
-            Widgets.Add(label9);
-            Widgets.Add(btnMenu);
-            Widgets.Add(label10);
-            Widgets.Add(btnShowFps);
-            Widgets.Add(label11);
-            Widgets.Add(btnCapFps);
-            Widgets.Add(btnReturnFromControls);
-            Widgets.Add(btnLoadDefaults);
-            Widgets.Add(btnSaveChanges);
-        }
 
         public TextButton btnMovementLeft;
         public TextButton btnMovementRight;
@@ -228,6 +29,206 @@ namespace ANXY.UI
         public Label lblMultipleIdenticalKeys;
         private TextButton oldSenderTextButton;
 
+        public ControlsMenu()
+        {
+            var lblKey = new Label();
+            lblKey.Text = "Key";
+            lblKey.VerticalAlignment = VerticalAlignment.Center;
+            lblKey.GridColumn = 2;
+
+            var lblMovement = new Label();
+            lblMovement.Text = "Movement";
+            lblMovement.VerticalAlignment = VerticalAlignment.Center;
+            lblMovement.GridRow = 1;
+
+            lblMultipleIdenticalKeys = new Label();
+            lblMultipleIdenticalKeys.Text = "Multiple identical Keys";
+            lblMultipleIdenticalKeys.VerticalAlignment = VerticalAlignment.Center;
+            lblMultipleIdenticalKeys.HorizontalAlignment = HorizontalAlignment.Center;
+            lblMultipleIdenticalKeys.Left = -40;
+            lblMultipleIdenticalKeys.GridColumn = 2;
+            lblMultipleIdenticalKeys.GridRow = 1;
+            lblMultipleIdenticalKeys.TextColor = Color.Red;
+            lblMultipleIdenticalKeys.Id = "lblMultipleIdenticalKeys";
+
+            var lblMoveLeft = new Label();
+            lblMoveLeft.Text = "Move Left";
+            lblMoveLeft.VerticalAlignment = VerticalAlignment.Center;
+            lblMoveLeft.GridColumn = 1;
+            lblMoveLeft.GridRow = 2;
+
+            btnMovementLeft = new TextButton();
+            btnMovementLeft.Text = "A";
+            btnMovementLeft.MinWidth = 100;
+            btnMovementLeft.Padding = new Thickness(10);
+            btnMovementLeft.VerticalAlignment = VerticalAlignment.Center;
+            btnMovementLeft.GridColumn = 2;
+            btnMovementLeft.GridRow = 2;
+            btnMovementLeft.Id = "btnMovementLeft";
+            btnMovementLeft.Click += OnInputButtonClicked;
+
+            var lblMoveRight = new Label();
+            lblMoveRight.Text = "Move Right";
+            lblMoveRight.VerticalAlignment = VerticalAlignment.Center;
+            lblMoveRight.GridColumn = 1;
+            lblMoveRight.GridRow = 3;
+
+            btnMovementRight = new TextButton();
+            btnMovementRight.Text = "D";
+            btnMovementRight.MinWidth = 100;
+            btnMovementRight.Padding = new Thickness(10);
+            btnMovementRight.VerticalAlignment = VerticalAlignment.Center;
+            btnMovementRight.GridColumn = 2;
+            btnMovementRight.GridRow = 3;
+            btnMovementRight.Id = "btnMovementRight";
+            btnMovementRight.Click += OnInputButtonClicked;
+
+            var lblJump = new Label();
+            lblJump.Text = "Jump";
+            lblJump.VerticalAlignment = VerticalAlignment.Center;
+            lblJump.GridColumn = 1;
+            lblJump.GridRow = 4;
+
+            btnMovementJump = new TextButton();
+            btnMovementJump.Text = "Space";
+            btnMovementJump.MinWidth = 100;
+            btnMovementJump.Padding = new Thickness(10);
+            btnMovementJump.VerticalAlignment = VerticalAlignment.Center;
+            btnMovementJump.GridColumn = 2;
+            btnMovementJump.GridRow = 4;
+            btnMovementJump.Id = "btnMovementJump";
+            btnMovementJump.Click += OnInputButtonClicked;
+
+            var lblGeneral = new Label();
+            lblGeneral.Text = "General";
+            lblGeneral.VerticalAlignment = VerticalAlignment.Center;
+            lblGeneral.GridRow = 5;
+
+            lblWaitingForKeyPress = new Label();
+            lblWaitingForKeyPress.Text = "Waiting for Key Press";
+            lblWaitingForKeyPress.VerticalAlignment = VerticalAlignment.Center;
+            lblWaitingForKeyPress.HorizontalAlignment = HorizontalAlignment.Center;
+            lblWaitingForKeyPress.Left = -40;
+            lblWaitingForKeyPress.GridColumn = 2;
+            lblWaitingForKeyPress.GridRow = 5;
+            lblWaitingForKeyPress.TextColor = Color.Red;
+            lblWaitingForKeyPress.Id = "lblWaitingForKeyPress";
+
+            var lblMenu = new Label();
+            lblMenu.Text = "Menu";
+            lblMenu.VerticalAlignment = VerticalAlignment.Center;
+            lblMenu.GridColumn = 1;
+            lblMenu.GridRow = 6;
+
+            btnMenu = new TextButton();
+            btnMenu.Text = "Menu Key TESTING";
+            btnMenu.MinWidth = 100;
+            btnMenu.Padding = new Thickness(10);
+            btnMenu.VerticalAlignment = VerticalAlignment.Center;
+            btnMenu.GridColumn = 2;
+            btnMenu.GridRow = 6;
+            btnMenu.Id = "btnMenu";
+            btnMenu.Click += OnInputButtonClicked;
+
+            var lblShowFps = new Label();
+            lblShowFps.Text = "Show FPS";
+            lblShowFps.VerticalAlignment = VerticalAlignment.Center;
+            lblShowFps.GridColumn = 1;
+            lblShowFps.GridRow = 7;
+
+            btnShowFps = new TextButton();
+            btnShowFps.Text = "F1";
+            btnShowFps.MinWidth = 100;
+            btnShowFps.Padding = new Thickness(10);
+            btnShowFps.VerticalAlignment = VerticalAlignment.Center;
+            btnShowFps.GridColumn = 2;
+            btnShowFps.GridRow = 7;
+            btnShowFps.Id = "btnShowFps";
+            btnShowFps.Click += OnInputButtonClicked;
+
+            var lblFpsCap = new Label();
+            lblFpsCap.Text = "V Sync (FPS cap)";
+            lblFpsCap.VerticalAlignment = VerticalAlignment.Center;
+            lblFpsCap.GridColumn = 1;
+            lblFpsCap.GridRow = 8;
+
+            btnCapFps = new TextButton();
+            btnCapFps.Text = "F4";
+            btnCapFps.MinWidth = 100;
+            btnCapFps.Padding = new Thickness(10);
+            btnCapFps.VerticalAlignment = VerticalAlignment.Center;
+            btnCapFps.GridColumn = 2;
+            btnCapFps.GridRow = 8;
+            btnCapFps.Id = "btnCapFps";
+            btnCapFps.Click += OnInputButtonClicked;
+
+            btnReturnFromControls = new TextButton();
+            btnReturnFromControls.Text = "Return";
+            btnReturnFromControls.MinWidth = 100;
+            btnReturnFromControls.Padding = new Thickness(10);
+            btnReturnFromControls.VerticalAlignment = VerticalAlignment.Center;
+            btnReturnFromControls.GridRow = 10;
+            btnReturnFromControls.Id = "btnReturnFromControls";
+            btnReturnFromControls.Click += OnReturnClicked;
+
+            btnLoadDefaults = new TextButton();
+            btnLoadDefaults.Text = "Load Defaults";
+            btnLoadDefaults.MinWidth = 100;
+            btnLoadDefaults.Padding = new Thickness(10);
+            btnLoadDefaults.VerticalAlignment = VerticalAlignment.Center;
+            btnLoadDefaults.HorizontalAlignment = HorizontalAlignment.Right;
+            btnLoadDefaults.GridColumn = 1;
+            btnLoadDefaults.GridRow = 10;
+            btnLoadDefaults.Id = "btnLoadDefaults";
+            btnLoadDefaults.Click += OnLoadDefaultsClicked;
+
+            btnSaveChanges = new TextButton();
+            btnSaveChanges.Text = "Save Changes";
+            btnSaveChanges.MinWidth = 100;
+            btnSaveChanges.Padding = new Thickness(10);
+            btnSaveChanges.VerticalAlignment = VerticalAlignment.Center;
+            btnSaveChanges.HorizontalAlignment = HorizontalAlignment.Left;
+            btnSaveChanges.GridColumn = 2;
+            btnSaveChanges.GridRow = 10;
+            btnSaveChanges.Id = "btnSaveChanges";
+            btnSaveChanges.Click += OnSaveChangesClicked;
+
+            ColumnSpacing = 10;
+            RowSpacing = 5;
+            MinWidth = 550;
+            ColumnsProportions.Add(new Proportion
+            {
+                Type = ProportionType.Auto,
+            });
+            RowsProportions.Add(new Proportion
+            {
+                Type = ProportionType.Auto,
+            });
+            HorizontalAlignment = HorizontalAlignment.Center;
+            VerticalAlignment = VerticalAlignment.Center;
+            Margin = new Thickness(10);
+            Padding = new Thickness(10);
+            Background = new SolidBrush("#0000FF22");
+            Widgets.Add(lblKey);
+            Widgets.Add(lblMovement);
+            Widgets.Add(lblMoveLeft);
+            Widgets.Add(btnMovementLeft);
+            Widgets.Add(lblMoveRight);
+            Widgets.Add(btnMovementRight);
+            Widgets.Add(lblJump);
+            Widgets.Add(btnMovementJump);
+            Widgets.Add(lblGeneral);
+            Widgets.Add(lblMenu);
+            Widgets.Add(btnMenu);
+            Widgets.Add(lblShowFps);
+            Widgets.Add(btnShowFps);
+            Widgets.Add(lblFpsCap);
+            Widgets.Add(btnCapFps);
+            Widgets.Add(btnReturnFromControls);
+            Widgets.Add(btnLoadDefaults);
+            Widgets.Add(btnSaveChanges);
+        }
+
         private void OnSaveChangesClicked(object sender, EventArgs e)
         {
             if (!CheckMultiple())
@@ -237,7 +238,7 @@ namespace ANXY.UI
                 inputSettings.Movement.Left = btnMovementLeft.Text;
                 inputSettings.Movement.Right = btnMovementRight.Text;
                 inputSettings.Movement.Jump = btnMovementJump.Text;
-                inputSettings.Menu = new PlayerInputController.KeySetting() ;
+                inputSettings.Menu = new PlayerInputController.KeySetting();
                 inputSettings.Menu.Key = btnMenu.Text;
                 inputSettings.ShowFps = new PlayerInputController.KeySetting();
                 inputSettings.ShowFps.Key = btnShowFps.Text;
@@ -362,5 +363,4 @@ namespace ANXY.UI
             CheckMultiple();
         }
     }
-
 }

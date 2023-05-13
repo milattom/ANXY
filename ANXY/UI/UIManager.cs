@@ -130,8 +130,6 @@ namespace ANXY.UI
                 _lastUiState = LastUiState.FpsOverlay;
             }
         }
-
-
     }
 
     public enum LastUiState
