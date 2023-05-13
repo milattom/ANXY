@@ -123,6 +123,11 @@ namespace ANXY.EntityComponent.Components
         {
         }
 
+        public void setInputSettings(InputSettings inputSettings)
+        {
+            this.inputSettings = inputSettings;
+        }
+
         public void LoadUserSettings()
         {
             Load(userValuePath);

@@ -43,15 +43,15 @@ namespace ANXY.UI
             label4.GridColumn = 1;
             label4.GridRow = 2;
 
-            btnMoveLeft = new TextButton();
-            btnMoveLeft.Text = "A";
-            btnMoveLeft.MinWidth = 100;
-            btnMoveLeft.Padding = new Thickness(10);
-            btnMoveLeft.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
-            btnMoveLeft.GridColumn = 2;
-            btnMoveLeft.GridRow = 2;
-            btnMoveLeft.Id = "btnMovementLeft";
-            btnMoveLeft.Click += OnInputButtonClicked;
+            btnMovementLeft = new TextButton();
+            btnMovementLeft.Text = "A";
+            btnMovementLeft.MinWidth = 100;
+            btnMovementLeft.Padding = new Thickness(10);
+            btnMovementLeft.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
+            btnMovementLeft.GridColumn = 2;
+            btnMovementLeft.GridRow = 2;
+            btnMovementLeft.Id = "btnMovementLeft";
+            btnMovementLeft.Click += OnInputButtonClicked;
 
             var label5 = new Label();
             label5.Text = "Move Right";
@@ -59,15 +59,15 @@ namespace ANXY.UI
             label5.GridColumn = 1;
             label5.GridRow = 3;
 
-            btnMoveRight = new TextButton();
-            btnMoveRight.Text = "D";
-            btnMoveRight.MinWidth = 100;
-            btnMoveRight.Padding = new Thickness(10);
-            btnMoveRight.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
-            btnMoveRight.GridColumn = 2;
-            btnMoveRight.GridRow = 3;
-            btnMoveRight.Id = "btnMoveRight";
-            btnMoveRight.Click += OnInputButtonClicked;
+            btnMovementRight = new TextButton();
+            btnMovementRight.Text = "D";
+            btnMovementRight.MinWidth = 100;
+            btnMovementRight.Padding = new Thickness(10);
+            btnMovementRight.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
+            btnMovementRight.GridColumn = 2;
+            btnMovementRight.GridRow = 3;
+            btnMovementRight.Id = "btnMovementRight";
+            btnMovementRight.Click += OnInputButtonClicked;
 
             var label6 = new Label();
             label6.Text = "Jump";
@@ -75,15 +75,15 @@ namespace ANXY.UI
             label6.GridColumn = 1;
             label6.GridRow = 4;
 
-            btnJump = new TextButton();
-            btnJump.Text = "Space";
-            btnJump.MinWidth = 100;
-            btnJump.Padding = new Thickness(10);
-            btnJump.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
-            btnJump.GridColumn = 2;
-            btnJump.GridRow = 4;
-            btnJump.Id = "btnJump";
-            btnJump.Click += OnInputButtonClicked;
+            btnMovementJump = new TextButton();
+            btnMovementJump.Text = "Space";
+            btnMovementJump.MinWidth = 100;
+            btnMovementJump.Padding = new Thickness(10);
+            btnMovementJump.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
+            btnMovementJump.GridColumn = 2;
+            btnMovementJump.GridRow = 4;
+            btnMovementJump.Id = "btnMovementJump";
+            btnMovementJump.Click += OnInputButtonClicked;
 
             var label7 = new Label();
             label7.Text = "General";
@@ -198,11 +198,11 @@ namespace ANXY.UI
             Widgets.Add(label1);
             Widgets.Add(label3);
             Widgets.Add(label4);
-            Widgets.Add(btnMoveLeft);
+            Widgets.Add(btnMovementLeft);
             Widgets.Add(label5);
-            Widgets.Add(btnMoveRight);
+            Widgets.Add(btnMovementRight);
             Widgets.Add(label6);
-            Widgets.Add(btnJump);
+            Widgets.Add(btnMovementJump);
             Widgets.Add(label7);
             Widgets.Add(label9);
             Widgets.Add(btnMenu);
@@ -215,9 +215,9 @@ namespace ANXY.UI
             Widgets.Add(btnSaveChanges);
         }
 
-        public TextButton btnMoveLeft;
-        public TextButton btnMoveRight;
-        public TextButton btnJump;
+        public TextButton btnMovementLeft;
+        public TextButton btnMovementRight;
+        public TextButton btnMovementJump;
         public TextButton btnMenu;
         public TextButton btnShowFps;
         public TextButton btnCapFps;
@@ -232,6 +232,20 @@ namespace ANXY.UI
         {
             if (!CheckMultiple())
             {
+                var inputSettings = new PlayerInputController.InputSettings();
+                inputSettings.Movement = new PlayerInputController.MovementSettings();
+                inputSettings.Movement.Left = btnMovementLeft.Text;
+                inputSettings.Movement.Right = btnMovementRight.Text;
+                inputSettings.Movement.Jump = btnMovementJump.Text;
+                inputSettings.Menu = new PlayerInputController.KeySetting() ;
+                inputSettings.Menu.Key = btnMenu.Text;
+                inputSettings.ShowFps = new PlayerInputController.KeySetting();
+                inputSettings.ShowFps.Key = btnShowFps.Text;
+                inputSettings.CapFps = new PlayerInputController.KeySetting();
+                inputSettings.CapFps.Key = btnCapFps.Text;
+
+                PlayerInputController.Instance.setInputSettings(inputSettings);
+
                 SaveChangesPressed?.Invoke();
             }
         }
@@ -329,7 +343,7 @@ namespace ANXY.UI
                     case "btnMovementRight":
                         txtBtn.Text = inputSettings.Movement.Right.ToString();
                         break;
-                    case "btnJump":
+                    case "btnMovementJump":
                         txtBtn.Text = inputSettings.Movement.Jump.ToString();
                         break;
                     case "btnMenu":
