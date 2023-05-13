@@ -88,6 +88,7 @@ namespace ANXY.UI
 
         public void OnControlsBtnPressed()
         {
+            _controlsMenu.LoadButtonLayout();
             _desktop.Root = _controlsMenu;
         }
 
@@ -98,17 +99,18 @@ namespace ANXY.UI
 
         public void OnReturnClicked()
         {
+            PlayerInputController.Instance.LoadUserSettings();
             _desktop.Root = _pauseMenu;
         }
 
         public void OnLoadDefaultsClicked()
         {
-
+            PlayerInputController.Instance.ResetToDefaults();
         }
 
         public void OnSaveChangesClicked()
         {
-
+            PlayerInputController.Instance.Save();
         }
         private void OnExitGamePressed()
         {

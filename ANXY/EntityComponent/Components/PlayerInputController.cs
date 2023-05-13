@@ -21,7 +21,6 @@ namespace ANXY.EntityComponent.Components
         public class InputSettings
         {
             public MovementSettings Movement { get; set; }
-            public KeySetting Jump { get; set; }
             public KeySetting Menu { get; set; }
             public KeySetting ShowFps { get; set; }
             public KeySetting CapFps { get; set; }
@@ -29,10 +28,9 @@ namespace ANXY.EntityComponent.Components
 
         public class MovementSettings
         {
-            public string Up { get; set; }
-            public string Down { get; set; }
             public string Left { get; set; }
             public string Right { get; set; }
+            public string Jump { get; set; }
         }
 
         public class KeySetting
@@ -42,12 +40,14 @@ namespace ANXY.EntityComponent.Components
 
         private KeyboardState currentKeyboardState;
         private KeyboardState lastKeyboardState;
-        private InputSettings inputSettings;
-        private Keys upKey, downKey, leftKey, rightKey, jumpKey, menuKey, showFpsKey, limitFpsKey;
+        public InputSettings inputSettings { get; private set; }
+        private Keys leftKey, rightKey, jumpKey, menuKey, showFpsKey, limitFpsKey;
         private String userValuePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Content\\InputUserValues.json");
         private String defaultValuePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Content\\InputDefaults.json");
 
-        private PlayerInputController() { }
+        private PlayerInputController()
+        {
+        }
 
         ///Singleton Pattern
         private static readonly Lazy<PlayerInputController> lazy = new(() => new PlayerInputController());
@@ -110,9 +110,13 @@ namespace ANXY.EntityComponent.Components
         {
         }
 
-        public void Load(string fileName)
+        public void LoadUserSettings()
         {
-            //var path = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            Load(userValuePath);
+        }
+
+        private void Load(string fileName)
+        {
             string json = File.ReadAllText(fileName);
             inputSettings = JsonConvert.DeserializeObject<InputSettings>(json);
             UpdateKeys();
@@ -120,20 +124,24 @@ namespace ANXY.EntityComponent.Components
 
         public void Save()
         {
+            string json = JsonConvert.SerializeObject(inputSettings);
+            File.WriteAllText(userValuePath, json);
+            UpdateKeys();
         }
 
         public void ResetToDefaults()
         {
+            //File.Copy(defaultValuePath, userValuePath, true);
+            Load(defaultValuePath);
+            UpdateKeys();
         }
 
         private void UpdateKeys()
         {
             // Convert the MovementSettings keys
-            Enum.TryParse(inputSettings.Movement.Up, out upKey);
-            Enum.TryParse(inputSettings.Movement.Down, out downKey);
             Enum.TryParse(inputSettings.Movement.Left, out leftKey);
             Enum.TryParse(inputSettings.Movement.Right, out rightKey);
-            Enum.TryParse(inputSettings.Jump.Key, out jumpKey);
+            Enum.TryParse(inputSettings.Movement.Jump, out jumpKey);
             Enum.TryParse(inputSettings.Menu.Key, out menuKey);
             Enum.TryParse(inputSettings.ShowFps.Key, out showFpsKey);
             Enum.TryParse(inputSettings.CapFps.Key, out limitFpsKey);
