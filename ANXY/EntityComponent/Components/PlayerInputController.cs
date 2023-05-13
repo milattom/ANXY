@@ -82,7 +82,7 @@ namespace ANXY.EntityComponent.Components
                 GamePausedChanged?.Invoke(GamePaused);
             }
 
-            if (IsShowFpsKeyPressed())
+            if (IsShowFpsKeyPressed() )
             {
                 ShowFpsKeyPressed?.Invoke();
             }

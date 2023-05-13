@@ -35,11 +35,20 @@ public class ANXYGame : Game
     private readonly string[] _foregroundLayerNames = { "" };
     private readonly string contentRootDirectory = "Content";
     private KeyboardState oldState;
+    private bool GamePlaying = true;
+
+    ///Singleton Pattern
+    private static readonly Lazy<ANXYGame> lazy = new(() => new ANXYGame());
+
+    /// <summary>
+    ///     Singleton Pattern return the only instance there is
+    /// </summary>
+    public static ANXYGame Instance => lazy.Value;
 
     /// <summary>
     /// This is the constructor for the heart of the game, where everything gets its initial spark.
     /// </summary>
-    public ANXYGame()
+    private ANXYGame()
     {
         IsMouseVisible = false;
         //_graphics.ToggleFullScreen();
@@ -89,7 +98,6 @@ public class ANXYGame : Game
         {
             BoxColliderSystem.Instance.EnableDebugMode(_graphics.GraphicsDevice);
         }
-
 
         oldState = Keyboard.GetState();
     }
@@ -355,21 +363,6 @@ public class ANXYGame : Game
         {
             levelEntity.GetComponent<Level>().PlayerEntity = _playerEntity;
         }
-    }
-
-    private void InitializeUi()
-    {
-        //FPS counter
-        /*
-        var uiEntity = new Entity();
-        EntitySystem.Instance.AddEntity(uiEntity);
-        var fpsCounter = new FpsCounter();
-        uiEntity.AddComponent(fpsCounter);
-        var topLeftPosition = Vector2.One;
-        var textRenderer = new TextRenderer(_arialSpriteFont, FpsCounter.Instance.fpsText, topLeftPosition, Color.LimeGreen);
-        uiEntity.AddComponent(textRenderer);
-        */
-        //Myra UI
     }
 
     private void ToggleFpsLimit()

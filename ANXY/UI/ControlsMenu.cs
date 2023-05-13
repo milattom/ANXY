@@ -247,7 +247,8 @@ namespace ANXY.UI
             TextButton senderTextButton = sender as TextButton;
             if (oldSenderTextButton != null && senderTextButton.Id == oldSenderTextButton.Id && Widgets.Contains(lblWaitingForKeyPress))
             {
-                Widgets.Remove(lblWaitingForKeyPress); PlayerInputController.Instance.AnyKeyPress -= OnAnyKeyPress;
+                Widgets.Remove(lblWaitingForKeyPress);
+                PlayerInputController.Instance.AnyKeyPress -= OnAnyKeyPress;
                 return;
             }
             else if (!Widgets.Contains(lblWaitingForKeyPress))
@@ -333,6 +334,7 @@ namespace ANXY.UI
                         continue;
                 }
             }
+            CheckMultiple();
         }
     }
 
