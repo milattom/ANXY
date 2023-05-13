@@ -31,7 +31,10 @@ public class Player : Component
     private bool _isAlive = true;
     private PlayerInputController _playerInputController;
 
-
+    public Player() 
+    { 
+        PlayerSystem.Instance.Register(this); 
+    }
     /* TODO maybe implement later. Ideas for now
     public bool Crouch()
     {

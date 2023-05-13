@@ -4,26 +4,38 @@ using ANXY.EntityComponent;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System.Linq;
+using MonoGame.Extended.Timers;
 
 namespace ANXY.Start
 {
-    public sealed class SystemManager<T,C> where T : ComponentSystem<C> where C : Component
-    {
-        private static readonly Lazy<SystemManager<T, C>> _lazy = new(() => new SystemManager<T, C>);
+    /// <summary>
+    /// SystemManager holds all Systems that are added to the list via Register(). 
+    /// It is a helper class to easily go through all systems with its components and call each method.
+    /// If specific order is needed then use the GetSystemByType methode and then call the specific method.
+    /// Don't forget: to get the benefits of ECS call each component and don0t loop through each Entity.
+    /// </summary>
+    public sealed class SystemManager 
+    {   
+        public static SystemManager Instance => _lazy.Value;
+        private static readonly Lazy<SystemManager> _lazy = new(() => new SystemManager());
+        private readonly List<ISystem> _systems = new();
 
-        public static SystemManager<T,C> Instance => _lazy.Value;
-
-        private readonly List<T> _systems = new();
-
-        public void AddSystem(T system)
+        /// <summary>
+        /// Adds the system to the list. 
+        /// </summary>
+        /// <param name="system">The System needs to implement ISystem interface</param>
+        public void Register(ISystem system)
         {
+            if (_systems.Contains(system)) { return; }
             _systems.Add(system);
         }
 
         /// <summary>
-        ///     TODO
+        /// Removes the system from the list
         /// </summary>
-        public bool RemoveSystem(T system)
+        /// <param name="system">The System needs to implement ISystem interface</param>
+        /// <returns>true: system got removed; false: list didn't contain the system</returns>
+        public bool Unregister(ISystem system)
         {
             if(_systems.Contains(system))
             {
@@ -34,47 +46,27 @@ namespace ANXY.Start
             return false;
         }
 
+        public void InitializeAll()
+        {
+            foreach(var system in _systems) system.Initialize();
+        }
+
+        public void UpdateAll(GameTime gameTime)
+        {
+            foreach(var system in _systems) system.Update(gameTime);
+        }
+
+        public void DrawAll(GameTime gameTime, SpriteBatch  spriteBatch)
+        {
+            foreach(var system in _systems) system.Draw(gameTime, spriteBatch);
+        }
+
         public int GetNumberOfSystems()
         {
             return _systems.Count;
         }
 
-        /// <summary>
-        ///     TODO
-        /// </summary>
-        internal void Clear()
-        {
-            _systems.Clear();
-        }
-
-        /// <summary>
-        ///     TODO
-        /// </summary>
-        internal void _UpdateSystems(GameTime gameTime)
-        {
-            foreach(var system in _systems) system.Update(gameTime);
-        }
-
-        /// <summary>
-        ///     TODO
-        /// </summary>
-        internal void InitializeSystems()
-        {
-            foreach(var system in _systems) system.Initialize();
-        }
-
-        /// <summary>
-        ///     TODO
-        /// </summary>
-        internal void DrawSystems(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            foreach(var system in _systems) system.Draw(gameTime, spriteBatch);
-        }
-
-        /// <summary>
-        ///     TODO
-        /// </summary>
-        public ComponentSystem<Component> FindSystemByType<T>() where T : Component
+        public ISystem FindSystemByType<T>() where T : Component
         {
             return _systems.FirstOrDefault(s => s.GetType() == typeof(ComponentSystem<T>));
         }

@@ -22,6 +22,7 @@ public class SingleSpriteRenderer : Component
     public SingleSpriteRenderer(Texture2D atlas) : this(atlas, atlas.Bounds)
     {
         //DO NOTHING, NOP
+        SpriteSystem.Instance.Register(this);
     }
 
     /// <summary>

@@ -17,6 +17,8 @@ namespace ANXY.EntityComponent.Components
 
         public static FpsCounter Instance => lazy.Value;
 
+        public FpsCounter() { FpsSystem.Instance.Register(this); }
+
         public override void Update(GameTime gameTime)
         {
             fpsValue = 1.0f / (float)gameTime.ElapsedGameTime.TotalSeconds;

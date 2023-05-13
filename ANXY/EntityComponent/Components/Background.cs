@@ -22,6 +22,7 @@ public class Background : Component
     {
         this.WindowWidth = windowWidth;
         this.WindowHeight = windowHeight;
+        //BackgroundSystem.Instance.Register(this);
     }
 
     /// <summary>

@@ -7,7 +7,10 @@ namespace ANXY.EntityComponent.Components
     internal class UI : Component
     {
         private float fps = 0;
-
+        public UI()
+        {
+            UISystem.Instance.Register(this);
+        }
         public override void Update(GameTime gameTime)
         {
             var fps = 1.0f / (float)gameTime.ElapsedGameTime.TotalSeconds;

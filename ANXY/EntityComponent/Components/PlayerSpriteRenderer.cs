@@ -27,6 +27,7 @@ public class PlayerSpriteRenderer : Component
     {
         PlayerAtlas = playerAtlas;
         CurrentPlayerRectangle = StartPlayerRectangle;
+        PlayerSpriteSystem.Instance.Register(this);
     }
 
     /// <summary>
