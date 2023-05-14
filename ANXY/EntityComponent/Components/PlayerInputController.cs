@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Reflection;
 
 namespace ANXY.EntityComponent.Components
 {
@@ -44,8 +45,8 @@ namespace ANXY.EntityComponent.Components
         private KeyboardState lastKeyboardState;
         public InputSettings inputSettings { get; private set; }
         private Keys leftKey, rightKey, jumpKey, menuKey, showFpsKey, limitFpsKey;
-        private String userValuePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Content\\InputUserValues.json");
-        private String defaultValuePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Content\\InputDefaults.json");
+        private String userValuePath;
+        private String defaultValuePath ;
 
         private PlayerInputController() { }
 
@@ -101,6 +102,18 @@ namespace ANXY.EntityComponent.Components
 
         public override void Initialize()
         {
+            var assemblyLocation = Assembly.GetEntryAssembly().Location;
+            var contentRootPath = Path.GetDirectoryName(assemblyLocation);
+
+            if (OperatingSystem.IsMacCatalyst() || OperatingSystem.IsMacOS())
+            {
+                contentRootPath = Path.Combine(contentRootPath, "..", "Resources");
+            }
+
+            userValuePath = Path.Combine(contentRootPath, "Content", "InputUserValues.json");
+            defaultValuePath = Path.Combine(contentRootPath, "Content", "InputDefaults.json");
+
+
             if (File.Exists(userValuePath))
             {
                 Load(userValuePath);
@@ -134,7 +147,7 @@ namespace ANXY.EntityComponent.Components
 
         public void Save()
         {
-            string json = JsonConvert.SerializeObject(inputSettings);
+            string json = JsonConvert.SerializeObject(inputSettings, Formatting.Indented);
             File.WriteAllText(userValuePath, json);
             UpdateKeys();
         }
