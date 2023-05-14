@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.ComTypes;
-using System.Xml.Serialization;
+using System.Reflection;
 using ANXY.Start;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json;
-using static ANXY.EntityComponent.Components.PlayerInputController;
 
 namespace ANXY.EntityComponent.Components
 {
@@ -79,23 +75,34 @@ namespace ANXY.EntityComponent.Components
 
         public override void Initialize()
         {
+            // Access the content files
+            string assemblyLocation = Assembly.GetEntryAssembly().Location;
+            string contentRootPath = Path.GetDirectoryName(assemblyLocation);
+
+            if (OperatingSystem.IsMacCatalyst() || OperatingSystem.IsMacOS())
+            {
+                contentRootPath = Path.Combine(contentRootPath, "..", "Resources");
+            }
+
+            string filePath = Path.Combine(contentRootPath,"Content","InputUserValues.json");
+
+            /*
             // Get the base directory path of the application
             string baseDirectory = AppContext.BaseDirectory;
 
-            // Check if running on macOS
-            bool isRunningOnWindows = OperatingSystem.IsWindows();
-
             // Access a file within the app bundle
             string filePath = Path.Combine(baseDirectory.ToString());
-            if (!isRunningOnWindows) 
+            if (OperatingSystem.IsMacCatalyst() || OperatingSystem.IsMacOS()) 
             {
                 filePath = Path.Combine(filePath, "Contents", "Resources"); 
             }
             filePath = Path.Combine(filePath, "Content", "InputUserValues.json");
 
-            // Read the contents of the file
+            
+            // Read the contents of the file*/
             Load(filePath);
             UpdateKeys();
+            
 
             /*
             if (File.Exists(userValuePath))
