@@ -46,7 +46,7 @@ namespace ANXY.EntityComponent.Components
         public InputSettings inputSettings { get; private set; }
         private Keys leftKey, rightKey, jumpKey, menuKey, showFpsKey, limitFpsKey;
         private String userValuePath;
-        private String defaultValuePath ;
+        private String defaultValuePath;
 
         private PlayerInputController() { }
 
