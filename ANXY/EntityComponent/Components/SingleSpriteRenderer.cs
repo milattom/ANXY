@@ -34,6 +34,7 @@ public class SingleSpriteRenderer : Component
     {
         _atlas = atlas;
         _region = region;
+        SpriteSystem.Instance.Register(this);
     }
 
     /// <summary>

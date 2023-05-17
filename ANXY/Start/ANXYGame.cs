@@ -82,8 +82,8 @@ public class ANXYGame : Game
     {
         base.Initialize();
         InitializeDefaultScene();
-        EntitySystem.Instance._InitializeEntities();
-        //SystemManager.Instance.InitializeAll();
+        //EntitySystem.Instance._InitializeEntities();
+        SystemManager.Instance.InitializeAll();
         //Debug mode
         if (DebugMode)
         {
@@ -108,7 +108,7 @@ public class ANXYGame : Game
         AddPlayerToBackground();
         AddPlayerToLevel();
 
-        InitializeUi();
+        //InitializeUi(); //TODO: doesnt work with the system
     }
 
     /// <summary>
@@ -147,8 +147,8 @@ public class ANXYGame : Game
     /// <param name="gameTime">Provides a snapshot of timing values.</param>
     protected override void Update(GameTime gameTime)
     {
-        EntitySystem.Instance._UpdateEntities(gameTime);
-        //SystemManager.Instance.UpdateAll(gameTime);
+        //EntitySystem.Instance._UpdateEntities(gameTime);
+        SystemManager.Instance.UpdateAll(gameTime);
         var state = Keyboard.GetState();
         if (state.IsKeyDown(Keys.F) && oldState.IsKeyUp(Keys.F))
         {
@@ -170,8 +170,8 @@ public class ANXYGame : Game
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
         _spriteBatch.Begin();
-        EntitySystem.Instance.DrawEntities(gameTime, _spriteBatch);
-        //SystemManager.Instance.DrawAll(gameTime, _spriteBatch);
+        //EntitySystem.Instance.DrawEntities(gameTime, _spriteBatch);
+        SystemManager.Instance.DrawAll(gameTime, _spriteBatch);
         _spriteBatch.End();
     }
 
