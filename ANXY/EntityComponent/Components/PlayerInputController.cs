@@ -78,13 +78,25 @@ namespace ANXY.EntityComponent.Components
             // Access the content files
             string assemblyLocation = Assembly.GetEntryAssembly().Location;
             string contentRootPath = Path.GetDirectoryName(assemblyLocation);
+            string tempLocation = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
+            Debug.WriteLine("\nThis is temp: " + tempLocation + "\n");
+
+            string tempFolderANXY = Path.Combine(tempLocation, "ANXY");
+            Directory.CreateDirectory(tempFolderANXY);
+            string tempFilePath = Path.Combine(tempFolderANXY, "InputUserValues.json");
+            
             if (OperatingSystem.IsMacCatalyst() || OperatingSystem.IsMacOS())
             {
                 contentRootPath = Path.Combine(contentRootPath, "..", "Resources");
             }
 
-            string filePath = Path.Combine(contentRootPath,"Content","InputUserValues.json");
+            string assemblyFilePath = Path.Combine(contentRootPath,"Content","InputUserValues.json");
+
+            if (!File.Exists(tempFilePath))
+            {
+                File.Copy(assemblyFilePath, tempFilePath);
+            }
 
             /*
             // Get the base directory path of the application
@@ -100,8 +112,7 @@ namespace ANXY.EntityComponent.Components
 
             
             // Read the contents of the file*/
-            Load(filePath);
-            UpdateKeys();
+            Load(tempFilePath);
             
 
             /*
@@ -122,7 +133,6 @@ namespace ANXY.EntityComponent.Components
             {
                 lastKeyState.Add(key, false);
             }
-            Debug.WriteLine("Hello");
         }
 
         public override void Destroy()
@@ -131,7 +141,6 @@ namespace ANXY.EntityComponent.Components
 
         public void Load(string fileName)
         {
-            //var path = System.Reflection.Assembly.GetExecutingAssembly().Location;
             string json = File.ReadAllText(fileName);
             inputSettings = JsonConvert.DeserializeObject<InputSettings>(json);
             UpdateKeys();

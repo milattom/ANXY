@@ -72,6 +72,7 @@ public class Player : Component
         //keyboard input
         var state = Keyboard.GetState();
         InputDirection = Vector2.Zero;
+
         if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right))
             InputDirection += new Vector2(1, 0);
 

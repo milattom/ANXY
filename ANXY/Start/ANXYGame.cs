@@ -87,6 +87,7 @@ public class ANXYGame : Game
         {
             BoxColliderSystem.Instance.EnableDebugMode(_graphics.GraphicsDevice);
         }
+        InitializeInputController();
 
         oldState = Keyboard.GetState();
     }
@@ -126,7 +127,7 @@ public class ANXYGame : Game
         _levelTileMap = Content.Load<TiledMap>("JumpNRun-1");
 
         //Load Fonts
-        _arialSpriteFont = Content.Load<SpriteFont>("Arial");
+        //_arialSpriteFont = Content.Load<SpriteFont>("Arial");
     }
 
     /// <summary>
