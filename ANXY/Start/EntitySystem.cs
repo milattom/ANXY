@@ -1,6 +1,4 @@
 ﻿using ANXY.EntityComponent;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
@@ -100,5 +98,5 @@ public sealed class EntitySystem
 
         return FoundEntities;
     }
-    
+
 }

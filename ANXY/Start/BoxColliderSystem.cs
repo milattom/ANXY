@@ -21,10 +21,10 @@ namespace ANXY.Start
 
         public static BoxColliderSystem Instance => Lazy.Value;
 
-        private BoxColliderSystem() 
-            {
+        private BoxColliderSystem()
+        {
             SystemManager.Instance.Register(this);
-            }
+        }
 
         /// <summary>
         /// Returns a list of BoxCollider which are colliding with the given box

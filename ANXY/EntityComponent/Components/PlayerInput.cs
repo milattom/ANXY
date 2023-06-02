@@ -1,13 +1,12 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using ANXY.Start;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Newtonsoft.Json;
 
 namespace ANXY.EntityComponent.Components
 {
@@ -111,10 +110,10 @@ namespace ANXY.EntityComponent.Components
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch) { }
 
         public override void Initialize()
-            // Access the content files
+        // Access the content files
         {
             string assemblyLocation = Assembly.GetEntryAssembly().Location;
-            
+
             string contentRootPath = Path.GetDirectoryName(assemblyLocation);
             string tempLocation = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
@@ -128,7 +127,7 @@ namespace ANXY.EntityComponent.Components
                 contentRootPath = Path.Combine(contentRootPath, "..", "Resources");
             }
 
-            string assemblyFilePath = Path.Combine(contentRootPath,"Content","InputUserValues.json");
+            string assemblyFilePath = Path.Combine(contentRootPath, "Content", "InputUserValues.json");
 
             if (!File.Exists(tempFilePath))
             {

@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using ANXY.EntityComponent;
-using Microsoft.Xna.Framework.Graphics;
+﻿using ANXY.EntityComponent;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using MonoGame.Extended.Timers;
 
 namespace ANXY.Start
 {
@@ -14,8 +13,8 @@ namespace ANXY.Start
     /// If specific order is needed then use the GetSystemByType methode and then call the specific method.
     /// Don't forget: to get the benefits of ECS call each component and don0t loop through each Entity.
     /// </summary>
-    public sealed class SystemManager 
-    {   
+    public sealed class SystemManager
+    {
         public static SystemManager Instance => _lazy.Value;
         private static readonly Lazy<SystemManager> _lazy = new(() => new SystemManager());
         private readonly List<ISystem> _systems = new();
@@ -37,7 +36,7 @@ namespace ANXY.Start
         /// <returns>true: system got removed; false: list didn't contain the system</returns>
         public bool Unregister(ISystem system)
         {
-            if(_systems.Contains(system))
+            if (_systems.Contains(system))
             {
                 _systems.Remove(system);
                 return true;
@@ -48,17 +47,17 @@ namespace ANXY.Start
 
         public void InitializeAll()
         {
-            foreach(var system in _systems) system.Initialize();
+            foreach (var system in _systems) system.Initialize();
         }
 
         public void UpdateAll(GameTime gameTime)
         {
-            foreach(var system in _systems) system.Update(gameTime);
+            foreach (var system in _systems) system.Update(gameTime);
         }
 
-        public void DrawAll(GameTime gameTime, SpriteBatch  spriteBatch)
+        public void DrawAll(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            foreach(var system in _systems) system.Draw(gameTime, spriteBatch);
+            foreach (var system in _systems) system.Draw(gameTime, spriteBatch);
         }
 
         public int GetNumberOfSystems()

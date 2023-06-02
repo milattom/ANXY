@@ -10,13 +10,14 @@ namespace ANXY.UI
         public event Action ReturnPressed;
         public TextButton btnReturn;
 
-        public Credits() {
+        public Credits()
+        {
             var label1 = new Label();
             label1.Text = "ANXY";
             label1.TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center;
             label1.HorizontalAlignment = HorizontalAlignment.Center;
             label1.GridColumnSpan = 2;
-            label1.Scale = new Microsoft.Xna.Framework.Vector2(2,2);
+            label1.Scale = new Microsoft.Xna.Framework.Vector2(2, 2);
 
             var label2 = new Label();
             label2.Text = "Game Developers";
