@@ -29,7 +29,10 @@ public class Player : Component
 
     private bool _isAlive = true;
 
-
+    public Player() 
+    { 
+        PlayerSystem.Instance.Register(this); 
+    }
     /* TODO maybe implement later. Ideas for now
     public bool Crouch()
     {
@@ -46,7 +49,7 @@ public class Player : Component
     /// </summary>
     public override void Initialize()
     {
-        PlayerInputController.Instance.GamePausedChanged += OnGamePausedChanged;
+        PlayerInput.Instance.GamePausedChanged += OnGamePausedChanged;
         UIManager.Instance.PauseToggled += OnGamePausedChanged;
     }
 
@@ -72,17 +75,17 @@ public class Player : Component
         //keyboard input
         InputDirection = Vector2.Zero;
 
-        if (PlayerInputController.Instance.IsWalkingRight())
+        if (PlayerInput.Instance.IsWalkingRight())
             InputDirection += new Vector2(1, 0);
 
-        if (PlayerInputController.Instance.IsWalkingLeft())
+        if (PlayerInput.Instance.IsWalkingLeft())
             InputDirection += new Vector2(-1, 0);
 
         //velocity update
         var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
         var acceleration = new Vector2(WalkAcceleration * InputDirection.X, Gravity);
         _velocity += acceleration * dt;
-        if (PlayerInputController.Instance.IsJumping() && !_midAir)
+        if (PlayerInput.Instance.IsJumping() && !_midAir)
         {
             _velocity.Y = -JumpVelocity;
             _midAir = true;

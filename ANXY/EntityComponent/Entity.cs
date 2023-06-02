@@ -53,6 +53,7 @@ public sealed class Entity
             .ToList();
     }
 
+    /*
     /// <summary>
     ///     Removes the first Component of specified type, by call its Destroy()
     ///     method and then removing it from the List
@@ -100,4 +101,5 @@ public sealed class Entity
                 component.Draw(gameTime, spriteBatch);
         }
     }
+    */
 }

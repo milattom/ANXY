@@ -50,10 +50,7 @@ public sealed class EntitySystem
 
     public int GetNumberOfEntities()
     {
-        var i = 0;
-        foreach (var VARIABLE in _gameEntities) i++;
-
-        return i;
+        return _gameEntities.Count;
     }
 
     /// <summary>
@@ -64,6 +61,7 @@ public sealed class EntitySystem
         _gameEntities.Clear();
     }
 
+    /*
     /// <summary>
     ///     TODO
     /// </summary>
@@ -88,6 +86,7 @@ public sealed class EntitySystem
         foreach (var entity in _gameEntities) entity.Draw(gameTime, spriteBatch);
     }
 
+    */
     /// <summary>
     ///     TODO
     /// </summary>
@@ -101,4 +100,5 @@ public sealed class EntitySystem
 
         return FoundEntities;
     }
+    
 }

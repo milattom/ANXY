@@ -233,19 +233,19 @@ namespace ANXY.UI
         {
             if (!CheckMultiple())
             {
-                var inputSettings = new PlayerInputController.InputSettings();
-                inputSettings.Movement = new PlayerInputController.MovementSettings();
+                var inputSettings = new PlayerInput.InputSettings();
+                inputSettings.Movement = new PlayerInput.MovementSettings();
                 inputSettings.Movement.Left = btnMovementLeft.Text;
                 inputSettings.Movement.Right = btnMovementRight.Text;
                 inputSettings.Movement.Jump = btnMovementJump.Text;
-                inputSettings.Menu = new PlayerInputController.KeySetting();
+                inputSettings.Menu = new PlayerInput.KeySetting();
                 inputSettings.Menu.Key = btnMenu.Text;
-                inputSettings.ShowFps = new PlayerInputController.KeySetting();
+                inputSettings.ShowFps = new PlayerInput.KeySetting();
                 inputSettings.ShowFps.Key = btnShowFps.Text;
-                inputSettings.CapFps = new PlayerInputController.KeySetting();
+                inputSettings.CapFps = new PlayerInput.KeySetting();
                 inputSettings.CapFps.Key = btnCapFps.Text;
 
-                PlayerInputController.Instance.SetInputSettings(inputSettings);
+                PlayerInput.Instance.SetInputSettings(inputSettings);
 
                 SaveChangesPressed?.Invoke();
             }
@@ -268,7 +268,7 @@ namespace ANXY.UI
             if (oldSenderTextButton != null && senderTextButton.Id == oldSenderTextButton.Id && Widgets.Contains(lblWaitingForKeyPress))
             {
                 Widgets.Remove(lblWaitingForKeyPress);
-                PlayerInputController.Instance.AnyKeyPress -= OnAnyKeyPress;
+                PlayerInput.Instance.AnyKeyPress -= OnAnyKeyPress;
                 return;
             }
             else if (!Widgets.Contains(lblWaitingForKeyPress))
@@ -277,13 +277,13 @@ namespace ANXY.UI
             }
             oldSenderTextButton = senderTextButton;
 
-            PlayerInputController.Instance.AnyKeyPress += OnAnyKeyPress;
+            PlayerInput.Instance.AnyKeyPress += OnAnyKeyPress;
         }
         private void OnAnyKeyPress(Keys key)
         {
             oldSenderTextButton.Text = key.ToString();
             Widgets.Remove(lblWaitingForKeyPress);
-            PlayerInputController.Instance.AnyKeyPress -= OnAnyKeyPress;
+            PlayerInput.Instance.AnyKeyPress -= OnAnyKeyPress;
             CheckMultiple();
         }
 
@@ -330,7 +330,7 @@ namespace ANXY.UI
         }
         public void LoadButtonLayout()
         {
-            var inputSettings = PlayerInputController.Instance.inputSettings;
+            var inputSettings = PlayerInput.Instance.inputSettings;
 
             foreach (TextButton txtBtn in Widgets.OfType<TextButton>())
             {

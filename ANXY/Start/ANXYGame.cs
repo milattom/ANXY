@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Tiled;
 using Myra;
 using System;
+using System.Collections.Generic;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
@@ -89,8 +90,8 @@ public class ANXYGame : Game
     {
         base.Initialize();
         InitializeDefaultScene();
-
-        EntitySystem.Instance._InitializeEntities();
+        //EntitySystem.Instance._InitializeEntities();
+        SystemManager.Instance.InitializeAll();
         //Debug mode
         if (DebugMode)
         {
@@ -156,10 +157,9 @@ public class ANXYGame : Game
     /// <param name="gameTime">Provides a snapshot of timing values.</param>
     protected override void Update(GameTime gameTime)
     {
-        PlayerInputController.Instance.SetCurrentState();
-        EntitySystem.Instance._UpdateEntities(gameTime);
-        PlayerInputController.Instance.SetLastState();
-        //using the MonoGame gameEngine
+        //PlayerInput.Instance.SetCurrentState();
+        SystemManager.Instance.UpdateAll(gameTime);
+        //PlayerInput.Instance.SetLastState();
         //base.Update(gameTime);
     }
 
@@ -171,7 +171,8 @@ public class ANXYGame : Game
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
         _spriteBatch.Begin();
-        EntitySystem.Instance.DrawEntities(gameTime, _spriteBatch);
+        //EntitySystem.Instance.DrawEntities(gameTime, _spriteBatch);
+        SystemManager.Instance.DrawAll(gameTime, _spriteBatch);
         _spriteBatch.End();
 
         UIManager.Instance.UpdateFPS(gameTime);
@@ -180,11 +181,8 @@ public class ANXYGame : Game
 
     private void InitializeInputController()
     {
-        var playerInputControllerEntity = new Entity();
-        EntitySystem.Instance.AddEntity(playerInputControllerEntity);
-        playerInputControllerEntity.AddComponent(PlayerInputController.Instance);
-        PlayerInputController.Instance.LimitFpsKeyPressed += ToggleFpsLimit;
-        PlayerInputController.Instance.GamePausedChanged += ToggleMouseCursorShow;
+        PlayerInput.Instance.LimitFpsKeyPressed += ToggleFpsLimit;
+        PlayerInput.Instance.GamePausedChanged += ToggleMouseCursorShow;
         UIManager.Instance.PauseToggled += TogglePlayerActiveState;
     }
 
@@ -208,12 +206,26 @@ public class ANXYGame : Game
         var playerCollider = new BoxCollider(playerBox, "Player");
         playerEntity.AddComponent(playerCollider);
 
-        BoxColliderSystem.Instance.AddBoxCollider(playerCollider);
+        /*
+        //------------------------------------------------------------------------------------------------------------------------------------
+        //System
+        BoxColliderSystem.Instance.Register(playerCollider);
+        SystemManager.Instance.Register(BoxColliderSystem.Instance);
+        //------------------------------------------------------------------------------------------------------------------------------------
+        */
 
         var cameraEntity = new Entity();
         EntitySystem.Instance.AddEntity(cameraEntity);
         var camera = new Camera(player, new Vector2(_windowWidth, _windowHeight), new Vector2(0.25f * _windowWidth, 0.5f * _windowHeight), new Vector2(float.PositiveInfinity, 0.85f * _windowHeight));
         cameraEntity.AddComponent(camera);
+
+        /*
+        //------------------------------------------------------------------------------------------------------------------------------------
+        //System
+        CameraSystem.Instance.Register(camera);
+        SystemManager.Instance.Register(CameraSystem.Instance);
+        //------------------------------------------------------------------------------------------------------------------------------------
+        */
     }
 
     /// <summary>
@@ -224,10 +236,21 @@ public class ANXYGame : Game
         var backgroundEntity = new Entity();
         EntitySystem.Instance.AddEntity(backgroundEntity);
         backgroundEntity.Position -= new Vector2(0.5f * _windowWidth, 0.5f * _windowHeight);
+        Background background = new Background(_windowWidth, _windowHeight);
+        backgroundEntity.AddComponent(background);
         backgroundEntity.AddComponent(new Background(_windowWidth, _windowHeight));
         SingleSpriteRenderer backgroundSprite = new SingleSpriteRenderer(_backgroundSprite);
         backgroundEntity.AddComponent(backgroundSprite);
         backgroundSprite.CameraEntity = _cameraEntity;
+        /*
+        //------------------------------------------------------------------------------------------------------------------------------------
+        //System
+        BackgroundSystem.Instance.Register(background);
+        SystemManager.Instance.Register(BackgroundSystem.Instance);
+        SpriteSystem.Instance.Register(backgroundSprite);
+        SystemManager.Instance.Register(SpriteSystem.Instance);
+        //------------------------------------------------------------------------------------------------------------------------------------
+        */
     }
 
 
@@ -285,7 +308,13 @@ public class ANXYGame : Game
             //Set Tile Sprite
             var tileSprite = new SingleSpriteRenderer(_levelTileMap.Tilesets[0].Texture, _levelTileMap.Tilesets[0].GetTileRegion(singleTile.GlobalIdentifier - 1));
             newTileEntity.AddComponent(tileSprite);
-
+            /*
+            //------------------------------------------------------------------------------------------------------------------------------------
+            //System
+            SpriteSystem.Instance.Register(tileSprite);
+            SystemManager.Instance.Register(SpriteSystem.Instance);
+            //------------------------------------------------------------------------------------------------------------------------------------
+            */
             tileSprite.CameraEntity = _cameraEntity;
 
             //Check for BoxCollider in XML/Json
@@ -311,8 +340,14 @@ public class ANXYGame : Game
                         , (int)Math.Round(collider.Size.Height)
                         );
                     var tileBoxCollider = new BoxCollider(rectangle, layerName);
-                    BoxColliderSystem.Instance.AddBoxCollider(tileBoxCollider);
                     newTileEntity.AddComponent(tileBoxCollider);
+                    /*
+                    //------------------------------------------------------------------------------------------------------------------------------------
+                    //System
+                    BoxColliderSystem.Instance.Register(tileBoxCollider);
+                    SystemManager.Instance.Register(BoxColliderSystem.Instance);
+                    //------------------------------------------------------------------------------------------------------------------------------------
+                    */
                 }
             }
         }

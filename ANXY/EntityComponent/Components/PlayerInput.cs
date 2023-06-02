@@ -15,7 +15,7 @@ namespace ANXY.EntityComponent.Components
     /// TODO Player Input Controller
     /// Checking for Keyboard input and setting everything accordingly. Every Class needing to check the Keyboard input must check it through this Class.
     /// </summary>
-    public class PlayerInputController : Component
+    public class PlayerInput : Component
     {
         public event Action ShowFpsKeyPressed;
         public event Action LimitFpsKeyPressed;
@@ -53,18 +53,22 @@ namespace ANXY.EntityComponent.Components
         private String userValuePath;
         private String defaultValuePath;
 
-        private PlayerInputController() { }
+        private PlayerInput()
+        {
+            PlayerInputSystem.Instance.Register(this);
+        }
 
         ///Singleton Pattern
-        private static readonly Lazy<PlayerInputController> lazy = new(() => new PlayerInputController());
+        private static readonly Lazy<PlayerInput> lazy = new(() => new PlayerInput());
 
         /// <summary>
         ///     Singleton Pattern return the only instance there is
         /// </summary>
-        public static PlayerInputController Instance => lazy.Value;
+        public static PlayerInput Instance => lazy.Value;
 
         public override void Update(GameTime gameTime)
         {
+            SetCurrentState();
             if (currentKeyboardState.GetPressedKeys().Length > 0 && !lastKeyboardState.IsKeyDown(currentKeyboardState.GetPressedKeys()[0]))
             {
                 // Raise the key press event
@@ -86,6 +90,7 @@ namespace ANXY.EntityComponent.Components
             {
                 ShowFpsKeyPressed?.Invoke();
             }
+            SetLastState();
         }
 
         public void SetCurrentState()
@@ -130,6 +135,7 @@ namespace ANXY.EntityComponent.Components
                 File.Copy(assemblyFilePath, tempFilePath);
             }
             userValuePath = tempFilePath;
+            defaultValuePath = assemblyFilePath;
 
             /*
             // Get the base directory path of the application
@@ -145,8 +151,8 @@ namespace ANXY.EntityComponent.Components
 
             
             // Read the contents of the file*/
-            Load(tempFilePath);
-            
+            //Load(tempFilePath);
+
 
             if (File.Exists(userValuePath))
             {
@@ -196,7 +202,9 @@ namespace ANXY.EntityComponent.Components
 
         public void ResetToDefaults()
         {
-            Load(defaultValuePath);
+            File.Delete(userValuePath);
+            File.Copy(defaultValuePath, userValuePath);
+            Load(userValuePath);
             UpdateKeys();
         }
 

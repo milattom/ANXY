@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ANXY.Start;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -53,6 +54,7 @@ public class BoxCollider : Component
         Dimensions = new Vector2(rectangle.Width, rectangle.Height);
         Offset = new Vector2(rectangle.X, rectangle.Y);
         LayerMask = layerMask;
+        BoxColliderSystem.Instance.Register(this);
     }
 
     /// <summary>

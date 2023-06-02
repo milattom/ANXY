@@ -42,8 +42,8 @@ namespace ANXY.UI
 
             _desktop.Root = _pauseMenu;
             _desktop.Root.Visible = false;
-            PlayerInputController.Instance.GamePausedChanged += OnGamePausedChanged;
-            PlayerInputController.Instance.ShowFpsKeyPressed += OnShowFpsKeyPressed;
+            PlayerInput.Instance.GamePausedChanged += OnGamePausedChanged;
+            PlayerInput.Instance.ShowFpsKeyPressed += OnShowFpsKeyPressed;
 
             _fpsOverlay = new FpsOverlay();
 
@@ -109,18 +109,18 @@ namespace ANXY.UI
 
         public void OnReturnClicked()
         {
-            PlayerInputController.Instance.LoadUserSettings();
+            PlayerInput.Instance.LoadUserSettings();
             _desktop.Root = _pauseMenu;
         }
 
         public void OnLoadDefaultsClicked()
         {
-            PlayerInputController.Instance.ResetToDefaults();
+            PlayerInput.Instance.ResetToDefaults();
         }
 
         public void OnSaveChangesClicked()
         {
-            PlayerInputController.Instance.Save();
+            PlayerInput.Instance.Save();
         }
         private void OnExitGamePressed()
         {

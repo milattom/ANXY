@@ -24,6 +24,7 @@ namespace ANXY.EntityComponent.Components
 
             _minPosition = minPosition;
             _maxPosition = maxPosition;
+            CameraSystem.Instance.Register(this);
         }
 
 

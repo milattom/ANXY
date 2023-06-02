@@ -20,6 +20,7 @@ namespace ANXY.EntityComponent.Components
             _text = text;
             _position = position;
             _color = color;
+            TextRendererSystem.Instance.Register(this);
         }
 
         public override void Update(GameTime gameTime)
