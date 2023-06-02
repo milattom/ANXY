@@ -1,9 +1,10 @@
 ﻿using ANXY.EntityComponent;
 using ANXY.EntityComponent.Components;
+using ANXY.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Tiled;
+using Myra;
 using System;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
@@ -32,15 +33,22 @@ public class ANXYGame : Game
     private readonly string[] _backgroundLayerNames = { "Ground" };
     private readonly string[] _foregroundLayerNames = { "" };
     private readonly string contentRootDirectory = "Content";
-    private KeyboardState oldState;
+    private bool GamePlaying = true;
 
+    ///Singleton Pattern
+    private static readonly Lazy<ANXYGame> lazy = new(() => new ANXYGame());
+
+    /// <summary>
+    ///     Singleton Pattern return the only instance there is
+    /// </summary>
+    public static ANXYGame Instance => lazy.Value;
 
     /// <summary>
     /// This is the constructor for the heart of the game, where everything gets its initial spark.
     /// </summary>
-    public ANXYGame()
+    private ANXYGame()
     {
-        //IsMouseVisible = true;
+        IsMouseVisible = false;
         //_graphics.ToggleFullScreen();
         _screenBounds = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.TitleSafeArea;
 
@@ -81,15 +89,13 @@ public class ANXYGame : Game
     {
         base.Initialize();
         InitializeDefaultScene();
+
         EntitySystem.Instance._InitializeEntities();
         //Debug mode
         if (DebugMode)
         {
             BoxColliderSystem.Instance.EnableDebugMode(_graphics.GraphicsDevice);
         }
-        InitializeInputController();
-
-        oldState = Keyboard.GetState();
     }
 
     /// <summary>
@@ -100,9 +106,10 @@ public class ANXYGame : Game
         _windowWidth = Window.ClientBounds.Width;
         _windowHeight = Window.ClientBounds.Height;
         InitializeBackground();
+
         InitializeLevelBackgroundLayers();
 
-        //InitializeInputController();
+        InitializeInputController();
         InitializePlayer();
 
         InitializeLevelForegroundLayers();
@@ -127,7 +134,10 @@ public class ANXYGame : Game
         _levelTileMap = Content.Load<TiledMap>("JumpNRun-1");
 
         //Load Fonts
+        //Load Myra
+        MyraEnvironment.Game = this;
         //_arialSpriteFont = Content.Load<SpriteFont>("Arial");
+
     }
 
     /// <summary>
@@ -146,17 +156,10 @@ public class ANXYGame : Game
     /// <param name="gameTime">Provides a snapshot of timing values.</param>
     protected override void Update(GameTime gameTime)
     {
+        PlayerInputController.Instance.SetCurrentState();
         EntitySystem.Instance._UpdateEntities(gameTime);
-        _ = PlayerInputController.Instance;
-        if(false)
-        //if (PlayerInputController.Instance.IsCapFpsKeyPressed())
-        {
-            //_graphics.SynchronizeWithVerticalRetrace = !_graphics.SynchronizeWithVerticalRetrace;
-            //IsFixedTimeStep = !IsFixedTimeStep;
-
-            //_graphics.ApplyChanges();
-        }
-
+        PlayerInputController.Instance.SetLastState();
+        //using the MonoGame gameEngine
         //base.Update(gameTime);
     }
 
@@ -170,6 +173,19 @@ public class ANXYGame : Game
         _spriteBatch.Begin();
         EntitySystem.Instance.DrawEntities(gameTime, _spriteBatch);
         _spriteBatch.End();
+
+        UIManager.Instance.UpdateFPS(gameTime);
+        UIManager.Instance.Draw();
+    }
+
+    private void InitializeInputController()
+    {
+        var playerInputControllerEntity = new Entity();
+        EntitySystem.Instance.AddEntity(playerInputControllerEntity);
+        playerInputControllerEntity.AddComponent(PlayerInputController.Instance);
+        PlayerInputController.Instance.LimitFpsKeyPressed += ToggleFpsLimit;
+        PlayerInputController.Instance.GamePausedChanged += ToggleMouseCursorShow;
+        UIManager.Instance.PauseToggled += TogglePlayerActiveState;
     }
 
     private void InitializeInputController()
@@ -189,6 +205,7 @@ public class ANXYGame : Game
         EntitySystem.Instance.AddEntity(playerEntity);
 
         var player = new Player();
+
         playerEntity.AddComponent(player);
 
         var playerSpriteRenderer = new PlayerSpriteRenderer(_playerSprite);
@@ -348,5 +365,25 @@ public class ANXYGame : Game
         {
             levelEntity.GetComponent<Level>().PlayerEntity = _playerEntity;
         }
+    }
+
+    private void ToggleFpsLimit()
+    {
+        _graphics.SynchronizeWithVerticalRetrace = !_graphics.SynchronizeWithVerticalRetrace;
+        IsFixedTimeStep = !IsFixedTimeStep;
+
+        _graphics.ApplyChanges();
+    }
+
+    private void TogglePlayerActiveState()
+    {
+        IsMouseVisible = !IsMouseVisible;
+        _graphics.ApplyChanges();
+    }
+
+    private void ToggleMouseCursorShow(bool gamePaused)
+    {
+        IsMouseVisible = !IsMouseVisible;
+        _graphics.ApplyChanges();
     }
 }

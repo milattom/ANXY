@@ -1,12 +1,8 @@
 {
     "Movement": {
-        "Up": "W",
-        "Down": "S",
         "Left": "A",
-        "Right": "D"
-    },
-    "Jump": {
-        "Key": "Space"
+        "Right": "D",
+        "Jump": "Space"
     },
     "Menu": {
         "Key": "Escape"

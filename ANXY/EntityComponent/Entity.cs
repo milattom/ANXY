@@ -83,8 +83,9 @@ public sealed class Entity
     public void Initialize()
     {
         foreach (var component in _components)
-            if (component.IsActive)
-                component.Initialize();
+        {
+            component.Initialize();
+        }
     }
 
     public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -94,7 +95,9 @@ public sealed class Entity
             return;
         }
         foreach (var component in _components)
+        {
             if (component.IsActive)
                 component.Draw(gameTime, spriteBatch);
+        }
     }
 }
