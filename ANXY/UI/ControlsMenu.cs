@@ -245,7 +245,7 @@ namespace ANXY.UI
                 inputSettings.CapFps = new PlayerInputController.KeySetting();
                 inputSettings.CapFps.Key = btnCapFps.Text;
 
-                PlayerInputController.Instance.setInputSettings(inputSettings);
+                PlayerInputController.Instance.SetInputSettings(inputSettings);
 
                 SaveChangesPressed?.Invoke();
             }

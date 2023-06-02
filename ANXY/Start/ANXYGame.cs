@@ -46,7 +46,7 @@ public class ANXYGame : Game
     /// <summary>
     /// This is the constructor for the heart of the game, where everything gets its initial spark.
     /// </summary>
-    private ANXYGame()
+    public ANXYGame()
     {
         IsMouseVisible = false;
         //_graphics.ToggleFullScreen();
@@ -186,13 +186,6 @@ public class ANXYGame : Game
         PlayerInputController.Instance.LimitFpsKeyPressed += ToggleFpsLimit;
         PlayerInputController.Instance.GamePausedChanged += ToggleMouseCursorShow;
         UIManager.Instance.PauseToggled += TogglePlayerActiveState;
-    }
-
-    private void InitializeInputController()
-    {
-        var playerInputControllerEntity = new Entity();
-        EntitySystem.Instance.AddEntity(playerInputControllerEntity);
-        playerInputControllerEntity.AddComponent(PlayerInputController.Instance);
     }
 
     /// <summary>

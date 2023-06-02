@@ -22,6 +22,8 @@ namespace ANXY.EntityComponent.Components
         public event Action<bool> GamePausedChanged;
         public event Action<Keys> AnyKeyPress;
 
+        private Dictionary<Keys, bool> lastKeyState;
+
         public bool GamePaused { get; private set; }
 
         public class InputSettings
@@ -127,6 +129,7 @@ namespace ANXY.EntityComponent.Components
             {
                 File.Copy(assemblyFilePath, tempFilePath);
             }
+            userValuePath = tempFilePath;
 
             /*
             // Get the base directory path of the application
@@ -154,9 +157,10 @@ namespace ANXY.EntityComponent.Components
             {
                 Load(defaultValuePath);
                 UpdateKeys();
+            }
 
             lastKeyState = new Dictionary<Keys, bool>();
-            Keys[] keys = { leftKey, rightKey, jumpKey, menuKey, showFpsKey, capFpsKey };
+            Keys[] keys = { leftKey, rightKey, jumpKey, menuKey, showFpsKey, limitFpsKey };
             foreach (var key in keys)
             {
                 lastKeyState.Add(key, false);
@@ -166,11 +170,21 @@ namespace ANXY.EntityComponent.Components
         public override void Destroy()
         {
         }
+
+        public void LoadUserSettings()
+        {
+            Load(userValuePath);
+        }
         private void Load(string fileName)
         {
             string json = File.ReadAllText(fileName);
             inputSettings = JsonConvert.DeserializeObject<InputSettings>(json);
             UpdateKeys();
+        }
+
+        public void SetInputSettings(InputSettings inputSettings)
+        {
+            this.inputSettings = inputSettings;
         }
 
         public void Save()
