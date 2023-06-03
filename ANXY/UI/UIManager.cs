@@ -8,16 +8,14 @@ namespace ANXY.UI
 {
     internal class UIManager
     {
-        public event Action PauseToggled;
-
         private PauseMenu _pauseMenu;
         private ControlsMenu _controlsMenu;
         private FpsOverlay _fpsOverlay;
         private Credits _credits;
-        private float _fps;
         private Desktop _desktop;
 
-        private LastUiState _lastUiState = LastUiState.PauseMenu;
+        private float _fps;
+        private bool _showFps = false;
 
         ///Singleton Pattern
         private static readonly Lazy<UIManager> lazy = new(() => new UIManager());
@@ -44,7 +42,7 @@ namespace ANXY.UI
 
             _desktop.Root = _pauseMenu;
             _desktop.Root.Visible = false;
-            PlayerInput.Instance.GamePausedChanged += OnGamePausedChanged;
+            ANXYGame.Instance.GamePausedChanged += OnGamePausedChanged;
             PlayerInput.Instance.ShowFpsKeyPressed += OnShowFpsKeyPressed;
 
             _fpsOverlay = new FpsOverlay();
@@ -68,69 +66,57 @@ namespace ANXY.UI
             _desktop.Render();
         }
 
-        private void SwitchUiViews()
+
+        private void OnResumeBtnPressed()
         {
-            if (_lastUiState == LastUiState.FpsOverlay && _desktop.Root == _fpsOverlay)
-            {
-                _desktop.Root = _pauseMenu;
-                _desktop.Root.Visible = true;
-            }
-            else if (_lastUiState == LastUiState.FpsOverlay && _desktop.Root != _fpsOverlay)
-            {
-                _desktop.Root = _fpsOverlay;
-                _desktop.Root.Visible = true;
-            }
-            else
-            {
-                _desktop.Root = _pauseMenu;
-                _desktop.Root.Visible = !_desktop.Root.Visible;
-            }
+            ANXYGame.Instance.SetGamePaused(false);
         }
 
-        public void OnResumeBtnPressed()
+        private void OnResetGameBtnPressed()
         {
-            SwitchUiViews();
-            PauseToggled?.Invoke();
-        }
-
-        public void OnResetGameBtnPressed()
-        {
-            SwitchUiViews();
-            PauseToggled?.Invoke();
             var player = EntitySystem.Instance.FindEntitiesByType<Player>()[0].GetComponent<Player>();
             player.Reset();
             var camera = EntitySystem.Instance.FindEntitiesByType<Camera>()[0].GetComponent<Camera>();
             camera.Reset();
+            ANXYGame.Instance.SetGamePaused(false);
         }
-
-        public void OnControlsBtnPressed()
+        private void OnControlsBtnPressed()
         {
             _controlsMenu.LoadButtonLayout();
             _desktop.Root = _controlsMenu;
         }
 
-        public void OnCreditsBtnPressed()
+        private void OnCreditsBtnPressed()
         {
             _desktop.Root = _credits;
         }
 
-        public void OnGamePausedChanged(bool gamePaused)
+        private void OnGamePausedChanged(bool gamePaused)
         {
-            SwitchUiViews();
+            if (gamePaused)
+            {
+                _desktop.Root = _pauseMenu;
+                _desktop.Root.Visible = true;
+            }
+            else
+            {
+                _desktop.Root = _fpsOverlay;
+                _desktop.Root.Visible = _showFps;
+            }
         }
 
-        public void OnReturnClicked()
+        private void OnReturnClicked()
         {
             PlayerInput.Instance.LoadUserSettings();
             _desktop.Root = _pauseMenu;
         }
 
-        public void OnLoadDefaultsClicked()
+        private void OnLoadDefaultsClicked()
         {
             PlayerInput.Instance.ResetToDefaults();
         }
 
-        public void OnSaveChangesClicked()
+        private void OnSaveChangesClicked()
         {
             PlayerInput.Instance.Save();
         }
@@ -141,22 +127,14 @@ namespace ANXY.UI
 
         private void OnShowFpsKeyPressed()
         {
-            if (_lastUiState == LastUiState.FpsOverlay)
+            if (ANXYGame.Instance.GamePaused)
             {
-                _desktop.Root = _pauseMenu;
-                _lastUiState = LastUiState.PauseMenu;
+                return;
             }
-            else if (!_desktop.Root.Visible)
-            {
-                _desktop.Root = _fpsOverlay;
-                _lastUiState = LastUiState.FpsOverlay;
-            }
-        }
-    }
 
-    public enum LastUiState
-    {
-        PauseMenu,
-        FpsOverlay
+            _showFps = !_showFps;
+            _desktop.Root = _fpsOverlay;
+            _desktop.Root.Visible = _showFps;
+        }
     }
 }

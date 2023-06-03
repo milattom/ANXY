@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ANXY.Start;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json;
@@ -18,12 +19,9 @@ namespace ANXY.EntityComponent.Components
     {
         public event Action ShowFpsKeyPressed;
         public event Action LimitFpsKeyPressed;
-        public event Action<bool> GamePausedChanged;
         public event Action<Keys> AnyKeyPress;
 
         private Dictionary<Keys, bool> lastKeyState;
-
-        public bool GamePaused { get; private set; }
 
         public class InputSettings
         {
@@ -68,6 +66,7 @@ namespace ANXY.EntityComponent.Components
         public override void Update(GameTime gameTime)
         {
             SetCurrentState();
+
             if (currentKeyboardState.GetPressedKeys().Length > 0 && !lastKeyboardState.IsKeyDown(currentKeyboardState.GetPressedKeys()[0]))
             {
                 // Raise the key press event
@@ -81,14 +80,14 @@ namespace ANXY.EntityComponent.Components
 
             if (IsMenuKeyPressed)
             {
-                GamePaused = !GamePaused;
-                GamePausedChanged?.Invoke(GamePaused);
+                ANXYGame.Instance.SetGamePaused(!ANXYGame.Instance.GamePaused);
             }
 
             if (IsShowFpsKeyPressed())
             {
                 ShowFpsKeyPressed?.Invoke();
             }
+
             SetLastState();
         }
 

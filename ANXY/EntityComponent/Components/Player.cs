@@ -49,8 +49,7 @@ public class Player : Component
     /// </summary>
     public override void Initialize()
     {
-        PlayerInput.Instance.GamePausedChanged += OnGamePausedChanged;
-        UIManager.Instance.PauseToggled += OnGamePausedChanged;
+        ANXYGame.Instance.GamePausedChanged += OnGamePausedChanged;
     }
 
     /// <summary>
@@ -102,11 +101,7 @@ public class Player : Component
 
     private void OnGamePausedChanged(bool gamePaused)
     {
-        IsActive = !IsActive;
-    }
-    private void OnGamePausedChanged()
-    {
-        IsActive = !IsActive;
+        IsActive = !gamePaused;
     }
 
     /// <summary>

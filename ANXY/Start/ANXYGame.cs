@@ -16,6 +16,8 @@ namespace ANXY.Start;
 /// </summary>
 public class ANXYGame : Game
 {
+    public event Action<bool> GamePausedChanged;
+
     public bool DebugMode { get; set; } = true;
     private readonly GraphicsDeviceManager _graphics;
     private Texture2D _backgroundSprite;
@@ -33,7 +35,7 @@ public class ANXYGame : Game
     private readonly string[] _backgroundLayerNames = { "Ground" };
     private readonly string[] _foregroundLayerNames = { "" };
     private readonly string contentRootDirectory = "Content";
-    private bool GamePlaying = true;
+    public bool GamePaused { get; private set; } = false;
 
     ///Singleton Pattern
     private static readonly Lazy<ANXYGame> lazy = new(() => new ANXYGame());
@@ -46,7 +48,7 @@ public class ANXYGame : Game
     /// <summary>
     /// This is the constructor for the heart of the game, where everything gets its initial spark.
     /// </summary>
-    public ANXYGame()
+    private ANXYGame()
     {
         IsMouseVisible = false;
         //_graphics.ToggleFullScreen();
@@ -96,6 +98,8 @@ public class ANXYGame : Game
         {
             BoxColliderSystem.Instance.EnableDebugMode(_graphics.GraphicsDevice);
         }
+
+        GamePausedChanged += OnGamePausedChanged;
     }
 
     /// <summary>
@@ -180,8 +184,6 @@ public class ANXYGame : Game
     private void InitializeInputController()
     {
         PlayerInput.Instance.LimitFpsKeyPressed += ToggleFpsLimit;
-        PlayerInput.Instance.GamePausedChanged += ToggleMouseCursorShow;
-        UIManager.Instance.PauseToggled += TogglePlayerActiveState;
     }
 
     /// <summary>
@@ -390,19 +392,20 @@ public class ANXYGame : Game
         _graphics.ApplyChanges();
     }
 
-    private void TogglePlayerActiveState()
+    private void OnGamePausedChanged(bool gamePaused)
     {
-        IsMouseVisible = !IsMouseVisible;
+        IsMouseVisible = gamePaused;
         _graphics.ApplyChanges();
     }
 
-    private void ToggleMouseCursorShow(bool gamePaused)
+    public void SetGamePaused(bool gamePaused)
     {
-        IsMouseVisible = !IsMouseVisible;
-        _graphics.ApplyChanges();
+        GamePaused = gamePaused;
+        GamePausedChanged?.Invoke(gamePaused);
     }
 
-    private void Reset() {
+    private void Reset()
+    {
         EntitySystem.Instance.Clear();
         InitializeDefaultScene();
     }
