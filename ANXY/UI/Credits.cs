@@ -139,8 +139,8 @@ namespace ANXY.UI
             btnReturn.Text = "Return";
             btnReturn.GridRow = 26;
             btnReturn.Id = "btnReturn";
-            HorizontalAlignment = HorizontalAlignment.Center;
-            VerticalAlignment = VerticalAlignment.Center;
+            btnReturn.HorizontalAlignment = HorizontalAlignment.Center;
+            btnReturn.VerticalAlignment = VerticalAlignment.Center;
             btnReturn.MinWidth = 100;
             btnReturn.Padding = new Thickness(10);
             btnReturn.Click += OnReturnClicked;

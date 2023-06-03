@@ -16,42 +16,55 @@ namespace ANXY.Start;
 /// </summary>
 public class ANXYGame : Game
 {
+    /// <summary>
+    ///    Event that is fired when the game is paused or unpaused
+    /// </summary>
     public event Action<bool> GamePausedChanged;
 
-    public bool DebugMode { get; set; } = true;
+    /// <summary>
+    ///    Game Modes: Pause, Debug
+    /// </summary>
+    public bool GamePaused { get; private set; } = false;
+
+    /// <summary>
+    ///    Window size, style
+    /// </summary>
     private readonly GraphicsDeviceManager _graphics;
-    private Texture2D _backgroundSprite;
-    private TiledMap _levelTileMap;
-    private Texture2D _playerSprite;
-    private SpriteFont _arialSpriteFont;
-    private SpriteBatch _spriteBatch;
     private readonly Rectangle _screenBounds;
     private Rectangle _1080pSize = new(0, 0, 1920, 1080);
     private int _windowHeight;
     private int _windowWidth;
-    private Entity _playerEntity;
-    private Entity _cameraEntity;
-    private readonly Vector2 _cameraPadding = new Vector2(1 / 5, 1 / 4);
-    private readonly string[] _backgroundLayerNames = { "Ground" };
-    private readonly string[] _foregroundLayerNames = { "" };
-    private readonly string contentRootDirectory = "Content";
-    public bool GamePaused { get; private set; } = false;
-
-    ///Singleton Pattern
-    private static readonly Lazy<ANXYGame> lazy = new(() => new ANXYGame());
 
     /// <summary>
-    ///     Singleton Pattern return the only instance there is
+    ///    Game Map: TileSet, TileMap, Background, Layers
     /// </summary>
+    private SpriteBatch _spriteBatch;
+    private TiledMap _levelTileMap;
+    private Texture2D _backgroundSprite;
+    private readonly string[] _backgroundLayerNames = { "Ground" };
+    private readonly string[] _foregroundLayerNames = { "" };
+
+    /// <summary>
+    ///   Player: Sprite, Entity
+    /// </summary>
+    private Texture2D _playerSprite;
+
+    /// <summary>
+    ///    Content: Root Directory
+    /// </summary>
+    private readonly string contentRootDirectory = "Content";
+
+    /// <summary>
+    ///    Singleton Pattern
+    /// </summary>
+    private static readonly Lazy<ANXYGame> lazy = new(() => new ANXYGame());
     public static ANXYGame Instance => lazy.Value;
 
     /// <summary>
-    /// This is the constructor for the heart of the game, where everything gets its initial spark.
+    ///   Constructor
     /// </summary>
     private ANXYGame()
     {
-        IsMouseVisible = false;
-        //_graphics.ToggleFullScreen();
         _screenBounds = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.TitleSafeArea;
 
         _graphics = new GraphicsDeviceManager(this);
@@ -63,23 +76,28 @@ public class ANXYGame : Game
         }
         else
         {
-            _graphics.PreferredBackBufferWidth = _screenBounds.Width;
-            _graphics.PreferredBackBufferHeight = _screenBounds.Height;
+            _graphics.PreferredBackBufferWidth = _screenBounds.Width-100;
+            _graphics.PreferredBackBufferHeight = _screenBounds.Height-100;
         }
-        //GraphicsDevice.Viewport.Bounds to get the current window size
-        //GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.TitleSafeArea to get screen resolution
+        Content.RootDirectory = contentRootDirectory;
 
-        //makes it possible for the user to change the window size
-        Window.AllowUserResizing = true;
+        _windowWidth = _graphics.PreferredBackBufferWidth;
+        _windowHeight = _graphics.PreferredBackBufferHeight;
 
+        _graphics.GraphicsProfile = GraphicsProfile.HiDef;
+
+        // VSync off
         _graphics.SynchronizeWithVerticalRetrace = false;
         IsFixedTimeStep = false;
 
+        IsMouseVisible = false;
+
+        Window.AllowUserResizing = true;
+        _graphics.IsFullScreen = true;
+
+        // Apply window properties (mouse, vsync, size, etc.)
         _graphics.ApplyChanges();
-
-        Content.RootDirectory = contentRootDirectory;
     }
-
 
     /// <summary>
     /// Allows the game to perform any initialization it needs to before starting to run.
@@ -91,15 +109,21 @@ public class ANXYGame : Game
     {
         base.Initialize();
         InitializeDefaultScene();
-        //EntitySystem.Instance._InitializeEntities();
         SystemManager.Instance.InitializeAll();
-        //Debug mode
-        if (DebugMode)
-        {
-            BoxColliderSystem.Instance.EnableDebugMode(_graphics.GraphicsDevice);
-        }
+        var xOffset = (_screenBounds.Width - _windowWidth) / 2;
+        var yOffset = (_screenBounds.Height - _windowHeight) / 2;
+        Window.Position = new Point(xOffset, yOffset);
 
         GamePausedChanged += OnGamePausedChanged;
+        Window.ClientSizeChanged += OnClientSizeChanged;
+    }
+
+    private void OnClientSizeChanged(object sender, EventArgs eventArgs)
+    {
+        _windowWidth = Window.ClientBounds.Width;
+        _windowHeight = Window.ClientBounds.Height;
+        var camera = EntitySystem.Instance.FindEntitiesByType<Camera>()[0].GetComponent<Camera>();
+        camera._windowDimensions = new Vector2(_windowWidth, _windowHeight);
     }
 
     /// <summary>
@@ -107,8 +131,6 @@ public class ANXYGame : Game
     /// </summary>
     private void InitializeDefaultScene()
     {
-        _windowWidth = Window.ClientBounds.Width;
-        _windowHeight = Window.ClientBounds.Height;
         InitializeBackground();
 
         InitializeLevelBackgroundLayers();
@@ -117,7 +139,6 @@ public class ANXYGame : Game
         InitializePlayer();
 
         InitializeLevelForegroundLayers();
-        AddPlayerToLevel();
     }
 
     /// <summary>
@@ -130,10 +151,6 @@ public class ANXYGame : Game
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         _playerSprite = Content.Load<Texture2D>("playerAtlas");
         _backgroundSprite = Content.Load<Texture2D>("Background-2");
-        //_levelTileMap = Content.Load<TiledMap>("TileMapSet2");
-
-        //TODO important level
-        //_levelTileMap = Content.Load<TiledMap>("JumpNRun-1");
         _levelTileMap = Content.Load<TiledMap>("JumpNRun-1");
 
         //Load Fonts
@@ -241,7 +258,6 @@ public class ANXYGame : Game
         backgroundEntity.AddComponent(new Background(_windowWidth, _windowHeight));
         SingleSpriteRenderer backgroundSprite = new SingleSpriteRenderer(_backgroundSprite);
         backgroundEntity.AddComponent(backgroundSprite);
-        backgroundSprite.CameraEntity = _cameraEntity;
         /*
         //------------------------------------------------------------------------------------------------------------------------------------
         //System
@@ -315,7 +331,6 @@ public class ANXYGame : Game
             SystemManager.Instance.Register(SpriteSystem.Instance);
             //------------------------------------------------------------------------------------------------------------------------------------
             */
-            tileSprite.CameraEntity = _cameraEntity;
 
             //Check for BoxCollider in XML/Json
             TiledMapTilesetTile foundTilesetTile = null;
@@ -371,17 +386,6 @@ public class ANXYGame : Game
             index++;
         }
         return -1;
-    }
-
-    /// <summary>
-    /// Add the Player Entity to all Level Components
-    /// </summary>
-    private void AddPlayerToLevel()
-    {
-        foreach (var levelEntity in EntitySystem.Instance.FindEntitiesByType<Level>())
-        {
-            levelEntity.GetComponent<Level>().PlayerEntity = _playerEntity;
-        }
     }
 
     private void ToggleFpsLimit()

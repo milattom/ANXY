@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended.Timers;
 using System;
 
 namespace ANXY.EntityComponent.Components;
@@ -9,16 +10,14 @@ namespace ANXY.EntityComponent.Components;
 /// </summary>
 public class PlayerSpriteRenderer : Component
 {
-    public const int XOffsetRectangle = 33;
-    private readonly int _numberOfFrames = 7;
+    private const int XOffsetRectangle = 33;
+    private const int _numberOfFrames = 7;
     public readonly Rectangle StartPlayerRectangle = new(0, 0, 33, 70);
-    private int _currentFrame;
-    private readonly int _millisecondsPerFrame = 80; //the smaller the faster animation. 42ms ~= 24fps
+    private const int _millisecondsPerFrame = 100; //the smaller the faster animation. 42ms ~= 24fps
     private Player _player;
-    private int _timeSinceLastFrame;
-    public Rectangle CurrentPlayerRectangle;
-    private SpriteEffects spriteEffect;
-    public Texture2D PlayerAtlas { get; }
+    private Rectangle CurrentPlayerRectangle;
+    private SpriteEffects _spriteEffect;
+    private Texture2D PlayerAtlas { get; }
 
     /// <summary>
     ///     set the playerAtlas with all Player Movement Frames
@@ -36,9 +35,15 @@ public class PlayerSpriteRenderer : Component
     /// <param name="gameTime">gameTime</param>
     public override void Update(GameTime gameTime)
     {
-        //Animation Update
-        _timeSinceLastFrame += gameTime.ElapsedGameTime.Milliseconds;
-        if (_timeSinceLastFrame > _millisecondsPerFrame) _updateAnimation();
+        if (_player.InputDirection.X > 0)
+        {
+            _spriteEffect = SpriteEffects.None;
+        }
+        else if (_player.InputDirection.X < 0)
+        {
+            _spriteEffect = SpriteEffects.FlipHorizontally;
+        }
+        UpdateAnimation(gameTime);
     }
 
     /// <summary>
@@ -51,7 +56,7 @@ public class PlayerSpriteRenderer : Component
         var drawRectangle = new Rectangle((int)(Entity.Position.X - Camera.ActiveCamera.DrawOffset.X), (int)(Entity.Position.Y - Camera.ActiveCamera.DrawOffset.Y), 33, 70);
 
         spriteBatch.Draw(PlayerAtlas, drawRectangle, CurrentPlayerRectangle, Color.White, 0f, new Vector2(0, 0),
-            spriteEffect, 0f);
+            _spriteEffect, 0f);
     }
 
     /// <summary>
@@ -96,25 +101,14 @@ public class PlayerSpriteRenderer : Component
     /// <summary>
     /// Update the Animation frame to the next frame.
     /// </summary>
-    private void _updateAnimation()
+    private void UpdateAnimation(GameTime gameTime)
     {
-        _timeSinceLastFrame = 0;
-        if (_currentFrame < _numberOfFrames && _player.InputDirection.X > 0)
+        var currentAnimationTime = gameTime.TotalGameTime.TotalMilliseconds % (_millisecondsPerFrame * _numberOfFrames);
+        var currentFrame = (int)(currentAnimationTime / _millisecondsPerFrame);
+        if (_player.Velocity.X == 0)
         {
-            CurrentPlayerRectangle.X = XOffsetRectangle * _currentFrame;
-            spriteEffect = SpriteEffects.None;
-            _currentFrame++;
+            currentFrame = 0;
         }
-        else if (_currentFrame < _numberOfFrames && _player.InputDirection.X < 0)
-        {
-            CurrentPlayerRectangle.X = XOffsetRectangle * _currentFrame;
-            spriteEffect = SpriteEffects.FlipHorizontally;
-            _currentFrame++;
-        }
-        else
-        {
-            CurrentPlayerRectangle.X = 0;
-            _currentFrame = 0;
-        }
+        CurrentPlayerRectangle.X = XOffsetRectangle * currentFrame;
     }
 }
