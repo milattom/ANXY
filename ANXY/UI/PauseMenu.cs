@@ -10,7 +10,7 @@ namespace ANXY.UI
     internal class PauseMenu : VerticalStackPanel
     {
         public event Action ResumePressed;
-        public event Action NewGamePressed;
+        public event Action ResetGamePressed;
         public event Action ControlsPressed;
         public event Action CreditsPressed;
         public event Action ExitGamePressed;
@@ -86,7 +86,7 @@ namespace ANXY.UI
 
         private void OnNewGameClicked(object sender, EventArgs e)
         {
-            NewGamePressed?.Invoke();
+            ResetGamePressed?.Invoke();
         }
 
         private void OnResumeClicked(object sender, EventArgs e)

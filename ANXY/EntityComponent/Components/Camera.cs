@@ -58,6 +58,7 @@ namespace ANXY.EntityComponent.Components
         {
             ActiveCamera = this;
 
+            Entity.Position = _player.Entity.Position;
         }
 
         /// <summary>
@@ -65,6 +66,11 @@ namespace ANXY.EntityComponent.Components
         /// </summary>
         public override void Destroy()
         {
+        }
+
+        public void Reset()
+        {
+            Entity.Position = _player.Entity.Position;
         }
     }
 }

@@ -196,6 +196,12 @@ public class Player : Component
         return true;
     }
 
+    public void Reset()
+    {
+        _velocity = Vector2.Zero;
+        Entity.Position = new Vector2(1200,540);
+    }
+
     /// <summary>
     /// PlayerState describes in what movement state the Player currently is
     /// </summary>

@@ -113,7 +113,6 @@ public class ANXYGame : Game
         InitializePlayer();
 
         InitializeLevelForegroundLayers();
-        AddPlayerToBackground();
         AddPlayerToLevel();
     }
 
@@ -373,22 +372,11 @@ public class ANXYGame : Game
     }
 
     /// <summary>
-    /// Add the Player Entity to Background Component
-    /// </summary>
-    private void AddPlayerToBackground()
-    {
-        foreach (var levelEntity in EntitySystem.Instance.FindEntityByType<Background>())
-        {
-            levelEntity.GetComponent<Background>().PlayerEntity = _playerEntity;
-        }
-    }
-
-    /// <summary>
     /// Add the Player Entity to all Level Components
     /// </summary>
     private void AddPlayerToLevel()
     {
-        foreach (var levelEntity in EntitySystem.Instance.FindEntityByType<Level>())
+        foreach (var levelEntity in EntitySystem.Instance.FindEntitiesByType<Level>())
         {
             levelEntity.GetComponent<Level>().PlayerEntity = _playerEntity;
         }
@@ -412,5 +400,10 @@ public class ANXYGame : Game
     {
         IsMouseVisible = !IsMouseVisible;
         _graphics.ApplyChanges();
+    }
+
+    private void Reset() {
+        EntitySystem.Instance.Clear();
+        InitializeDefaultScene();
     }
 }

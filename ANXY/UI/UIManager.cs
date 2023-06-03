@@ -1,4 +1,5 @@
 ﻿using ANXY.EntityComponent.Components;
+using ANXY.Start;
 using Microsoft.Xna.Framework;
 using Myra.Graphics2D.UI;
 using System;
@@ -31,6 +32,7 @@ namespace ANXY.UI
             _desktop = new Desktop();
             _pauseMenu = new PauseMenu();
             _pauseMenu.ResumePressed += OnResumeBtnPressed;
+            _pauseMenu.ResetGamePressed += OnResetGameBtnPressed;
             _pauseMenu.ControlsPressed += OnControlsBtnPressed;
             _pauseMenu.CreditsPressed += OnCreditsBtnPressed;
             _pauseMenu.ExitGamePressed += OnExitGamePressed;
@@ -89,6 +91,16 @@ namespace ANXY.UI
         {
             SwitchUiViews();
             PauseToggled?.Invoke();
+        }
+
+        public void OnResetGameBtnPressed()
+        {
+            SwitchUiViews();
+            PauseToggled?.Invoke();
+            var player = EntitySystem.Instance.FindEntitiesByType<Player>()[0].GetComponent<Player>();
+            player.Reset();
+            var camera = EntitySystem.Instance.FindEntitiesByType<Camera>()[0].GetComponent<Camera>();
+            camera.Reset();
         }
 
         public void OnControlsBtnPressed()
