@@ -22,6 +22,7 @@ namespace ANXY.UI
         public TextButton btnMenu;
         public TextButton btnShowFps;
         public TextButton btnCapFps;
+        public TextButton btnToggleFullscreen;
         public TextButton btnReturnFromControls;
         public TextButton btnLoadDefaults;
         public TextButton btnSaveChanges;
@@ -162,12 +163,28 @@ namespace ANXY.UI
             btnCapFps.Id = "btnCapFps";
             btnCapFps.Click += OnInputButtonClicked;
 
+            var lblToggleFullscreen = new Label();
+            lblToggleFullscreen.Text = "Toggle Fullscreen";
+            lblToggleFullscreen.VerticalAlignment = VerticalAlignment.Center;
+            lblToggleFullscreen.GridColumn = 1;
+            lblToggleFullscreen.GridRow = 9;
+
+            btnToggleFullscreen = new TextButton();
+            btnToggleFullscreen.Text = "F11";
+            btnToggleFullscreen.MinWidth = 100;
+            btnToggleFullscreen.Padding = new Thickness(10);
+            btnToggleFullscreen.VerticalAlignment = VerticalAlignment.Center;
+            btnToggleFullscreen.GridColumn = 2;
+            btnToggleFullscreen.GridRow = 9;
+            btnToggleFullscreen.Id = "btnToggleFullscreen";
+            btnToggleFullscreen.Click += OnInputButtonClicked;
+
             btnReturnFromControls = new TextButton();
             btnReturnFromControls.Text = "Return";
             btnReturnFromControls.MinWidth = 100;
             btnReturnFromControls.Padding = new Thickness(10);
             btnReturnFromControls.VerticalAlignment = VerticalAlignment.Center;
-            btnReturnFromControls.GridRow = 10;
+            btnReturnFromControls.GridRow = 11;
             btnReturnFromControls.Id = "btnReturnFromControls";
             btnReturnFromControls.Click += OnReturnClicked;
 
@@ -178,7 +195,7 @@ namespace ANXY.UI
             btnLoadDefaults.VerticalAlignment = VerticalAlignment.Center;
             btnLoadDefaults.HorizontalAlignment = HorizontalAlignment.Right;
             btnLoadDefaults.GridColumn = 1;
-            btnLoadDefaults.GridRow = 10;
+            btnLoadDefaults.GridRow = 11;
             btnLoadDefaults.Id = "btnLoadDefaults";
             btnLoadDefaults.Click += OnLoadDefaultsClicked;
 
@@ -189,7 +206,7 @@ namespace ANXY.UI
             btnSaveChanges.VerticalAlignment = VerticalAlignment.Center;
             btnSaveChanges.HorizontalAlignment = HorizontalAlignment.Left;
             btnSaveChanges.GridColumn = 2;
-            btnSaveChanges.GridRow = 10;
+            btnSaveChanges.GridRow = 11;
             btnSaveChanges.Id = "btnSaveChanges";
             btnSaveChanges.Click += OnSaveChangesClicked;
 
@@ -224,6 +241,8 @@ namespace ANXY.UI
             Widgets.Add(btnShowFps);
             Widgets.Add(lblFpsCap);
             Widgets.Add(btnCapFps);
+            Widgets.Add(lblToggleFullscreen);
+            Widgets.Add(btnToggleFullscreen);
             Widgets.Add(btnReturnFromControls);
             Widgets.Add(btnLoadDefaults);
             Widgets.Add(btnSaveChanges);
@@ -244,6 +263,8 @@ namespace ANXY.UI
                 inputSettings.ShowFps.Key = btnShowFps.Text;
                 inputSettings.CapFps = new PlayerInput.KeySetting();
                 inputSettings.CapFps.Key = btnCapFps.Text;
+                inputSettings.ToggleFullscreen = new PlayerInput.KeySetting();
+                inputSettings.ToggleFullscreen.Key = btnToggleFullscreen.Text;
 
                 PlayerInput.Instance.SetInputSettings(inputSettings);
 

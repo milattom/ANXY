@@ -19,6 +19,7 @@ namespace ANXY.EntityComponent.Components
     {
         public event Action ShowFpsKeyPressed;
         public event Action LimitFpsKeyPressed;
+        public event Action ToggleFullscreenKeyPressed;
         public event Action<Keys> AnyKeyPress;
 
         private Dictionary<Keys, bool> lastKeyState;
@@ -29,6 +30,7 @@ namespace ANXY.EntityComponent.Components
             public KeySetting Menu { get; set; }
             public KeySetting ShowFps { get; set; }
             public KeySetting CapFps { get; set; }
+            public KeySetting ToggleFullscreen { get; set; }
         }
 
         public class MovementSettings
@@ -46,7 +48,8 @@ namespace ANXY.EntityComponent.Components
         private KeyboardState currentKeyboardState;
         private KeyboardState lastKeyboardState;
         public InputSettings inputSettings { get; private set; }
-        private Keys leftKey, rightKey, jumpKey, menuKey, showFpsKey, limitFpsKey;
+        private Keys leftKey, rightKey, jumpKey, menuKey, showFpsKey, limitFpsKey, toggleFullscreenKey;
+        private List<Keys> keys = new List<Keys>();
         private String userValuePath;
         private String defaultValuePath;
 
@@ -88,6 +91,11 @@ namespace ANXY.EntityComponent.Components
                 ShowFpsKeyPressed?.Invoke();
             }
 
+            if (IsToggleFullscreenPressed())
+            {
+                ToggleFullscreenKeyPressed?.Invoke();
+            }
+
             SetLastState();
         }
 
@@ -126,7 +134,7 @@ namespace ANXY.EntityComponent.Components
                 contentRootPath = Path.Combine(contentRootPath, "..", "Resources");
             }
 
-            string assemblyFilePath = Path.Combine(contentRootPath, "Content", "InputUserValues.json");
+            string assemblyFilePath = Path.Combine(contentRootPath, "Content", "InputDefaults.json");
 
             if (!File.Exists(tempFilePath))
             {
@@ -135,55 +143,33 @@ namespace ANXY.EntityComponent.Components
             userValuePath = tempFilePath;
             defaultValuePath = assemblyFilePath;
 
-            /*
-            // Get the base directory path of the application
-            string baseDirectory = AppContext.BaseDirectory;
-
-            // Access a file within the app bundle
-            string filePath = Path.Combine(baseDirectory.ToString());
-            if (OperatingSystem.IsMacCatalyst() || OperatingSystem.IsMacOS()) 
-            {
-                filePath = Path.Combine(filePath, "Contents", "Resources"); 
-            }
-            filePath = Path.Combine(filePath, "Content", "InputUserValues.json");
-
-            
-            // Read the contents of the file*/
-            //Load(tempFilePath);
-
-
             if (File.Exists(userValuePath))
             {
                 Load(userValuePath);
-                UpdateKeys();
             }
             else
             {
-                Load(defaultValuePath);
-                UpdateKeys();
+                ResetToDefaults();
             }
 
             lastKeyState = new Dictionary<Keys, bool>();
-            Keys[] keys = { leftKey, rightKey, jumpKey, menuKey, showFpsKey, limitFpsKey };
-            foreach (var key in keys)
-            {
-                lastKeyState.Add(key, false);
-            }
         }
 
         public override void Destroy()
         {
         }
 
-        public void LoadUserSettings()
-        {
-            Load(userValuePath);
-        }
         private void Load(string fileName)
         {
             string json = File.ReadAllText(fileName);
             inputSettings = JsonConvert.DeserializeObject<InputSettings>(json);
-            UpdateKeys();
+            try
+            {
+                UpdateKeys();
+            }catch(Exception e)
+            {
+                ResetToDefaults();
+            }
         }
 
         public void SetInputSettings(InputSettings inputSettings)
@@ -203,18 +189,30 @@ namespace ANXY.EntityComponent.Components
             File.Delete(userValuePath);
             File.Copy(defaultValuePath, userValuePath);
             Load(userValuePath);
-            UpdateKeys();
         }
 
         private void UpdateKeys()
         {
             // Convert the MovementSettings keys
+            keys.Clear();
             Enum.TryParse(inputSettings.Movement.Left, out leftKey);
+            keys.Add(leftKey);
             Enum.TryParse(inputSettings.Movement.Right, out rightKey);
+            keys.Add(rightKey);
             Enum.TryParse(inputSettings.Movement.Jump, out jumpKey);
+            keys.Add(jumpKey);
             Enum.TryParse(inputSettings.Menu.Key, out menuKey);
+            keys.Add(menuKey);
             Enum.TryParse(inputSettings.ShowFps.Key, out showFpsKey);
+            keys.Add(showFpsKey);
             Enum.TryParse(inputSettings.CapFps.Key, out limitFpsKey);
+            keys.Add(limitFpsKey);
+            Enum.TryParse(inputSettings.ToggleFullscreen.Key, out toggleFullscreenKey);
+            keys.Add(toggleFullscreenKey);
+            if (keys.Contains(Keys.None))
+            {
+                throw new Exception("One or more keys are not set in the InputUserValues.json file");
+            }
         }
 
         public bool IsWalkingRight()
@@ -242,6 +240,11 @@ namespace ANXY.EntityComponent.Components
         public bool IsLimitFpsKeyPressed()
         {
             return IsKeyPressed(limitFpsKey);
+        }
+
+        public bool IsToggleFullscreenPressed()
+        {
+            return IsKeyPressed(toggleFullscreenKey);
         }
 
         private bool IsKeyPressed(Keys key)

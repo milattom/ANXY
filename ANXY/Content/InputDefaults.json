@@ -10,7 +10,10 @@
     "ShowFps": {
         "Key": "F1"
     },
-    "CapFps": {
-        "Key": "F4"
-    }
+  "CapFps": {
+    "Key": "F4"
+  },
+  "ToggleFullscreen": {
+    "Key": "F11"
+  }
 }
