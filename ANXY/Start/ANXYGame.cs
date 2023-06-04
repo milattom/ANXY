@@ -40,7 +40,7 @@ public class ANXYGame : Game
     private readonly string[] _backgroundLayerNames = { "Ground" };
     private readonly string[] _foregroundLayerNames = { "" };
 
-    // Player: Sprite, Entity.
+    // Player: Sprite.
     private Texture2D _playerSprite;
 
     // Content: Root Directory.
@@ -84,7 +84,8 @@ public class ANXYGame : Game
         IsMouseVisible = false;
 
         Window.AllowUserResizing = true;
-        _graphics.IsFullScreen = true;
+        _graphics.HardwareModeSwitch = false;
+        _graphics.IsFullScreen = false;
 
         // Apply window properties (mouse visible, vsync, window size, etc).
         _graphics.ApplyChanges();
