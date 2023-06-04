@@ -102,6 +102,11 @@ public class PlayerSpriteRenderer : Component
     /// </summary>
     private void UpdateAnimation(GameTime gameTime)
     {
+        if (_player._midAir)
+        {
+            CurrentPlayerRectangle.X = XOffsetRectangle * 7;
+            return;
+        }
         var currentAnimationTime = gameTime.TotalGameTime.TotalMilliseconds % (_millisecondsPerFrame * _numberOfFrames);
         var currentFrame = (int)(currentAnimationTime / _millisecondsPerFrame);
         if (_player.Velocity.X == 0)

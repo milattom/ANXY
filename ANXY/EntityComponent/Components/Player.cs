@@ -20,7 +20,7 @@ public class Player : Component
     //TODO remove GroundLevel or reduce it to Window Bottom Edge when Level is fully implemented in Tiled.
     private const float Gravity = 350;
     private const float JumpVelocity = 300;
-    private bool _midAir = true;
+    public bool _midAir { get; private set; } = true;
 
     private const float MaxWalkSpeed = 300;
     private const float WalkAcceleration = 150;
