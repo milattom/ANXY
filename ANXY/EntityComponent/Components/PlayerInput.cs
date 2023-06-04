@@ -162,7 +162,8 @@ namespace ANXY.EntityComponent.Components
             try
             {
                 UpdateKeys();
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 ResetToDefaults();
             }

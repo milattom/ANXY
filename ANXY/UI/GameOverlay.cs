@@ -1,12 +1,14 @@
-﻿using FontStashSharp.RichText;
+﻿using ANXY.Start;
+using FontStashSharp.RichText;
 using Microsoft.Xna.Framework;
 using Myra.Graphics2D;
-using Myra.Graphics2D.Brushes;
 using Myra.Graphics2D.UI;
+using System;
+using System.Text;
 
 namespace ANXY.UI
 {
-    internal class FpsOverlay : VerticalStackPanel
+    internal class GameOverlay : VerticalStackPanel
     {
         private const string FPS_TEXT = "FPS: ";
         private const string CURRENT_MAX_FPS = "max: ";
@@ -22,8 +24,16 @@ namespace ANXY.UI
         private float lastFpsTextUpdate = 0.0f;
         private float lastMinMaxFpsTextUpdate = 0.0f;
 
-        public FpsOverlay()
+        //StopWatch elements
+        private double StopWatchTime;
+        private Label _lblStopWatch;
+
+        private StringBuilder _stopWatchStringBuilder;
+
+        public GameOverlay()
         {
+            _stopWatchStringBuilder = new StringBuilder();
+
             _lblFpsTimeStepExplanation = new Label();
             _lblFpsTimeStepExplanation.Text = "fps refresh all 0.33s";
             _lblFpsTimeStepExplanation.TextColor = ColorStorage.CreateColor(254, 57, 48, 255);
@@ -47,26 +57,27 @@ namespace ANXY.UI
             _lblMinFps = new Label();
             _lblMinFps.Text = CURRENT_MIN_FPS;
             _lblMinFps.TextColor = ColorStorage.CreateColor(254, 57, 48, 255);
-            //_lblMinFps.SetStyle =
             _lblMinFps.Id = "lblMinFps";
+
+            //StopWatch
+            _lblStopWatch = new Label();
+
 
             Padding = new Thickness(15);
             Spacing = 5;
-            Widgets.Add(_lblCurrentFps);
-            Widgets.Add(_lblMaxFps);
-            Widgets.Add(_lblMinFps);
-            Widgets.Add(_lblFpsTimeStepExplanation);
-            Widgets.Add(_lblMinMaxTimeStepExplanation);
+            Widgets.Add(_lblStopWatch);
         }
 
         public void Update(GameTime gameTime)
         {
-            float newMilliseconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            lastFpsTextUpdate += newMilliseconds;
-            lastMinMaxFpsTextUpdate += newMilliseconds;
+            UpdateStopWatch(gameTime);
 
-            FpsValue = 1.0f / newMilliseconds;
-            
+            var gameTimeElapsedSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            lastFpsTextUpdate += gameTimeElapsedSeconds;
+            lastMinMaxFpsTextUpdate += gameTimeElapsedSeconds;
+
+            FpsValue = 1.0f / gameTimeElapsedSeconds;
+
             if (FpsValue > MaxFpsValue)
             {
                 MaxFpsValue = FpsValue;
@@ -89,6 +100,64 @@ namespace ANXY.UI
                 MaxFpsValue = float.MinValue;
                 MinFpsValue = float.MaxValue;
                 lastMinMaxFpsTextUpdate = 0;
+            }
+        }
+
+
+        public void UpdateStopWatch(GameTime gameTime)
+        {
+            if (ANXYGame.Instance.GamePaused)
+            {
+                return;
+            }
+
+            var gameTimeElapsedSeconds = gameTime.ElapsedGameTime.TotalSeconds;
+            StopWatchTime += gameTimeElapsedSeconds;
+
+            TimeSpan timeSpan = TimeSpan.FromSeconds(StopWatchTime);
+
+            if (timeSpan.Hours > 0)
+            {
+                _stopWatchStringBuilder.Append(string.Format("{0:00}:", timeSpan.Hours));
+            }
+
+            if (timeSpan.Minutes > 0 || timeSpan.Hours > 0)
+            {
+                _stopWatchStringBuilder.Append(string.Format("{0:00}:", timeSpan.Minutes));
+                _stopWatchStringBuilder.Append(string.Format("{0:00}.{1:00}", timeSpan.Seconds, timeSpan.Milliseconds / 10));
+            }
+            else
+            {
+                _stopWatchStringBuilder.Append(string.Format("{0:0}.{1:00}", timeSpan.Seconds, timeSpan.Milliseconds / 10));
+            }
+
+
+            _lblStopWatch.Text = "Time: " + _stopWatchStringBuilder.ToString();
+            _stopWatchStringBuilder.Clear();
+        }
+
+        public void ResetStopWatch()
+        {
+            StopWatchTime = 0;
+        }
+
+        public void ShowFps(bool show)
+        {
+            if (show)
+            {
+                Widgets.Add(_lblCurrentFps);
+                Widgets.Add(_lblMaxFps);
+                Widgets.Add(_lblMinFps);
+                Widgets.Add(_lblFpsTimeStepExplanation);
+                Widgets.Add(_lblMinMaxTimeStepExplanation);
+            }
+            else
+            {
+                Widgets.Remove(_lblCurrentFps);
+                Widgets.Remove(_lblMaxFps);
+                Widgets.Remove(_lblMinFps);
+                Widgets.Remove(_lblFpsTimeStepExplanation);
+                Widgets.Remove(_lblMinMaxTimeStepExplanation);
             }
         }
     }

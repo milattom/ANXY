@@ -13,7 +13,7 @@ namespace ANXY.UI
     {
         // The different UI overlays or UI screens.
         private readonly Desktop _desktop;
-        private readonly FpsOverlay _fpsOverlay;
+        private readonly GameOverlay _inGameOverlay;
         private readonly PauseMenu _pauseMenu;
         private readonly ControlsMenu _controlsMenu;
         private readonly Credits _credits;
@@ -43,21 +43,27 @@ namespace ANXY.UI
             _controlsMenu.LoadDefaultsPressed += OnLoadDefaultsClicked;
             _controlsMenu.SaveChangesPressed += OnSaveChangesClicked;
 
-            // FPS Overlay
-            _fpsOverlay = new FpsOverlay();
+            //InGameOverlay
+            _inGameOverlay = new GameOverlay();
 
             // Credits
             _credits = new Credits();
             _credits.ReturnPressed += OnReturnClicked;
 
+
             // Desktop is the root of UI
             _desktop = new Desktop();
-            _desktop.Root = _pauseMenu;
-            _desktop.Root.Visible = false;
+            _desktop.Root = _inGameOverlay;
+            _desktop.Root.Visible = true;
 
             // Event handlers
             ANXYGame.Instance.GamePausedChanged += OnGamePausedChanged;
             PlayerInput.Instance.ShowFpsKeyPressed += OnShowFpsKeyPressed;
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            UpdateFPS(gameTime);
         }
 
         /// <summary>
@@ -66,9 +72,9 @@ namespace ANXY.UI
         /// <param name="gameTime"></param>
         public void UpdateFPS(GameTime gameTime)
         {
-            if (_desktop.Root == _fpsOverlay && _desktop.Root.Visible)
+            if (_desktop.Root == _inGameOverlay)
             {
-                _fpsOverlay.Update(gameTime);
+                _inGameOverlay.Update(gameTime);
             }
         }
 
@@ -98,6 +104,7 @@ namespace ANXY.UI
             player.Reset();
             var camera = EntitySystem.Instance.FindEntitiesByType<Camera>()[0].GetComponent<Camera>();
             camera.Reset();
+            _inGameOverlay.ResetStopWatch();
             ANXYGame.Instance.SetGamePaused(false);
         }
 
@@ -127,12 +134,10 @@ namespace ANXY.UI
             if (gamePaused)
             {
                 _desktop.Root = _pauseMenu;
-                _desktop.Root.Visible = true;
             }
             else
             {
-                _desktop.Root = _fpsOverlay;
-                _desktop.Root.Visible = _showFps;
+                _desktop.Root = _inGameOverlay;
             }
         }
 
@@ -179,8 +184,7 @@ namespace ANXY.UI
             }
 
             _showFps = !_showFps;
-            _desktop.Root = _fpsOverlay;
-            _desktop.Root.Visible = _showFps;
+            _inGameOverlay.ShowFps(_showFps);
         }
     }
 }

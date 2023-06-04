@@ -1,5 +1,4 @@
 ﻿using ANXY.Start;
-using ANXY.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -194,7 +193,7 @@ public class Player : Component
     public void Reset()
     {
         _velocity = Vector2.Zero;
-        Entity.Position = new Vector2(1200,540);
+        Entity.Position = new Vector2(1200, 540);
     }
 
     /// <summary>

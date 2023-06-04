@@ -151,8 +151,8 @@ public class ANXYGame : Game
         SystemManager.Instance.DrawAll(gameTime, _spriteBatch);
         _spriteBatch.End();
 
-        // Calculate and draw FPS.
-        UIManager.Instance.UpdateFPS(gameTime);
+        // Update UI and draw
+        UIManager.Instance.Update(gameTime);
         UIManager.Instance.Draw();
     }
 

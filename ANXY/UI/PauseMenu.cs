@@ -36,10 +36,10 @@ namespace ANXY.UI
 
 
             var textButton2 = new TextButton();
-            textButton2.Text = "Reset / New Game";
+            textButton2.Text = "Restart Game";
             textButton2.Padding = new Thickness(10);
             textButton2.HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment.Stretch;
-            textButton2.Click += OnNewGameClicked;
+            textButton2.Click += OnResetGameClicked;
 
             var textButton3 = new TextButton();
             textButton3.Text = "Controls";
@@ -84,7 +84,7 @@ namespace ANXY.UI
             CreditsPressed?.Invoke();
         }
 
-        private void OnNewGameClicked(object sender, EventArgs e)
+        private void OnResetGameClicked(object sender, EventArgs e)
         {
             ResetGamePressed?.Invoke();
         }
