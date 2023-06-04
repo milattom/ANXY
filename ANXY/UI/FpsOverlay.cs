@@ -15,7 +15,8 @@ namespace ANXY.UI
         public float MaxFpsValue = float.MinValue;
         public float MinFpsValue = float.MaxValue;
         private readonly Label _lblCurrentFps;
-        private readonly Label _lblTimeStepExplanation;
+        private readonly Label _lblMinMaxTimeStepExplanation;
+        private readonly Label _lblFpsTimeStepExplanation;
         private readonly Label _lblMaxFps;
         private readonly Label _lblMinFps;
         private float lastFpsTextUpdate = 0.0f;
@@ -23,15 +24,20 @@ namespace ANXY.UI
 
         public FpsOverlay()
         {
+            _lblFpsTimeStepExplanation = new Label();
+            _lblFpsTimeStepExplanation.Text = "fps refresh all 0.33s";
+            _lblFpsTimeStepExplanation.TextColor = ColorStorage.CreateColor(254, 57, 48, 255);
+            _lblFpsTimeStepExplanation.Id = "lblExplanation";
+
             _lblCurrentFps = new Label();
             _lblCurrentFps.Text = FPS_TEXT + string.Format("{0:0.00}", FpsValue);
             _lblCurrentFps.TextColor = ColorStorage.CreateColor(254, 57, 48, 255);
             _lblCurrentFps.Id = "lblCurrentFps";
 
-            _lblTimeStepExplanation = new Label();
-            _lblTimeStepExplanation.Text = "min/max refresh all 2s";
-            _lblTimeStepExplanation.TextColor = ColorStorage.CreateColor(254, 57, 48, 255);
-            _lblTimeStepExplanation.Id = "lblExplanation";
+            _lblMinMaxTimeStepExplanation = new Label();
+            _lblMinMaxTimeStepExplanation.Text = "min/max refresh all 2s";
+            _lblMinMaxTimeStepExplanation.TextColor = ColorStorage.CreateColor(254, 57, 48, 255);
+            _lblMinMaxTimeStepExplanation.Id = "lblExplanation";
 
             _lblMaxFps = new Label();
             _lblMaxFps.Text = CURRENT_MAX_FPS;
@@ -49,6 +55,8 @@ namespace ANXY.UI
             Widgets.Add(_lblCurrentFps);
             Widgets.Add(_lblMaxFps);
             Widgets.Add(_lblMinFps);
+            Widgets.Add(_lblFpsTimeStepExplanation);
+            Widgets.Add(_lblMinMaxTimeStepExplanation);
         }
 
         public void Update(GameTime gameTime)
