@@ -6,11 +6,12 @@ using System;
 
 namespace ANXY.UI
 {
+    /// <summary>
+    ///    Manages the UI elements. This class is a singleton.
+    /// </summary>
     internal class UIManager
     {
-        /// <summary>
-        ///     The different UI overlays or UI screens.
-        /// </summary>
+        // The different UI overlays or UI screens.
         private readonly Desktop _desktop;
         private readonly FpsOverlay _fpsOverlay;
         private readonly PauseMenu _pauseMenu;
@@ -19,14 +20,12 @@ namespace ANXY.UI
 
         private bool _showFps = false;
 
-        /// <summary>
-        ///     Singleton Pattern.
-        /// </summary>
+        // Singleton Pattern.
         private static readonly Lazy<UIManager> lazy = new(() => new UIManager());
         public static UIManager Instance => lazy.Value;
 
         /// <summary>
-        ///    Private constructor to prevent instantiation.
+        ///    Singleton Pattern: Private constructor to prevent instantiation.
         /// </summary>
         private UIManager()
         {
@@ -105,7 +104,7 @@ namespace ANXY.UI
         }
 
         /// <summary>
-        /// 
+        ///     Shows the controls menu.
         /// </summary>
         private void OnControlsBtnPressed()
         {
@@ -114,7 +113,7 @@ namespace ANXY.UI
         }
 
         /// <summary>
-        /// 
+        ///     Shows the credits of the game.
         /// </summary>
         private void OnCreditsBtnPressed()
         {
@@ -122,7 +121,7 @@ namespace ANXY.UI
         }
 
         /// <summary>
-        /// 
+        ///     Shows the pause menu on game pause.
         /// </summary>
         /// <param name="gamePaused"></param>
         private void OnGamePausedChanged(bool gamePaused)
@@ -140,7 +139,7 @@ namespace ANXY.UI
         }
 
         /// <summary>
-        /// 
+        ///     Resumes the game.
         /// </summary>
         private void OnReturnClicked()
         {
@@ -148,7 +147,7 @@ namespace ANXY.UI
         }
 
         /// <summary>
-        /// 
+        ///     Loads default keyboard input settings.
         /// </summary>
         private void OnLoadDefaultsClicked()
         {
@@ -156,7 +155,7 @@ namespace ANXY.UI
         }
 
         /// <summary>
-        /// 
+        ///     Saves the current keyboard input settings from the controls menu.
         /// </summary>
         private void OnSaveChangesClicked()
         {
@@ -164,7 +163,7 @@ namespace ANXY.UI
         }
 
         /// <summary>
-        /// 
+        ///     Stops the game and exits the application.
         /// </summary>
         private void OnExitGamePressed()
         {
@@ -172,7 +171,7 @@ namespace ANXY.UI
         }
 
         /// <summary>
-        /// 
+        ///     Toggles the FPS overlay.
         /// </summary>
         private void OnShowFpsKeyPressed()
         {
