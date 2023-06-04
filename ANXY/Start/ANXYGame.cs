@@ -85,7 +85,7 @@ public class ANXYGame : Game
 
         Window.AllowUserResizing = true;
         _graphics.HardwareModeSwitch = false;
-        _graphics.IsFullScreen = false;
+        _graphics.IsFullScreen = true;
 
         // Apply window properties (mouse visible, vsync, window size, etc).
         _graphics.ApplyChanges();
@@ -299,7 +299,7 @@ public class ANXYGame : Game
     private void InitializePlayerInput()
     {
         PlayerInput.Instance.LimitFpsKeyPressed += ToggleFpsLimit;
-        PlayerInput.Instance.ToggleFullscreenKeyPressed += ToggleFullscreen;
+        PlayerInput.Instance.FullscreenKeyPressed += ToggleFullscreen;
     }
 
     /// <summary>

@@ -19,10 +19,8 @@ namespace ANXY.EntityComponent.Components
     {
         public event Action ShowFpsKeyPressed;
         public event Action LimitFpsKeyPressed;
-        public event Action ToggleFullscreenKeyPressed;
+        public event Action FullscreenKeyPressed;
         public event Action<Keys> AnyKeyPress;
-
-        private Dictionary<Keys, bool> lastKeyState;
 
         public class InputSettings
         {
@@ -30,7 +28,7 @@ namespace ANXY.EntityComponent.Components
             public KeySetting Menu { get; set; }
             public KeySetting ShowFps { get; set; }
             public KeySetting CapFps { get; set; }
-            public KeySetting ToggleFullscreen { get; set; }
+            public KeySetting Fullscreen { get; set; }
         }
 
         public class MovementSettings
@@ -48,7 +46,7 @@ namespace ANXY.EntityComponent.Components
         private KeyboardState currentKeyboardState;
         private KeyboardState lastKeyboardState;
         public InputSettings inputSettings { get; private set; }
-        private Keys leftKey, rightKey, jumpKey, menuKey, showFpsKey, limitFpsKey, toggleFullscreenKey;
+        private Keys leftKey, rightKey, jumpKey, menuKey, showFpsKey, limitFpsKey, fullscreenKey;
         private List<Keys> keys = new List<Keys>();
         private String userValuePath;
         private String defaultValuePath;
@@ -91,9 +89,9 @@ namespace ANXY.EntityComponent.Components
                 ShowFpsKeyPressed?.Invoke();
             }
 
-            if (IsToggleFullscreenPressed())
+            if (IsFullscreenPressed())
             {
-                ToggleFullscreenKeyPressed?.Invoke();
+                FullscreenKeyPressed?.Invoke();
             }
 
             SetLastState();
@@ -151,8 +149,6 @@ namespace ANXY.EntityComponent.Components
             {
                 ResetToDefaults();
             }
-
-            lastKeyState = new Dictionary<Keys, bool>();
         }
 
         public override void Destroy()
@@ -207,8 +203,8 @@ namespace ANXY.EntityComponent.Components
             keys.Add(showFpsKey);
             Enum.TryParse(inputSettings.CapFps.Key, out limitFpsKey);
             keys.Add(limitFpsKey);
-            Enum.TryParse(inputSettings.ToggleFullscreen.Key, out toggleFullscreenKey);
-            keys.Add(toggleFullscreenKey);
+            Enum.TryParse(inputSettings.Fullscreen.Key, out fullscreenKey);
+            keys.Add(fullscreenKey);
             if (keys.Contains(Keys.None))
             {
                 throw new Exception("One or more keys are not set in the InputUserValues.json file");
@@ -242,9 +238,9 @@ namespace ANXY.EntityComponent.Components
             return IsKeyPressed(limitFpsKey);
         }
 
-        public bool IsToggleFullscreenPressed()
+        public bool IsFullscreenPressed()
         {
-            return IsKeyPressed(toggleFullscreenKey);
+            return IsKeyPressed(fullscreenKey);
         }
 
         private bool IsKeyPressed(Keys key)

@@ -68,9 +68,7 @@ namespace ANXY.UI
         {
             if (_desktop.Root == _fpsOverlay && _desktop.Root.Visible)
             {
-                var fps = 1.0f / (float)gameTime.ElapsedGameTime.TotalSeconds;
-                _fpsOverlay.FpsValue = fps;
-                _fpsOverlay.Update();
+                _fpsOverlay.Update(gameTime);
             }
         }
 
