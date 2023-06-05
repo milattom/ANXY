@@ -117,29 +117,39 @@ namespace ANXY.UI
             label22.GridColumn = 1;
             label22.GridRow = 21;
 
-            var label23 = new Label();
-            label23.Text = "Legal Notice";
-            label23.GridRow = 23;
+            var lblLegalStuff = new Label();
+            lblLegalStuff.Text = "Legal Notice";
+            lblLegalStuff.GridRow = 24;
 
-            var label24 = new Label();
-            label24.Text = "CC BY-NC-ND";
-            label24.GridColumn = 1;
-            label24.GridRow = 23;
+            var lblCreativeCommons = new Label();
+            lblCreativeCommons.Text = "CC BY-NC-ND";
+            lblCreativeCommons.GridColumn = 1;
+            lblCreativeCommons.GridRow = 24;
+
+            var lblVersion = new Label();
+            lblVersion.Text = "Version";
+            lblVersion.GridRow = 23;
+
+            var lblVersionNr = new Label();
+            lblVersionNr.Text = "v0.1.8-alpha";
+            lblVersionNr.GridColumn = 1;
+            lblVersionNr.GridRow = 23;
 
             var label25 = new Label();
             label25.Text = "Contact Information";
-            label25.GridRow = 24;
+            label25.GridRow = 25;
 
             var label26 = new Label();
             label26.Text = "GitHub.com/milattom/ANXY";
             label26.GridColumn = 1;
-            label26.GridRow = 24;
+            label26.GridRow = 25;
 
             btnReturn = new TextButton();
             btnReturn.Text = "Return";
-            btnReturn.GridRow = 26;
+            btnReturn.GridRow = 27;
             btnReturn.Id = "btnReturn";
-            btnReturn.HorizontalAlignment = HorizontalAlignment.Center;
+            btnReturn.GridRowSpan = 2;
+            btnReturn.HorizontalAlignment = HorizontalAlignment.Left;
             btnReturn.VerticalAlignment = VerticalAlignment.Center;
             btnReturn.MinWidth = 100;
             btnReturn.Padding = new Thickness(10);
@@ -149,8 +159,8 @@ namespace ANXY.UI
             VerticalAlignment = VerticalAlignment.Center;
             MinWidth = 550;
             Margin = new Thickness(10);
-            Padding = new Thickness(5, 5, 5, 5);
-            Background = new SolidBrush("#000000DD");
+            Padding = new Thickness(10, 30, 10, 10);
+            Background = new SolidBrush("#0000FFAA");
             Widgets.Add(label1);
             Widgets.Add(label2);
             Widgets.Add(label3);
@@ -173,8 +183,10 @@ namespace ANXY.UI
             Widgets.Add(label20);
             Widgets.Add(label21);
             Widgets.Add(label22);
-            Widgets.Add(label23);
-            Widgets.Add(label24);
+            Widgets.Add(lblVersion);
+            Widgets.Add(lblVersionNr);
+            Widgets.Add(lblLegalStuff);
+            Widgets.Add(lblCreativeCommons);
             Widgets.Add(label25);
             Widgets.Add(label26);
             Widgets.Add(btnReturn);

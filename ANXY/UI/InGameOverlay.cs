@@ -171,12 +171,12 @@ namespace ANXY.UI
             uiWelcomeAndTutorial.Spacing = 2;
             uiWelcomeAndTutorial.HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment.Center;
             uiWelcomeAndTutorial.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
-            uiWelcomeAndTutorial.Padding = new Thickness(5, 20, 5, 5);
+            uiWelcomeAndTutorial.Padding = new Thickness(10, 10, 10, 10);
             uiWelcomeAndTutorial.GridColumn = 1;
             uiWelcomeAndTutorial.GridRow = 1;
-            uiWelcomeAndTutorial.Background = new SolidBrush("#000000DD");
-            uiWelcomeAndTutorial.Widgets.Add(label15);
+            uiWelcomeAndTutorial.Background = new SolidBrush("#0000FFAA");
             uiWelcomeAndTutorial.Widgets.Add(label16);
+            uiWelcomeAndTutorial.Widgets.Add(label15);
             uiWelcomeAndTutorial.Widgets.Add(label17);
             uiWelcomeAndTutorial.Widgets.Add(label18);
             uiWelcomeAndTutorial.Widgets.Add(label19);

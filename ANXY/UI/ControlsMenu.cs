@@ -225,7 +225,7 @@ namespace ANXY.UI
             VerticalAlignment = VerticalAlignment.Center;
             Margin = new Thickness(10);
             Padding = new Thickness(10);
-            Background = new SolidBrush("#0000FF22");
+            Background = new SolidBrush("#0000FFAA");
             Widgets.Add(lblKey);
             Widgets.Add(lblMovement);
             Widgets.Add(lblMoveLeft);

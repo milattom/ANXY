@@ -65,7 +65,7 @@ namespace ANXY.UI
             VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
             MinWidth = 500;
             Padding = new Thickness(50);
-            Background = new SolidBrush("#0000FF22");
+            Background = new SolidBrush("#0000FFAA");
             Widgets.Add(textBox1);
             Widgets.Add(textButton1);
             Widgets.Add(textButton2);
