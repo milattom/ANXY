@@ -16,11 +16,13 @@ namespace ANXY.Start
     /// </summary>
     internal class BoxColliderSystem : ComponentSystem<BoxCollider>
     {
-        ///Singleton Pattern
+        // Singleton Pattern
         private static readonly Lazy<BoxColliderSystem> Lazy = new(() => new BoxColliderSystem());
-
         public static BoxColliderSystem Instance => Lazy.Value;
 
+        /// <summary>
+        ///    Singleton Pattern: Private constructor to prevent instantiation.
+        /// </summary>
         private BoxColliderSystem()
         {
             SystemManager.Instance.Register(this);

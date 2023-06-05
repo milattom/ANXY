@@ -11,7 +11,7 @@ namespace ANXY.EntityComponent.Components
     {
         public static Camera ActiveCamera { get; private set; }
         private Player _player;
-        private readonly Vector2 _windowDimensions;
+        public Vector2 _windowDimensions;
         public Vector2 DrawOffset { get; private set; }
         public readonly Vector2 _minPosition;
         public readonly Vector2 _maxPosition;
@@ -58,6 +58,7 @@ namespace ANXY.EntityComponent.Components
         {
             ActiveCamera = this;
 
+            Entity.Position = _player.Entity.Position;
         }
 
         /// <summary>
@@ -65,6 +66,11 @@ namespace ANXY.EntityComponent.Components
         /// </summary>
         public override void Destroy()
         {
+        }
+
+        public void Reset()
+        {
+            Entity.Position = _player.Entity.Position;
         }
     }
 }

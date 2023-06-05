@@ -12,15 +12,11 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Content\InputDefaults.json" />
-    <None Remove="Content\InputUserValues.json" />
     <None Remove="Icon.ico" />
     <None Remove="Icon.bmp" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\InputDefaults.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\InputUserValues.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -1,150 +1,205 @@
 ﻿using ANXY.EntityComponent.Components;
+using ANXY.Start;
 using Microsoft.Xna.Framework;
 using Myra.Graphics2D.UI;
 using System;
 
 namespace ANXY.UI
 {
+    /// <summary>
+    ///    Manages the UI elements. This class is a singleton.
+    /// </summary>
     internal class UIManager
     {
-        public event Action PauseToggled;
+        // The different UI overlays or UI screens.
+        private readonly Desktop _desktop;
+        private readonly InGameOverlay _inGameOverlay;
+        private readonly PauseMenu _pauseMenu;
+        private readonly ControlsMenu _controlsMenu;
+        private readonly Credits _credits;
 
-        private PauseMenu _pauseMenu;
-        private ControlsMenu _controlsMenu;
-        private FpsOverlay _fpsOverlay;
-        private Credits _credits;
-        private float _fps;
-        private Desktop _desktop;
+        private bool _showFps = false;
+        public bool _showWelcomeAndTutorial { get; private set; } = true;
 
-        private LastUiState _lastUiState = LastUiState.PauseMenu;
-
-        ///Singleton Pattern
+        // Singleton Pattern.
         private static readonly Lazy<UIManager> lazy = new(() => new UIManager());
-
+        public static UIManager Instance => lazy.Value;
 
         /// <summary>
-        ///     Singleton Pattern return the only instance there is
+        ///    Singleton Pattern: Private constructor to prevent instantiation.
         /// </summary>
-        public static UIManager Instance => lazy.Value;
         private UIManager()
         {
-            _desktop = new Desktop();
+            // Pause Menu
             _pauseMenu = new PauseMenu();
             _pauseMenu.ResumePressed += OnResumeBtnPressed;
+            _pauseMenu.ResetGamePressed += OnResetGameBtnPressed;
             _pauseMenu.ControlsPressed += OnControlsBtnPressed;
             _pauseMenu.CreditsPressed += OnCreditsBtnPressed;
             _pauseMenu.ExitGamePressed += OnExitGamePressed;
 
+            // Controls Menu
             _controlsMenu = new ControlsMenu();
             _controlsMenu.ReturnPressed += OnReturnClicked;
             _controlsMenu.LoadDefaultsPressed += OnLoadDefaultsClicked;
             _controlsMenu.SaveChangesPressed += OnSaveChangesClicked;
 
-            _desktop.Root = _pauseMenu;
-            _desktop.Root.Visible = false;
-            PlayerInput.Instance.GamePausedChanged += OnGamePausedChanged;
-            PlayerInput.Instance.ShowFpsKeyPressed += OnShowFpsKeyPressed;
+            //InGameOverlay
+            _inGameOverlay = new InGameOverlay();
 
-            _fpsOverlay = new FpsOverlay();
-
+            // Credits
             _credits = new Credits();
             _credits.ReturnPressed += OnReturnClicked;
+
+
+            // Desktop is the root of UI
+            _desktop = new Desktop();
+            _desktop.Root = _inGameOverlay;
+            _desktop.Root.Visible = true;
+
+            // Event handlers
+            ANXYGame.Instance.GamePausedChanged += OnGamePausedChanged;
+            PlayerInput.Instance.ShowFpsKeyPressed += OnShowFpsKeyPressed;
+            PlayerInput.Instance.MovementKeyPressed += OnStartMoving;
         }
 
+        public void Update(GameTime gameTime)
+        {
+            UpdateFPS(gameTime);
+        }
+
+        /// <summary>
+        ///    Calculates the current FPS rate and update the FPS overlay.
+        /// </summary>
+        /// <param name="gameTime"></param>
         public void UpdateFPS(GameTime gameTime)
         {
-            if (_desktop.Root == _fpsOverlay && _desktop.Root.Visible)
+            if (_desktop.Root == _inGameOverlay)
             {
-                _fps = 1.0f / (float)gameTime.ElapsedGameTime.TotalSeconds;
-                _fpsOverlay.FpsValue = _fps;
-                _fpsOverlay.Update();
+                _inGameOverlay.Update(gameTime);
             }
         }
 
+        /// <summary>
+        ///    Draws the UI. UI root needs to be set to the desired UI elements before calling this method.
+        /// </summary>
         public void Draw()
         {
             _desktop.Render();
         }
 
-        private void SwitchUiViews()
+        // Event handlers.
+        /// <summary>
+        ///     Resumes the game when the resume button is pressed.
+        /// </summary>
+        private void OnResumeBtnPressed()
         {
-            if (_lastUiState == LastUiState.FpsOverlay && _desktop.Root == _fpsOverlay)
-            {
-                _desktop.Root = _pauseMenu;
-                _desktop.Root.Visible = true;
-            }
-            else if (_lastUiState == LastUiState.FpsOverlay && _desktop.Root != _fpsOverlay)
-            {
-                _desktop.Root = _fpsOverlay;
-                _desktop.Root.Visible = true;
-            }
-            else
-            {
-                _desktop.Root = _pauseMenu;
-                _desktop.Root.Visible = !_desktop.Root.Visible;
-            }
+            ANXYGame.Instance.SetGamePaused(false);
         }
 
-        public void OnResumeBtnPressed()
+        /// <summary>
+        ///     Restarts the game from the beginning.
+        /// </summary>
+        private void OnResetGameBtnPressed()
         {
-            SwitchUiViews();
-            PauseToggled?.Invoke();
+            var player = EntitySystem.Instance.FindEntitiesByType<Player>()[0].GetComponent<Player>();
+            player.Reset();
+            var camera = EntitySystem.Instance.FindEntitiesByType<Camera>()[0].GetComponent<Camera>();
+            camera.Reset();
+
+            _inGameOverlay.Reset();
+            _showWelcomeAndTutorial = true;
+            PlayerInput.Instance.MovementKeyPressed += OnStartMoving;
+            ANXYGame.Instance.SetGamePaused(false);
+
         }
 
-        public void OnControlsBtnPressed()
+        /// <summary>
+        ///     Shows the controls menu.
+        /// </summary>
+        private void OnControlsBtnPressed()
         {
             _controlsMenu.LoadButtonLayout();
             _desktop.Root = _controlsMenu;
         }
 
-        public void OnCreditsBtnPressed()
+        /// <summary>
+        ///     Shows the credits of the game.
+        /// </summary>
+        private void OnCreditsBtnPressed()
         {
             _desktop.Root = _credits;
         }
 
-        public void OnGamePausedChanged(bool gamePaused)
+        /// <summary>
+        ///     Shows the pause menu on game pause.
+        /// </summary>
+        /// <param name="gamePaused"></param>
+        private void OnGamePausedChanged(bool gamePaused)
         {
-            SwitchUiViews();
+            if (gamePaused)
+            {
+                _desktop.Root = _pauseMenu;
+            }
+            else
+            {
+                _desktop.Root = _inGameOverlay;
+            }
         }
 
-        public void OnReturnClicked()
+        /// <summary>
+        ///     Resumes the game.
+        /// </summary>
+        private void OnReturnClicked()
         {
-            PlayerInput.Instance.LoadUserSettings();
             _desktop.Root = _pauseMenu;
         }
 
-        public void OnLoadDefaultsClicked()
+        /// <summary>
+        ///     Loads default keyboard input settings.
+        /// </summary>
+        private void OnLoadDefaultsClicked()
         {
             PlayerInput.Instance.ResetToDefaults();
         }
 
-        public void OnSaveChangesClicked()
+        /// <summary>
+        ///     Saves the current keyboard input settings from the controls menu.
+        /// </summary>
+        private void OnSaveChangesClicked()
         {
             PlayerInput.Instance.Save();
         }
+
+        /// <summary>
+        ///     Stops the game and exits the application.
+        /// </summary>
         private void OnExitGamePressed()
         {
             Environment.Exit(0);
         }
 
+        /// <summary>
+        ///     Toggles the FPS overlay.
+        /// </summary>
         private void OnShowFpsKeyPressed()
         {
-            if (_lastUiState == LastUiState.FpsOverlay)
+            if (ANXYGame.Instance.GamePaused)
             {
-                _desktop.Root = _pauseMenu;
-                _lastUiState = LastUiState.PauseMenu;
+                return;
             }
-            else if (!_desktop.Root.Visible)
-            {
-                _desktop.Root = _fpsOverlay;
-                _lastUiState = LastUiState.FpsOverlay;
-            }
-        }
-    }
 
-    public enum LastUiState
-    {
-        PauseMenu,
-        FpsOverlay
+            _showFps = !_showFps;
+            _inGameOverlay.ShowFps(_showFps);
+            _inGameOverlay.ResetFpsUI();
+        }
+
+        private void OnStartMoving()
+        {
+            _showWelcomeAndTutorial = false;
+            _inGameOverlay.ShowWelcomeAndTutorial(_showWelcomeAndTutorial);
+
+            PlayerInput.Instance.MovementKeyPressed -= OnStartMoving;
+        }
     }
 }

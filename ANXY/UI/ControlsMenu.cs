@@ -22,6 +22,7 @@ namespace ANXY.UI
         public TextButton btnMenu;
         public TextButton btnShowFps;
         public TextButton btnCapFps;
+        public TextButton btnFullscreen;
         public TextButton btnReturnFromControls;
         public TextButton btnLoadDefaults;
         public TextButton btnSaveChanges;
@@ -162,12 +163,28 @@ namespace ANXY.UI
             btnCapFps.Id = "btnCapFps";
             btnCapFps.Click += OnInputButtonClicked;
 
+            var lblFullscreen = new Label();
+            lblFullscreen.Text = "Fullscreen on/off";
+            lblFullscreen.VerticalAlignment = VerticalAlignment.Center;
+            lblFullscreen.GridColumn = 1;
+            lblFullscreen.GridRow = 9;
+
+            btnFullscreen = new TextButton();
+            btnFullscreen.Text = "F11";
+            btnFullscreen.MinWidth = 100;
+            btnFullscreen.Padding = new Thickness(10);
+            btnFullscreen.VerticalAlignment = VerticalAlignment.Center;
+            btnFullscreen.GridColumn = 2;
+            btnFullscreen.GridRow = 9;
+            btnFullscreen.Id = "btnFullscreen";
+            btnFullscreen.Click += OnInputButtonClicked;
+
             btnReturnFromControls = new TextButton();
             btnReturnFromControls.Text = "Return";
             btnReturnFromControls.MinWidth = 100;
             btnReturnFromControls.Padding = new Thickness(10);
             btnReturnFromControls.VerticalAlignment = VerticalAlignment.Center;
-            btnReturnFromControls.GridRow = 10;
+            btnReturnFromControls.GridRow = 11;
             btnReturnFromControls.Id = "btnReturnFromControls";
             btnReturnFromControls.Click += OnReturnClicked;
 
@@ -178,7 +195,7 @@ namespace ANXY.UI
             btnLoadDefaults.VerticalAlignment = VerticalAlignment.Center;
             btnLoadDefaults.HorizontalAlignment = HorizontalAlignment.Right;
             btnLoadDefaults.GridColumn = 1;
-            btnLoadDefaults.GridRow = 10;
+            btnLoadDefaults.GridRow = 11;
             btnLoadDefaults.Id = "btnLoadDefaults";
             btnLoadDefaults.Click += OnLoadDefaultsClicked;
 
@@ -189,7 +206,7 @@ namespace ANXY.UI
             btnSaveChanges.VerticalAlignment = VerticalAlignment.Center;
             btnSaveChanges.HorizontalAlignment = HorizontalAlignment.Left;
             btnSaveChanges.GridColumn = 2;
-            btnSaveChanges.GridRow = 10;
+            btnSaveChanges.GridRow = 11;
             btnSaveChanges.Id = "btnSaveChanges";
             btnSaveChanges.Click += OnSaveChangesClicked;
 
@@ -208,7 +225,7 @@ namespace ANXY.UI
             VerticalAlignment = VerticalAlignment.Center;
             Margin = new Thickness(10);
             Padding = new Thickness(10);
-            Background = new SolidBrush("#0000FF22");
+            Background = new SolidBrush("#0000FFAA");
             Widgets.Add(lblKey);
             Widgets.Add(lblMovement);
             Widgets.Add(lblMoveLeft);
@@ -224,6 +241,8 @@ namespace ANXY.UI
             Widgets.Add(btnShowFps);
             Widgets.Add(lblFpsCap);
             Widgets.Add(btnCapFps);
+            Widgets.Add(lblFullscreen);
+            Widgets.Add(btnFullscreen);
             Widgets.Add(btnReturnFromControls);
             Widgets.Add(btnLoadDefaults);
             Widgets.Add(btnSaveChanges);
@@ -244,6 +263,8 @@ namespace ANXY.UI
                 inputSettings.ShowFps.Key = btnShowFps.Text;
                 inputSettings.CapFps = new PlayerInput.KeySetting();
                 inputSettings.CapFps.Key = btnCapFps.Text;
+                inputSettings.Fullscreen = new PlayerInput.KeySetting();
+                inputSettings.Fullscreen.Key = btnFullscreen.Text;
 
                 PlayerInput.Instance.SetInputSettings(inputSettings);
 
@@ -268,7 +289,7 @@ namespace ANXY.UI
             if (oldSenderTextButton != null && senderTextButton.Id == oldSenderTextButton.Id && Widgets.Contains(lblWaitingForKeyPress))
             {
                 Widgets.Remove(lblWaitingForKeyPress);
-                PlayerInput.Instance.AnyKeyPress -= OnAnyKeyPress;
+                PlayerInput.Instance.AnyKeyPressed -= OnAnyKeyPress;
                 return;
             }
             else if (!Widgets.Contains(lblWaitingForKeyPress))
@@ -277,13 +298,13 @@ namespace ANXY.UI
             }
             oldSenderTextButton = senderTextButton;
 
-            PlayerInput.Instance.AnyKeyPress += OnAnyKeyPress;
+            PlayerInput.Instance.AnyKeyPressed += OnAnyKeyPress;
         }
         private void OnAnyKeyPress(Keys key)
         {
             oldSenderTextButton.Text = key.ToString();
             Widgets.Remove(lblWaitingForKeyPress);
-            PlayerInput.Instance.AnyKeyPress -= OnAnyKeyPress;
+            PlayerInput.Instance.AnyKeyPressed -= OnAnyKeyPress;
             CheckMultiple();
         }
 

@@ -1,5 +1,4 @@
 ﻿using ANXY.Start;
-using ANXY.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -21,7 +20,7 @@ public class Player : Component
     //TODO remove GroundLevel or reduce it to Window Bottom Edge when Level is fully implemented in Tiled.
     private const float Gravity = 350;
     private const float JumpVelocity = 300;
-    private bool _midAir = true;
+    public bool _midAir { get; private set; } = true;
 
     private const float MaxWalkSpeed = 300;
     private const float WalkAcceleration = 150;
@@ -49,8 +48,7 @@ public class Player : Component
     /// </summary>
     public override void Initialize()
     {
-        PlayerInput.Instance.GamePausedChanged += OnGamePausedChanged;
-        UIManager.Instance.PauseToggled += OnGamePausedChanged;
+        ANXYGame.Instance.GamePausedChanged += OnGamePausedChanged;
     }
 
     /// <summary>
@@ -102,11 +100,7 @@ public class Player : Component
 
     private void OnGamePausedChanged(bool gamePaused)
     {
-        IsActive = !IsActive;
-    }
-    private void OnGamePausedChanged()
-    {
-        IsActive = !IsActive;
+        IsActive = !gamePaused;
     }
 
     /// <summary>
@@ -194,6 +188,12 @@ public class Player : Component
     public bool DoubleJump()
     {
         return true;
+    }
+
+    public void Reset()
+    {
+        _velocity = Vector2.Zero;
+        Entity.Position = new Vector2(1200, 540);
     }
 
     /// <summary>

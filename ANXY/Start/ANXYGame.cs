@@ -12,44 +12,50 @@ using Rectangle = Microsoft.Xna.Framework.Rectangle;
 namespace ANXY.Start;
 
 /// <summary>
-/// This is the main type for your game.
+///    ANXYGame is the main class of the game.
 /// </summary>
 public class ANXYGame : Game
 {
-    public bool DebugMode { get; set; } = true;
+    /// <summary>
+    ///     Event that is fired when the game is paused or unpaused.
+    /// </summary>
+    public event Action<bool> GamePausedChanged;
+
+    /// <summary>
+    ///     Shows if the game is paused or not.
+    /// </summary>
+    public bool GamePaused { get; private set; } = false;
+
+    // Window size, style.
     private readonly GraphicsDeviceManager _graphics;
-    private Texture2D _backgroundSprite;
-    private TiledMap _levelTileMap;
-    private Texture2D _playerSprite;
-    private SpriteFont _arialSpriteFont;
-    private SpriteBatch _spriteBatch;
     private readonly Rectangle _screenBounds;
     private Rectangle _1080pSize = new(0, 0, 1920, 1080);
     private int _windowHeight;
     private int _windowWidth;
-    private Entity _playerEntity;
-    private Entity _cameraEntity;
-    private readonly Vector2 _cameraPadding = new Vector2(1 / 5, 1 / 4);
+
+    // Game Map: TileSet, TileMap, Background, Layers.
+    private SpriteBatch _spriteBatch;
+    private TiledMap _levelTileMap;
+    private Texture2D _backgroundSprite;
     private readonly string[] _backgroundLayerNames = { "Ground" };
     private readonly string[] _foregroundLayerNames = { "" };
+
+    // Player: Sprite.
+    private Texture2D _playerSprite;
+
+    // Content: Root Directory.
     private readonly string contentRootDirectory = "Content";
-    private bool GamePlaying = true;
 
-    ///Singleton Pattern
+    // Singelton Pattern.
     private static readonly Lazy<ANXYGame> lazy = new(() => new ANXYGame());
-
-    /// <summary>
-    ///     Singleton Pattern return the only instance there is
-    /// </summary>
     public static ANXYGame Instance => lazy.Value;
 
     /// <summary>
-    /// This is the constructor for the heart of the game, where everything gets its initial spark.
+    ///    Singleton Pattern: Private constructor to prevent instantiation.
     /// </summary>
-    public ANXYGame()
+    private ANXYGame()
     {
-        IsMouseVisible = false;
-        //_graphics.ToggleFullScreen();
+        // graphics & window setup.
         _screenBounds = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.TitleSafeArea;
 
         _graphics = new GraphicsDeviceManager(this);
@@ -61,200 +67,130 @@ public class ANXYGame : Game
         }
         else
         {
-            _graphics.PreferredBackBufferWidth = _screenBounds.Width;
-            _graphics.PreferredBackBufferHeight = _screenBounds.Height;
+            _graphics.PreferredBackBufferWidth = _screenBounds.Width - 100;
+            _graphics.PreferredBackBufferHeight = _screenBounds.Height - 100;
         }
-        //GraphicsDevice.Viewport.Bounds to get the current window size
-        //GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.TitleSafeArea to get screen resolution
+        Content.RootDirectory = contentRootDirectory;
 
-        //makes it possible for the user to change the window size
-        Window.AllowUserResizing = true;
+        _windowWidth = _graphics.PreferredBackBufferWidth;
+        _windowHeight = _graphics.PreferredBackBufferHeight;
 
+        _graphics.GraphicsProfile = GraphicsProfile.HiDef;
+
+        // VSync off.
         _graphics.SynchronizeWithVerticalRetrace = false;
         IsFixedTimeStep = false;
 
-        _graphics.ApplyChanges();
+        IsMouseVisible = false;
 
-        Content.RootDirectory = contentRootDirectory;
+        Window.AllowUserResizing = true;
+        _graphics.HardwareModeSwitch = true;
+        _graphics.IsFullScreen = true;
+
+        // Apply window properties (mouse visible, vsync, window size, etc).
+        _graphics.ApplyChanges();
     }
 
-
+    // Most important methods: Initialize, LoadContent, Update, Draw. (Called in this order)
     /// <summary>
-    /// Allows the game to perform any initialization it needs to before starting to run.
-    /// This is where it can query for any required services and load any non-graphic
-    /// related content.  Calling base.Initialize will enumerate through any components
-    /// and initialize them as well. 
+    ///     Perform any initialization before starting to run (runs before LoadContent).
+    ///     Run any queries for any required services, load non-graphic realted content.
     /// </summary>
     protected override void Initialize()
     {
         base.Initialize();
         InitializeDefaultScene();
-        //EntitySystem.Instance._InitializeEntities();
         SystemManager.Instance.InitializeAll();
-        //Debug mode
-        if (DebugMode)
-        {
-            BoxColliderSystem.Instance.EnableDebugMode(_graphics.GraphicsDevice);
-        }
+
+        // Center window on screen and set size.
+        var xOffset = (_screenBounds.Width - _windowWidth) / 2;
+        var yOffset = (_screenBounds.Height - _windowHeight) / 2;
+        Window.Position = new Point(xOffset, yOffset);
+
+        // Register event handlers.
+        GamePausedChanged += OnGamePausedChanged;
+        Window.ClientSizeChanged += OnClientSizeChanged;
     }
 
     /// <summary>
-    /// Initializes the default scene.
-    /// </summary>
-    private void InitializeDefaultScene()
-    {
-        _windowWidth = Window.ClientBounds.Width;
-        _windowHeight = Window.ClientBounds.Height;
-        InitializeBackground();
-
-        InitializeLevelBackgroundLayers();
-
-        InitializeInputController();
-        InitializePlayer();
-
-        InitializeLevelForegroundLayers();
-        AddPlayerToBackground();
-        AddPlayerToLevel();
-    }
-
-    /// <summary>
-    /// LoadContent will be called once per game and is the place to load
-    /// all content such as sprite batches, textures and maps.
+    ///     Load all content. Called once at the start of the game (after Initialize).
     /// </summary>
     protected override void LoadContent()
     {
-        // Create a new SpriteBatch, which can be used to draw textures.
+        // Create a new SpriteBatch. Load background picture, level tile map and player sprite.
         _spriteBatch = new SpriteBatch(GraphicsDevice);
-        _playerSprite = Content.Load<Texture2D>("playerAtlas");
         _backgroundSprite = Content.Load<Texture2D>("Background-2");
-        //_levelTileMap = Content.Load<TiledMap>("TileMapSet2");
-
-        //TODO important level
-        //_levelTileMap = Content.Load<TiledMap>("JumpNRun-1");
         _levelTileMap = Content.Load<TiledMap>("JumpNRun-1");
+        _playerSprite = Content.Load<Texture2D>("playerAtlas");
 
-        //Load Fonts
-        //Load Myra
+        // Load Myra.
         MyraEnvironment.Game = this;
-        //_arialSpriteFont = Content.Load<SpriteFont>("Arial");
-
     }
 
     /// <summary>
-    /// UnloadContent will be called once per game and is the place to unload
-    /// game-specific content.
-    /// </summary>
-    protected override void UnloadContent()
-    {
-        // TODO: Unload any non ContentManager content here
-    }
-
-    /// <summary>
-    /// Allows the game to run logic such as updating the world,
-    /// checking for collisions, gathering input, and playing audio.
+    ///     Runs once per game loop.
+    ///     Everything that needs updating is called here.
     /// </summary>
     /// <param name="gameTime">Provides a snapshot of timing values.</param>
     protected override void Update(GameTime gameTime)
     {
-        //PlayerInput.Instance.SetCurrentState();
         SystemManager.Instance.UpdateAll(gameTime);
-        //PlayerInput.Instance.SetLastState();
-        //base.Update(gameTime);
     }
 
     /// <summary>
-    /// This is called when the game should draw itself.
+    ///     Draws the game.
     /// </summary>
     /// <param name="gameTime">Provides a snapshot of timing values.</param>
     protected override void Draw(GameTime gameTime)
     {
+        // Background color, if there is nothing to be shown.
         GraphicsDevice.Clear(Color.CornflowerBlue);
+
+        // Sprite batch that holds and draws all sprites.
         _spriteBatch.Begin();
-        //EntitySystem.Instance.DrawEntities(gameTime, _spriteBatch);
         SystemManager.Instance.DrawAll(gameTime, _spriteBatch);
         _spriteBatch.End();
 
-        UIManager.Instance.UpdateFPS(gameTime);
+        // Update UI and draw
+        UIManager.Instance.Update(gameTime);
         UIManager.Instance.Draw();
     }
 
-    private void InitializeInputController()
+    // Other methods.
+    /// <summary>
+    ///     Initializes the default scene.
+    /// </summary>
+    private void InitializeDefaultScene()
     {
-        PlayerInput.Instance.LimitFpsKeyPressed += ToggleFpsLimit;
-        PlayerInput.Instance.GamePausedChanged += ToggleMouseCursorShow;
-        UIManager.Instance.PauseToggled += TogglePlayerActiveState;
+        InitializeBackgroundPicture();
+
+        InitializeLevelBackgroundLayers();
+
+        InitializePlayerInput();
+        InitializePlayer();
+
+        InitializeLevelForegroundLayers();
     }
 
     /// <summary>
-    /// creates the Player Entity. Sets position, Sprite, BoxCollider.
+    ///     Create a Background.
     /// </summary>
-    private void InitializePlayer()
-    {
-        var playerEntity = new Entity { Position = new Vector2(1200, 540) };
-
-        EntitySystem.Instance.AddEntity(playerEntity);
-
-        var player = new Player();
-
-        playerEntity.AddComponent(player);
-
-        var playerSpriteRenderer = new PlayerSpriteRenderer(_playerSprite);
-        playerEntity.AddComponent(playerSpriteRenderer);
-
-        var playerBox = new Rectangle(1, 6, 32, 64);
-        var playerCollider = new BoxCollider(playerBox, "Player");
-        playerEntity.AddComponent(playerCollider);
-
-        /*
-        //------------------------------------------------------------------------------------------------------------------------------------
-        //System
-        BoxColliderSystem.Instance.Register(playerCollider);
-        SystemManager.Instance.Register(BoxColliderSystem.Instance);
-        //------------------------------------------------------------------------------------------------------------------------------------
-        */
-
-        var cameraEntity = new Entity();
-        EntitySystem.Instance.AddEntity(cameraEntity);
-        var camera = new Camera(player, new Vector2(_windowWidth, _windowHeight), new Vector2(0.25f * _windowWidth, 0.5f * _windowHeight), new Vector2(float.PositiveInfinity, 0.85f * _windowHeight));
-        cameraEntity.AddComponent(camera);
-
-        /*
-        //------------------------------------------------------------------------------------------------------------------------------------
-        //System
-        CameraSystem.Instance.Register(camera);
-        SystemManager.Instance.Register(CameraSystem.Instance);
-        //------------------------------------------------------------------------------------------------------------------------------------
-        */
-    }
-
-    /// <summary>
-    /// Creates a Background Entity with Sprite and Background
-    /// </summary>
-    private void InitializeBackground()
+    private void InitializeBackgroundPicture()
     {
         var backgroundEntity = new Entity();
         EntitySystem.Instance.AddEntity(backgroundEntity);
         backgroundEntity.Position -= new Vector2(0.5f * _windowWidth, 0.5f * _windowHeight);
-        Background background = new Background(_windowWidth, _windowHeight);
+
+        Background background = new(_windowWidth, _windowHeight);
         backgroundEntity.AddComponent(background);
         backgroundEntity.AddComponent(new Background(_windowWidth, _windowHeight));
-        SingleSpriteRenderer backgroundSprite = new SingleSpriteRenderer(_backgroundSprite);
+
+        SingleSpriteRenderer backgroundSprite = new(_backgroundSprite);
         backgroundEntity.AddComponent(backgroundSprite);
-        backgroundSprite.CameraEntity = _cameraEntity;
-        /*
-        //------------------------------------------------------------------------------------------------------------------------------------
-        //System
-        BackgroundSystem.Instance.Register(background);
-        SystemManager.Instance.Register(BackgroundSystem.Instance);
-        SpriteSystem.Instance.Register(backgroundSprite);
-        SystemManager.Instance.Register(SpriteSystem.Instance);
-        //------------------------------------------------------------------------------------------------------------------------------------
-        */
     }
 
-
     /// <summary>
-    /// Layer to be drawn below Player. Player will walk over these
+    ///     Create all Layers that are set behind the player.
     /// </summary>
     private void InitializeLevelBackgroundLayers()
     {
@@ -265,7 +201,7 @@ public class ANXYGame : Game
     }
 
     /// <summary>
-    /// Layers to be drawn on top of Player. Player can hide or walk below these.
+    ///     Create all Layers that are set in front of the player (overlapping/hiding the player).
     /// </summary>
     private void InitializeLevelForegroundLayers()
     {
@@ -276,9 +212,9 @@ public class ANXYGame : Game
     }
 
     /// <summary>
-    /// Adds all tiles of layer with layerName as entities to the EntitySystem
+    ///     Adds all tiles of layer with a given layer name as entities to the EntitySystem.
     /// </summary>
-    /// <param name="layerName">name of the layer</param>
+    /// <param name="layerName">Layers with this name will be added.</param>
     private void InitializeLevelLayer(String layerName)
     {
         var tilesIndex = GetLayerIndexByLayerName(layerName);
@@ -289,6 +225,7 @@ public class ANXYGame : Game
 
         var tiles = _levelTileMap.TileLayers[tilesIndex].Tiles;
 
+        // Iterate over all tiles in the layer.
         foreach (var singleTile in tiles)
         {
             if (singleTile.GlobalIdentifier == 0)
@@ -296,7 +233,7 @@ public class ANXYGame : Game
                 continue;
             }
 
-            //Create Tile Entity
+            // Create new Entity for each Tile.
             var newTileEntity = new Entity
             {
                 Position = new Vector2(singleTile.X * _levelTileMap.TileWidth, singleTile.Y * _levelTileMap.TileHeight)
@@ -304,19 +241,11 @@ public class ANXYGame : Game
             EntitySystem.Instance.AddEntity(newTileEntity);
             newTileEntity.AddComponent(new Level());
 
-            //Set Tile Sprite
+            // Add Sprite to Tile Entity.
             var tileSprite = new SingleSpriteRenderer(_levelTileMap.Tilesets[0].Texture, _levelTileMap.Tilesets[0].GetTileRegion(singleTile.GlobalIdentifier - 1));
             newTileEntity.AddComponent(tileSprite);
-            /*
-            //------------------------------------------------------------------------------------------------------------------------------------
-            //System
-            SpriteSystem.Instance.Register(tileSprite);
-            SystemManager.Instance.Register(SpriteSystem.Instance);
-            //------------------------------------------------------------------------------------------------------------------------------------
-            */
-            tileSprite.CameraEntity = _cameraEntity;
 
-            //Check for BoxCollider in XML/Json
+            // Check for BoxColliders in XML.
             TiledMapTilesetTile foundTilesetTile = null;
             foreach (var tile in _levelTileMap.Tilesets[0].Tiles)
             {
@@ -327,7 +256,7 @@ public class ANXYGame : Game
                 }
             }
 
-            //Add all BoxCooliders
+            // Add BoxCollider to Tile Entity.
             if (foundTilesetTile != null)
             {
                 foreach (var collider in foundTilesetTile.Objects)
@@ -340,24 +269,16 @@ public class ANXYGame : Game
                         );
                     var tileBoxCollider = new BoxCollider(rectangle, layerName);
                     newTileEntity.AddComponent(tileBoxCollider);
-                    /*
-                    //------------------------------------------------------------------------------------------------------------------------------------
-                    //System
-                    BoxColliderSystem.Instance.Register(tileBoxCollider);
-                    SystemManager.Instance.Register(BoxColliderSystem.Instance);
-                    //------------------------------------------------------------------------------------------------------------------------------------
-                    */
                 }
             }
         }
     }
 
     /// <summary>
-    /// If there is a LayerName in the XML/Json with the Name of param String layerName, the index of that layer is returned.
-    /// Otherwise -1 is returned.
+    ///     For a given layer name, return the index of the layer in the level tile map.
     /// </summary>
-    /// <param name="layerName">name of the layer</param>
-    /// <returns>index of layer or -1</returns>
+    /// <param name="layerName">Name of the layer.</param>
+    /// <returns>Index of layer. -1 if nothing found.</returns>
     private int GetLayerIndexByLayerName(String layerName)
     {
         var index = 0;
@@ -373,27 +294,44 @@ public class ANXYGame : Game
     }
 
     /// <summary>
-    /// Add the Player Entity to Background Component
+    ///     Initialize Player Input.
     /// </summary>
-    private void AddPlayerToBackground()
+    private void InitializePlayerInput()
     {
-        foreach (var levelEntity in EntitySystem.Instance.FindEntityByType<Background>())
-        {
-            levelEntity.GetComponent<Background>().PlayerEntity = _playerEntity;
-        }
+        PlayerInput.Instance.LimitFpsKeyPressed += ToggleFpsLimit;
+        PlayerInput.Instance.FullscreenKeyPressed += ToggleFullscreen;
     }
 
     /// <summary>
-    /// Add the Player Entity to all Level Components
+    ///     Initialize Player and Camera.
     /// </summary>
-    private void AddPlayerToLevel()
+    private void InitializePlayer()
     {
-        foreach (var levelEntity in EntitySystem.Instance.FindEntityByType<Level>())
-        {
-            levelEntity.GetComponent<Level>().PlayerEntity = _playerEntity;
-        }
+        // Create player entity with necessary components.
+        var playerEntity = new Entity { Position = new Vector2(1200, 540) };
+        EntitySystem.Instance.AddEntity(playerEntity);
+
+        var player = new Player();
+        playerEntity.AddComponent(player);
+
+        var playerSpriteRenderer = new PlayerSpriteRenderer(_playerSprite);
+        playerEntity.AddComponent(playerSpriteRenderer);
+
+        var playerBox = new Rectangle(1, 6, 32, 64);
+        var playerCollider = new BoxCollider(playerBox, "Player");
+        playerEntity.AddComponent(playerCollider);
+
+        // Add camera entity, components and reference to player.
+        var cameraEntity = new Entity();
+        EntitySystem.Instance.AddEntity(cameraEntity);
+
+        var camera = new Camera(player, new Vector2(_windowWidth, _windowHeight), new Vector2(0.25f * _windowWidth, 0.5f * _windowHeight), new Vector2(float.PositiveInfinity, 0.85f * _windowHeight));
+        cameraEntity.AddComponent(camera);
     }
 
+    /// <summary>
+    ///    Toggle between fixed and variable time step, VSync.
+    /// </summary>
     private void ToggleFpsLimit()
     {
         _graphics.SynchronizeWithVerticalRetrace = !_graphics.SynchronizeWithVerticalRetrace;
@@ -402,15 +340,50 @@ public class ANXYGame : Game
         _graphics.ApplyChanges();
     }
 
-    private void TogglePlayerActiveState()
+    /// <summary>
+    ///    Toggle between fullscreen and windowed mode.
+    /// </summary>
+    public void ToggleFullscreen()
     {
-        IsMouseVisible = !IsMouseVisible;
+        if (GamePaused)
+        {
+            return;
+        }
+        _graphics.IsFullScreen = !_graphics.IsFullScreen;
         _graphics.ApplyChanges();
     }
 
-    private void ToggleMouseCursorShow(bool gamePaused)
+    /// <summary>
+    ///    Pause or unpause the game.
+    /// </summary>
+    /// <param name="gamePaused">Is the game paused or running? -> paused = true</param>
+    public void SetGamePaused(bool gamePaused)
     {
-        IsMouseVisible = !IsMouseVisible;
+        GamePaused = gamePaused;
+        GamePausedChanged?.Invoke(gamePaused);
+    }
+
+    // Event handlers.
+    /// <summary>
+    ///     Handle window resize by user, reset the window size and center the camera.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="eventArgs"></param>
+    private void OnClientSizeChanged(object sender, EventArgs eventArgs)
+    {
+        _windowWidth = Window.ClientBounds.Width;
+        _windowHeight = Window.ClientBounds.Height;
+        var camera = EntitySystem.Instance.FindEntitiesByType<Camera>()[0].GetComponent<Camera>();
+        camera._windowDimensions = new Vector2(_windowWidth, _windowHeight);
+    }
+
+    /// <summary>
+    ///    Handle game pause state change, set mouse visibility and apply changes.
+    /// </summary>
+    /// <param name="gamePaused">Is the game paused or running? -> paused = true</param>
+    private void OnGamePausedChanged(bool gamePaused)
+    {
+        IsMouseVisible = gamePaused;
         _graphics.ApplyChanges();
     }
 }

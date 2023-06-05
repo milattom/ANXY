@@ -10,7 +10,7 @@ namespace ANXY.UI
     internal class PauseMenu : VerticalStackPanel
     {
         public event Action ResumePressed;
-        public event Action NewGamePressed;
+        public event Action ResetGamePressed;
         public event Action ControlsPressed;
         public event Action CreditsPressed;
         public event Action ExitGamePressed;
@@ -36,10 +36,10 @@ namespace ANXY.UI
 
 
             var textButton2 = new TextButton();
-            textButton2.Text = "Reset / New Game";
+            textButton2.Text = "Restart Game";
             textButton2.Padding = new Thickness(10);
             textButton2.HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment.Stretch;
-            textButton2.Click += OnNewGameClicked;
+            textButton2.Click += OnResetGameClicked;
 
             var textButton3 = new TextButton();
             textButton3.Text = "Controls";
@@ -65,7 +65,7 @@ namespace ANXY.UI
             VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
             MinWidth = 500;
             Padding = new Thickness(50);
-            Background = new SolidBrush("#0000FF22");
+            Background = new SolidBrush("#0000FFAA");
             Widgets.Add(textBox1);
             Widgets.Add(textButton1);
             Widgets.Add(textButton2);
@@ -84,9 +84,9 @@ namespace ANXY.UI
             CreditsPressed?.Invoke();
         }
 
-        private void OnNewGameClicked(object sender, EventArgs e)
+        private void OnResetGameClicked(object sender, EventArgs e)
         {
-            NewGamePressed?.Invoke();
+            ResetGamePressed?.Invoke();
         }
 
         private void OnResumeClicked(object sender, EventArgs e)

@@ -88,7 +88,7 @@ public sealed class EntitySystem
     /// <summary>
     ///     TODO
     /// </summary>
-    public List<Entity> FindEntityByType<T>() where T : Component
+    public List<Entity> FindEntitiesByType<T>() where T : Component
     {
         var FoundEntities = new List<Entity>();
 

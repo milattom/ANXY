@@ -12,5 +12,8 @@
     },
     "CapFps": {
         "Key": "F4"
+    },
+    "Fullscreen": {
+        "Key": "F11"
     }
 }

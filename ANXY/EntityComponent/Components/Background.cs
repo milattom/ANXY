@@ -11,7 +11,6 @@ public class Background : Component
 {
     public int WindowHeight { get; }
     public int WindowWidth { get; }
-    public Entity PlayerEntity { get; set; }
 
     /// <summary>
     /// Class Constructor
