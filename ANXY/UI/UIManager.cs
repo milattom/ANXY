@@ -13,12 +13,13 @@ namespace ANXY.UI
     {
         // The different UI overlays or UI screens.
         private readonly Desktop _desktop;
-        private readonly GameOverlay _inGameOverlay;
+        private readonly InGameOverlay _inGameOverlay;
         private readonly PauseMenu _pauseMenu;
         private readonly ControlsMenu _controlsMenu;
         private readonly Credits _credits;
 
         private bool _showFps = false;
+        public bool _showWelcomeAndTutorial { get; private set; } = true;
 
         // Singleton Pattern.
         private static readonly Lazy<UIManager> lazy = new(() => new UIManager());
@@ -44,7 +45,7 @@ namespace ANXY.UI
             _controlsMenu.SaveChangesPressed += OnSaveChangesClicked;
 
             //InGameOverlay
-            _inGameOverlay = new GameOverlay();
+            _inGameOverlay = new InGameOverlay();
 
             // Credits
             _credits = new Credits();
@@ -59,6 +60,7 @@ namespace ANXY.UI
             // Event handlers
             ANXYGame.Instance.GamePausedChanged += OnGamePausedChanged;
             PlayerInput.Instance.ShowFpsKeyPressed += OnShowFpsKeyPressed;
+            PlayerInput.Instance.MovementKeyPressed += OnStartMoving;
         }
 
         public void Update(GameTime gameTime)
@@ -104,8 +106,12 @@ namespace ANXY.UI
             player.Reset();
             var camera = EntitySystem.Instance.FindEntitiesByType<Camera>()[0].GetComponent<Camera>();
             camera.Reset();
-            _inGameOverlay.ResetStopWatch();
+
+            _inGameOverlay.Reset();
+            _showWelcomeAndTutorial = true;
+            PlayerInput.Instance.MovementKeyPressed += OnStartMoving;
             ANXYGame.Instance.SetGamePaused(false);
+
         }
 
         /// <summary>
@@ -185,6 +191,14 @@ namespace ANXY.UI
 
             _showFps = !_showFps;
             _inGameOverlay.ShowFps(_showFps);
+        }
+
+        private void OnStartMoving()
+        {
+            _showWelcomeAndTutorial = false;
+            _inGameOverlay.ShowWelcomeAndTutorial(_showWelcomeAndTutorial);
+
+            PlayerInput.Instance.MovementKeyPressed -= OnStartMoving;
         }
     }
 }

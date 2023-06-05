@@ -1,4 +1,5 @@
 ﻿using ANXY.Start;
+using ANXY.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -20,7 +21,8 @@ namespace ANXY.EntityComponent.Components
         public event Action ShowFpsKeyPressed;
         public event Action LimitFpsKeyPressed;
         public event Action FullscreenKeyPressed;
-        public event Action<Keys> AnyKeyPress;
+        public event Action<Keys> AnyKeyPressed;
+        public event Action MovementKeyPressed;
 
         public class InputSettings
         {
@@ -94,6 +96,14 @@ namespace ANXY.EntityComponent.Components
                 FullscreenKeyPressed?.Invoke();
             }
 
+            if (UIManager.Instance._showWelcomeAndTutorial)
+            {
+                if (IsMovementKeyPressed())
+                {
+                    MovementKeyPressed?.Invoke();
+                }
+            }
+
             SetLastState();
         }
 
@@ -109,7 +119,12 @@ namespace ANXY.EntityComponent.Components
 
         private void KeyPressed(Keys key)
         {
-            AnyKeyPress?.Invoke(key);
+            AnyKeyPressed?.Invoke(key);
+        }
+
+        private bool IsMovementKeyPressed()
+        {
+            return IsWalkingLeft() || IsWalkingRight() || IsJumping();
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch) { }

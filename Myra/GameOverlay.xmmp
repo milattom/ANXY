@@ -1,0 +1,37 @@
+<Project>
+  <Project.ExportOptions Namespace="ANXY.UI" Class="GameOverlay" OutputPath="C:\Users\Gamer\Documents\Git\PA\ANXY\Myra\CS-Files" />
+  <Grid Padding="15, 15, 15, 5">
+    <VerticalStackPanel Spacing="2" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="5" Background="#000000DD">
+      <Label Text="current FPS: 2000.09" HorizontalAlignment="Right" />
+      <Label Text="Min: 100.09" HorizontalAlignment="Right" />
+      <Label Text="Max: 6000.12" HorizontalAlignment="Right" />
+      <Label Text="FPS refreshing every 0.33s" />
+      <Label Text="Min/Max refreshing every 2s" />
+    </VerticalStackPanel>
+    <VerticalStackPanel HorizontalAlignment="Center" VerticalAlignment="Top" Padding="5" GridColumn="1" Background="#FF0000DD">
+      <Label Text="Debuggin Mode" Padding="0, 0, 0, 7" HorizontalAlignment="Center" />
+      <Label Text="XY: 12.59 / 34.90" HorizontalAlignment="Center" />
+      <Label Text="Facing: Right" HorizontalAlignment="Center" />
+      <Label Text="Midair: false" HorizontalAlignment="Center" />
+      <Label Text="Toggle Hitboxes with F6" Padding="0, 7, 0, 0" HorizontalAlignment="Center" />
+    </VerticalStackPanel>
+    <VerticalStackPanel Spacing="2" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="5" GridColumn="2" Background="#000000AA">
+      <Label Text="12:34:56.78" HorizontalAlignment="Right" />
+      <Label />
+      <Label Text="Fastest time:" HorizontalAlignment="Right" />
+      <Label Text="12:34:56.78" HorizontalAlignment="Right" />
+    </VerticalStackPanel>
+    <VerticalStackPanel Spacing="2" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="5, 20, 5, 5" GridColumn="1" GridRow="1" Background="#FF0000AA" >
+      <Label Text="ANXY" Padding="0, 0, 0, 4" HorizontalAlignment="Center" Scale="3, 3" />
+      <Label Text="Welcome to" Padding="0, 0, 0, 3" HorizontalAlignment="Center" VerticalAlignment="Center" />
+      <Label />
+      <Label Text="Move with A &amp; D" HorizontalAlignment="Center" />
+      <Label Text="Jump with Space" HorizontalAlignment="Center" />
+      <Label Text="Open the Menu with ESC" HorizontalAlignment="Center" />
+    </VerticalStackPanel>
+    <HorizontalStackPanel Spacing="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" Padding="5" GridRow="2" GridColumnSpan="3" Background="#000000AA">
+      <Label Text="Anxiety meter:" />
+      <Label Text="#########################---------------------------------------------------------------------------" />
+    </HorizontalStackPanel>
+  </Grid>
+</Project>
