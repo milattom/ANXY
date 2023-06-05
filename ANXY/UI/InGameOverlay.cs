@@ -4,6 +4,7 @@ using Myra.Graphics2D;
 using Myra.Graphics2D.Brushes;
 using Myra.Graphics2D.UI;
 using System;
+using System.Globalization;
 using System.Text;
 
 namespace ANXY.UI
@@ -15,6 +16,8 @@ namespace ANXY.UI
         public float MinFpsValue = float.MaxValue;
         private float lastFpsTextUpdate = 0.0f;
         private float lastMinMaxFpsTextUpdate = 0.0f;
+        private readonly NumberFormatInfo nfi;
+
 
         //UI Elements
         Label lblCurrentFps;
@@ -38,6 +41,9 @@ namespace ANXY.UI
         {
             BuildUI();
             _stopWatchStringBuilder = new StringBuilder();
+            nfi = (NumberFormatInfo)
+            CultureInfo.InvariantCulture.NumberFormat.Clone();
+            nfi.NumberGroupSeparator = "'";
         }
 
         private void BuildUI()
@@ -53,6 +59,7 @@ namespace ANXY.UI
 
             var lblFpsRefreshExplanation = new Label();
             lblFpsRefreshExplanation.Text = "FPS refreshing every " + string.Format("{0:0.00}", _currentFpsRefreshTime) + "s";
+            lblFpsRefreshExplanation.Padding = new Thickness(0, 7, 0, 0);
 
             var lblMinMaxFpsRefreshExplanation = new Label();
             lblMinMaxFpsRefreshExplanation.Text = "Min/Max refreshing every " + string.Format("{0:0}", _minMaxFpsRefreshTime) + "s";
@@ -232,14 +239,14 @@ namespace ANXY.UI
 
             if (lastFpsTextUpdate >= _currentFpsRefreshTime)
             {
-                lblCurrentFps.Text = "Current FPS: " + string.Format("{0:0.00}", FpsValue);
+                lblCurrentFps.Text = "Current FPS: " + FpsValue.ToString("n", nfi);
                 lastFpsTextUpdate = 0;
             }
 
             if (lastMinMaxFpsTextUpdate >= _minMaxFpsRefreshTime)
             {
-                lblMinFps.Text = "Min: " + string.Format("{0:0.00}", MinFpsValue);
-                lblMaxFps.Text = "Max: " + string.Format("{0:0.00}", MaxFpsValue);
+                lblMinFps.Text = "Min: " + MinFpsValue.ToString("n", nfi);
+                lblMaxFps.Text = "Max: " + MaxFpsValue.ToString("n", nfi);
                 MaxFpsValue = float.MinValue;
                 MinFpsValue = float.MaxValue;
                 lastMinMaxFpsTextUpdate = 0;
@@ -291,7 +298,7 @@ namespace ANXY.UI
             _lblStopWatch.Text = string.Format("{0:0.00}", StopWatchTime);
         }
 
-        private void ResetFpsUI()
+        public void ResetFpsUI()
         {
             lblCurrentFps.Text = "Current FPS:";
             lblMinFps.Text = "Min: ";

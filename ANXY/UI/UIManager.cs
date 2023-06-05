@@ -191,6 +191,7 @@ namespace ANXY.UI
 
             _showFps = !_showFps;
             _inGameOverlay.ShowFps(_showFps);
+            _inGameOverlay.ResetFpsUI();
         }
 
         private void OnStartMoving()
