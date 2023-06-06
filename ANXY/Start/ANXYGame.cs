@@ -211,7 +211,7 @@ public class ANXYGame : Game
         //BoxColliderSystem.Instance.AddBoxCollider(playerCollider);
         var playerEntity = PlayerFactory.Instance.CreatePlayer(new Vector2(1200, 540), _playerSprite);
         var player = playerEntity.GetComponent<Player>();
-        PlayerFactory.Instance.CreatePlayers(100, _playerSprite);
+        //PlayerFactory.Instance.CreatePlayers(100, _playerSprite);
 
         var cameraEntity = new Entity();
         EntitySystem.Instance.AddEntity(cameraEntity);
