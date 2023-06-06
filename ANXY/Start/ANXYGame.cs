@@ -210,7 +210,7 @@ public class ANXYGame : Game
         var player = playerEntity.GetComponent<Player>();
 
         //the rest
-        PlayerFactory.Instance.CreatePlayers(100, _playerSprite);
+        //PlayerFactory.Instance.CreatePlayers(100, _playerSprite);
         /*
         //------------------------------------------------------------------------------------------------------------------------------------
         //System

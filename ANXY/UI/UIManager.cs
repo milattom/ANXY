@@ -49,6 +49,8 @@ namespace ANXY.UI
 
             _credits = new Credits();
             _credits.ReturnPressed += OnReturnClicked;
+
+            OnShowFpsKeyPressed();
         }
 
         public void UpdateFPS(GameTime gameTime)
@@ -57,6 +59,7 @@ namespace ANXY.UI
             {
                 _fps = 1.0f / (float)gameTime.ElapsedGameTime.TotalSeconds;
                 _fpsOverlay.FpsValue = _fps;
+                _fpsOverlay.gameTime = gameTime.TotalGameTime.TotalSeconds;
                 _fpsOverlay.Update();
             }
         }
@@ -124,6 +127,7 @@ namespace ANXY.UI
         }
         private void OnExitGamePressed()
         {
+            _fpsOverlay.writeFpsFile();
             Environment.Exit(0);
         }
 
