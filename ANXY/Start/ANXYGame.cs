@@ -193,22 +193,25 @@ public class ANXYGame : Game
     /// </summary>
     private void InitializePlayer()
     {
-        var playerEntity = new Entity { Position = new Vector2(1200, 540) };
-
-        EntitySystem.Instance.AddEntity(playerEntity);
-
-        var player = new Player();
-
-        playerEntity.AddComponent(player);
-
-        var playerSpriteRenderer = new PlayerSpriteRenderer(_playerSprite);
-        playerEntity.AddComponent(playerSpriteRenderer);
-
-        var playerBox = new Rectangle(1, 6, 32, 64);
-        var playerCollider = new BoxCollider(playerBox, "Player");
-        playerEntity.AddComponent(playerCollider);
-
-        BoxColliderSystem.Instance.AddBoxCollider(playerCollider);
+        //var playerEntity = new Entity { Position = new Vector2(1200, 540) };
+        //
+        //EntitySystem.Instance.AddEntity(playerEntity);
+        //
+        //var player = new Player();
+        //
+        //playerEntity.AddComponent(player);
+        //
+        //var playerSpriteRenderer = new PlayerSpriteRenderer(_playerSprite);
+        //playerEntity.AddComponent(playerSpriteRenderer);
+        //
+        //var playerBox = new Rectangle(1, 6, 32, 64);
+        //var playerCollider = new BoxCollider(playerBox, "Player");
+        //playerEntity.AddComponent(playerCollider);
+        //
+        //BoxColliderSystem.Instance.AddBoxCollider(playerCollider);
+        var playerEntity = PlayerFactory.Instance.CreatePlayer(new Vector2(1200, 540), _playerSprite);
+        var player = playerEntity.GetComponent<Player>();
+        PlayerFactory.Instance.CreatePlayers(200, _playerSprite);
 
         var cameraEntity = new Entity();
         EntitySystem.Instance.AddEntity(cameraEntity);
