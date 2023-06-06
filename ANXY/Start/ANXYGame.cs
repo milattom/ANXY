@@ -85,7 +85,7 @@ public class ANXYGame : Game
 
         Window.AllowUserResizing = true;
         _graphics.HardwareModeSwitch = true;
-        _graphics.IsFullScreen = true;
+        _graphics.IsFullScreen = false;
 
         // Apply window properties (mouse visible, vsync, window size, etc).
         _graphics.ApplyChanges();

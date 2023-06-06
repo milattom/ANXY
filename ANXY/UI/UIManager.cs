@@ -61,6 +61,8 @@ namespace ANXY.UI
             ANXYGame.Instance.GamePausedChanged += OnGamePausedChanged;
             PlayerInput.Instance.ShowFpsKeyPressed += OnShowFpsKeyPressed;
             PlayerInput.Instance.MovementKeyPressed += OnStartMoving;
+
+            OnShowFpsKeyPressed();
         }
 
         public void Update(GameTime gameTime)
@@ -176,6 +178,7 @@ namespace ANXY.UI
         /// </summary>
         private void OnExitGamePressed()
         {
+            _inGameOverlay.writeFpsFile();
             Environment.Exit(0);
         }
 

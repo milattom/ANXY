@@ -4,19 +4,24 @@ using Myra.Graphics2D;
 using Myra.Graphics2D.Brushes;
 using Myra.Graphics2D.UI;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Text;
 
 namespace ANXY.UI
 {
     internal class InGameOverlay : Grid
     {
-        public float FpsValue = -1;
-        public float MaxFpsValue = float.MinValue;
-        public float MinFpsValue = float.MaxValue;
-        private float lastFpsTextUpdate = 0.0f;
-        private float lastMinMaxFpsTextUpdate = 0.0f;
+        public double FpsValue = -1;
+        public double MaxFpsValue = float.MinValue;
+        public double MinFpsValue = float.MaxValue;
+        private double lastFpsTextUpdate = 0.0f;
+        private double lastMinMaxFpsTextUpdate = 0.0f;
         private readonly NumberFormatInfo nfi;
+        private bool writeFpsValueFile = false;
 
 
         //UI Elements
@@ -28,6 +33,8 @@ namespace ANXY.UI
         VerticalStackPanel uiWelcomeAndTutorial;
         Label lblFastestTime;
         VerticalStackPanel uiFastestTime;
+        StringBuilder fpsStringValuesBuilder;
+        double startTrackingTime = double.MinValue;
 
         //StopWatch elements
         private double StopWatchTime;
@@ -41,6 +48,7 @@ namespace ANXY.UI
         {
             BuildUI();
             _stopWatchStringBuilder = new StringBuilder();
+            fpsStringValuesBuilder = new StringBuilder();
             nfi = (NumberFormatInfo)
             CultureInfo.InvariantCulture.NumberFormat.Clone();
             nfi.NumberGroupSeparator = "'";
@@ -219,14 +227,21 @@ namespace ANXY.UI
         {
             if (!uiFPS.Visible)
             {
+                writeFpsFile();
                 return;
             }
 
-            var gameTimeElapsedSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (startTrackingTime == double.MinValue)
+            {
+                startTrackingTime = gameTime.TotalGameTime.TotalSeconds;
+            }
+
+            writeFpsValueFile = true;
+            var gameTimeElapsedSeconds = gameTime.ElapsedGameTime.TotalSeconds;
             lastFpsTextUpdate += gameTimeElapsedSeconds;
             lastMinMaxFpsTextUpdate += gameTimeElapsedSeconds;
 
-            FpsValue = 1.0f / gameTimeElapsedSeconds;
+            FpsValue = 1.0 / gameTimeElapsedSeconds;
 
             if (FpsValue > MaxFpsValue)
             {
@@ -250,6 +265,23 @@ namespace ANXY.UI
                 MaxFpsValue = float.MinValue;
                 MinFpsValue = float.MaxValue;
                 lastMinMaxFpsTextUpdate = 0;
+            }
+
+            var time = gameTime.TotalGameTime.TotalSeconds-startTrackingTime;
+            var roundedTime = Math.Round(time/0.33)* 0.33;
+            fpsStringValuesBuilder.AppendLine(roundedTime.ToString() + "," + time.ToString()+  "," +  FpsValue.ToString());
+        }
+
+        public void writeFpsFile()
+        {
+            if (writeFpsValueFile)
+            {
+                writeFpsValueFile = false;
+                //write fps value file
+                var FpsValuesCsvPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                FpsValuesCsvPath = Path.Combine(FpsValuesCsvPath, "ANXY");
+                FpsValuesCsvPath = Path.Combine(FpsValuesCsvPath, "FpsValues.csv");
+                File.WriteAllText(FpsValuesCsvPath, "rounded Time,Time,FPS\n" + fpsStringValuesBuilder.ToString());
             }
         }
 
