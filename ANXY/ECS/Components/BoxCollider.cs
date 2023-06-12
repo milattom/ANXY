@@ -1,10 +1,10 @@
-﻿using ANXY.Start;
+﻿using ANXY.ECS.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
-namespace ANXY.EntityComponent.Components;
+namespace ANXY.ECS.Components;
 
 /// <summary>
 /// Represents a Collision box. Holds the pivot, center, Dimensions, Layermask and a boolean which indicates if

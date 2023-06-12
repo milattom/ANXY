@@ -1,0 +1,115 @@
+﻿using ANXY.ECS.Components;
+using ANXY.Start;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
+
+namespace ANXY.ECS.Systems;
+
+/// <summary>
+/// The ComponentSystem is used to hold the References of all Components of Type T.
+/// This makes it possible to load them during runtime/usage more efficiently into the cache.
+/// Instead of loading each Entity into the cache and looping through them to finaly get each
+/// component, a system provides the possibility to load all the needed components of a type
+/// such as Collider into the cache and loop right through them which results in better performance.
+/// The ComponentSystem implements the ISystem interface which is needed to do a Non Generic call on its methods.
+/// </summary>
+/// <typeparam name="T">Type of component</typeparam>
+public class System<T> : ISystem where T : Component
+{
+    protected static List<T> components = new();
+
+    public void Register(T component)
+    {
+        components.Add(component);
+    }
+
+    public void Initialize()
+    {
+        foreach (T component in components)
+        {
+            if (component.IsActive) component.Initialize();
+        }
+    }
+
+    public void Update(GameTime gameTime)
+    {
+        foreach (T component in components)
+        {
+            if (component.IsActive) component.Update(gameTime);
+        }
+    }
+
+    public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+    {
+        foreach (T component in components)
+        {
+            if (component.IsActive) component.Draw(gameTime, spriteBatch);
+        }
+    }
+}
+
+class PlayerSystem : System<Player>
+{
+    private static readonly Lazy<PlayerSystem> _lazy = new(() => new PlayerSystem());
+    public static PlayerSystem Instance => _lazy.Value;
+    private PlayerSystem()
+    {
+        SystemManager.Instance.Register(this);
+    }
+}
+class PlayerInputSystem : System<PlayerInput>
+{
+    private static readonly Lazy<PlayerInputSystem> _lazy = new(() => new PlayerInputSystem());
+    public static PlayerInputSystem Instance => _lazy.Value;
+    private PlayerInputSystem()
+    {
+        SystemManager.Instance.Register(this);
+    }
+}
+class PlayerSpriteSystem : System<PlayerSpriteRenderer>
+{
+    private static readonly Lazy<PlayerSpriteSystem> _lazy = new(() => new PlayerSpriteSystem());
+    public static PlayerSpriteSystem Instance => _lazy.Value;
+    private PlayerSpriteSystem()
+    {
+        SystemManager.Instance.Register(this);
+    }
+}
+class SpriteSystem : System<SingleSpriteRenderer>
+{
+    private static readonly Lazy<SpriteSystem> _lazy = new(() => new SpriteSystem());
+    public static SpriteSystem Instance => _lazy.Value;
+    private SpriteSystem()
+    {
+        SystemManager.Instance.Register(this);
+    }
+}
+class TextRendererSystem : System<TextRenderer>
+{
+    private static readonly Lazy<TextRendererSystem> _lazy = new(() => new TextRendererSystem());
+    public static TextRendererSystem Instance => _lazy.Value;
+    private TextRendererSystem()
+    {
+        SystemManager.Instance.Register(this);
+    }
+}
+class CameraSystem : System<Camera>
+{
+    private static readonly Lazy<CameraSystem> _lazy = new(() => new CameraSystem());
+    public static CameraSystem Instance => _lazy.Value;
+    private CameraSystem()
+    {
+        SystemManager.Instance.Register(this);
+    }
+}
+class BackgroundSystem : System<Background>
+{
+    private static readonly Lazy<BackgroundSystem> _lazy = new(() => new BackgroundSystem());
+    public static BackgroundSystem Instance => _lazy.Value;
+    private BackgroundSystem()
+    {
+        SystemManager.Instance.Register(this);
+    }
+}

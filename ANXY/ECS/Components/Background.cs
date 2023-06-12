@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
-namespace ANXY.EntityComponent.Components;
+namespace ANXY.ECS.Components;  
 
 /// <summary>
 /// Background manager. Shifts the Background when needed

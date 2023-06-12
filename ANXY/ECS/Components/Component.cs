@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
-namespace ANXY.EntityComponent;
+namespace ANXY.ECS.Components;
 
 public abstract class Component
 {

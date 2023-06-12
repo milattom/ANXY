@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
-namespace ANXY.EntityComponent.Components
+namespace ANXY.ECS.Components
 {
     internal class SpriteAnimation : Component
     {

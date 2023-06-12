@@ -1,4 +1,5 @@
-﻿using ANXY.EntityComponent;
+﻿using ANXY.ECS;
+using ANXY.ECS.Components;
 using System;
 using System.Collections.Generic;
 

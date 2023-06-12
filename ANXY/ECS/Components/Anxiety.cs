@@ -2,18 +2,22 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
-namespace ANXY.EntityComponent.Components;
+namespace ANXY.ECS.Components;
 
 /// <summary>
-/// TODO implement ScoreTracker to track HighScore, personal Score, etc
-/// Maybe track time as score?
+/// TODO implement Anxiety with Anxiety Score
 /// </summary>
-public class ScoreTracker : Component
+public class Anxiety : Component
 {
-    public int Time { get; set; }
-    public int Score { get; set; }
+    public double AnxietyScore { get; set; }
 
-    // TODO public File HighScore;
+    /// <summary>
+    /// TODO implement Anxiety Score. Starting Score, Death/Game Over Score. Steps per time, increase of Steps-Length
+    /// </summary>
+    public Anxiety()
+    {
+
+    }
 
     /// <summary>
     /// TODO implement Update

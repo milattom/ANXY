@@ -1,8 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ANXY.ECS.Components;
+using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ANXY.EntityComponent;
+namespace ANXY.ECS;
 
 /// <summary>
 ///     Represents any Gameobject and holds a list with its components as well as a position vector
