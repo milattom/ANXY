@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ANXY.ECS.Systems;
+using ANXY.Start;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace ANXY.ECS.Components;  
@@ -22,6 +24,7 @@ public class Background : Component
     {
         this.WindowWidth = windowWidth;
         this.WindowHeight = windowHeight;
+        BackgroundSystem.Instance.Register(this);
     }
 
     /// <summary>
@@ -54,6 +57,6 @@ public class Background : Component
     /// </summary>
     public override void Initialize()
     {
-        _player = Entity.GetComponent<Player>();
+        _player = (Player)SystemManager.Instance.FindSystemByType<Player>().GetComponent();
     }
 }

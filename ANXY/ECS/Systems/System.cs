@@ -20,11 +20,18 @@ public class System<T> : ISystem where T : Component
 {
     protected static List<T> components = new();
 
+    /// <summary>
+    /// Adds a component to the system.
+    /// </summary>
+    /// <param name="component"></param>
     public void Register(T component)
     {
         components.Add(component);
     }
 
+    /// <summary>
+    /// Calls Initialize() in all components of this system.
+    /// </summary>
     public void Initialize()
     {
         foreach (T component in components)
@@ -33,6 +40,10 @@ public class System<T> : ISystem where T : Component
         }
     }
 
+    /// <summary>
+    /// Calls Update() in all components of this system.
+    /// </summary>
+    /// <param name="gameTime">current game time</param>
     public void Update(GameTime gameTime)
     {
         foreach (T component in components)
@@ -41,12 +52,26 @@ public class System<T> : ISystem where T : Component
         }
     }
 
+    /// <summary>
+    /// Calls Draw() in all components of this system.
+    /// </summary>
+    /// <param name="gameTime">current game time</param>
+    /// <param name="spriteBatch">SpriteBatch of Game class</param>
     public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
         foreach (T component in components)
         {
             if (component.IsActive) component.Draw(gameTime, spriteBatch);
         }
+    }
+
+    /// <summary>
+    /// Returns first component of the list
+    /// </summary>
+    /// <returns></returns>
+    public Component GetComponent()
+    {
+        return components[0];
     }
 }
 

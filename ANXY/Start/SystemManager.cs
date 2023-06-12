@@ -81,6 +81,12 @@ public sealed class SystemManager
     /// <returns></returns>
     public ISystem FindSystemByType<T>() where T : Component
     {
-        return _systems.FirstOrDefault(s => s.GetType() == typeof(System<T>));
+
+        //foreach (var system in _systems)
+        //{
+        //    var type = system.GetType().BaseType.GetGenericArguments()[0];
+        //    if (type == typeof(T)) return system;
+        //}
+        return _systems.FirstOrDefault(s => s.GetType().BaseType.GetGenericArguments().First() == typeof(T));
     }
 }
