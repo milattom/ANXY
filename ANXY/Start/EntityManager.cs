@@ -5,17 +5,20 @@ using System.Collections.Generic;
 
 namespace ANXY.Start;
 
-public sealed class EntitySystem
+/// <summary>
+/// TODO
+/// </summary>
+public class EntityManager
 {
     ///Singleton Pattern
-    private static readonly Lazy<EntitySystem> lazy = new(() => new EntitySystem());
+    private static readonly Lazy<EntityManager> lazy = new(() => new EntityManager());
 
     private readonly List<Entity> _gameEntities;
 
     /// <summary>
     ///     TODO
     /// </summary>
-    private EntitySystem()
+    private EntityManager()
     {
         _gameEntities = new List<Entity>();
     }
@@ -23,7 +26,7 @@ public sealed class EntitySystem
     /// <summary>
     ///     Singleton Pattern return the only instance there is
     /// </summary>
-    public static EntitySystem Instance => lazy.Value;
+    public static EntityManager Instance => lazy.Value;
 
     /// <summary>
     ///     TODO
@@ -60,32 +63,6 @@ public sealed class EntitySystem
         _gameEntities.Clear();
     }
 
-    /*
-    /// <summary>
-    ///     TODO
-    /// </summary>
-    internal void _UpdateEntities(GameTime gameTime)
-    {
-        foreach (var entity in _gameEntities) entity.Update(gameTime);
-    }
-
-    /// <summary>
-    ///     TODO
-    /// </summary>
-    internal void _InitializeEntities()
-    {
-        foreach (var entity in _gameEntities) entity.Initialize();
-    }
-
-    /// <summary>
-    ///     TODO
-    /// </summary>
-    internal void DrawEntities(GameTime gameTime, SpriteBatch spriteBatch)
-    {
-        foreach (var entity in _gameEntities) entity.Draw(gameTime, spriteBatch);
-    }
-
-    */
     /// <summary>
     ///     TODO
     /// </summary>

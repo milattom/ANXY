@@ -8,12 +8,12 @@ using System.Collections.Generic;
 namespace ANXY.ECS.Systems;
 
 /// <summary>
-/// The ComponentSystem is used to hold the References of all Components of Type T.
+/// System is used to hold the References of all Components of Type T.
 /// This makes it possible to load them during runtime/usage more efficiently into the cache.
 /// Instead of loading each Entity into the cache and looping through them to finaly get each
 /// component, a system provides the possibility to load all the needed components of a type
 /// such as Collider into the cache and loop right through them which results in better performance.
-/// The ComponentSystem implements the ISystem interface which is needed to do a Non Generic call on its methods.
+/// System implements the ISystem interface which is needed to do a Non Generic call on its methods.
 /// </summary>
 /// <typeparam name="T">Type of component</typeparam>
 public class System<T> : ISystem where T : Component

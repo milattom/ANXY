@@ -179,7 +179,7 @@ public class PlayerInput : Component
         {
             UpdateKeys();
         }
-        catch (Exception e)
+        catch
         {
             ResetToDefaults();
         }

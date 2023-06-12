@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 
 namespace ANXY.ECS.Components;  
 
@@ -11,6 +10,8 @@ public class Background : Component
 {
     public int WindowHeight { get; }
     public int WindowWidth { get; }
+    private Player _player;
+    public float MinDistance;
 
     /// <summary>
     /// Class Constructor
@@ -21,7 +22,6 @@ public class Background : Component
     {
         this.WindowWidth = windowWidth;
         this.WindowHeight = windowHeight;
-        //BackgroundSystem.Instance.Register(this);
     }
 
     /// <summary>
@@ -33,6 +33,11 @@ public class Background : Component
     /// <param name="gameTime">gameTime</param>
     public override void Update(GameTime gameTime)
     {
+        var currentPosition = WindowWidth - _player.Entity.Position.X;
+        if(currentPosition < MinDistance)
+        {
+            //shift background
+        }
     }
 
     /// <summary>
@@ -49,14 +54,6 @@ public class Background : Component
     /// </summary>
     public override void Initialize()
     {
-    }
-
-    /// <summary>
-    /// TODO implement Destroy
-    /// </summary>
-    /// <exception cref="NotImplementedException"></exception>
-    public override void Destroy()
-    {
-        throw new NotImplementedException();
+        _player = Entity.GetComponent<Player>();
     }
 }

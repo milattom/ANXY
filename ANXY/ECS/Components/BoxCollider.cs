@@ -79,7 +79,10 @@ public class BoxCollider : Component
         };
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Gets called each frame and checks if Debug is enabled to dehighlight the collision boxes.
+    /// </summary>
+    /// <param name="gameTime"></param>
     public override void Update(GameTime gameTime)
     {
         if (DebugEnabled) Dehighlight(); //Debug
@@ -91,15 +94,6 @@ public class BoxCollider : Component
     public override void Initialize()
     {
         _highlightColor = _activeColor;
-    }
-
-    /// <summary>
-    /// Should be called when this component isn't active anymore.
-    /// </summary>
-    /// <exception cref="NotImplementedException"></exception>
-    public override void Destroy()
-    {
-        throw new NotImplementedException();
     }
 
     // -------------------------------------------------------- Debugging ------------------------------------------------------------------

@@ -46,26 +46,39 @@ public sealed class SystemManager
         return false;
     }
 
+    /// <summary>
+    /// Calls Initialize() in all systems.
+    /// </summary>
     public void InitializeAll()
     {
         foreach (var system in _systems) system.Initialize();
     }
 
+    /// <summary>
+    /// Calls Update() in all systems.
+    /// </summary>
+    /// <param name="gameTime">current game time</param>
     public void UpdateAll(GameTime gameTime)
     {
         foreach (var system in _systems) system.Update(gameTime);
     }
 
+    /// <summary>
+    /// Calls Draw() in all systems
+    /// </summary>
+    /// <param name="gameTime">current game time</param>
+    /// <param name="spriteBatch">spriteBatch of game class</param>
     public void DrawAll(GameTime gameTime, SpriteBatch spriteBatch)
     {
         foreach (var system in _systems) system.Draw(gameTime, spriteBatch);
     }
 
-    public int GetNumberOfSystems()
-    {
-        return _systems.Count;
-    }
-
+    /// <summary>
+    /// Returns the system of the specified component. Can be used to manipulate components
+    /// in a particular order.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
     public ISystem FindSystemByType<T>() where T : Component
     {
         return _systems.FirstOrDefault(s => s.GetType() == typeof(System<T>));
