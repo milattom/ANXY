@@ -1,8 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ANXY.ECS.Systems;
 using System;
 
-namespace ANXY.EntityComponent.Components;
+namespace ANXY.ECS.Components;
 
 /// <summary>
 /// SingleSpriteRenderer renders a single image to the screen

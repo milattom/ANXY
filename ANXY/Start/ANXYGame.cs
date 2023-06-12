@@ -1,5 +1,5 @@
-﻿using ANXY.EntityComponent;
-using ANXY.EntityComponent.Components;
+﻿using ANXY.ECS;
+using ANXY.ECS.Components;
 using ANXY.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

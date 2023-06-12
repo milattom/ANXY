@@ -1,8 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using ANXY.ECS.Systems;
 
-namespace ANXY.EntityComponent.Components;
+namespace ANXY.ECS.Components;
 
 /// <summary>
 /// PlayerSpriteRenderer renders the image of the Player. It switches between different frames depending on the current movement type, direction, etc.

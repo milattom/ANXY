@@ -1,11 +1,12 @@
-﻿using ANXY.Start;
+﻿using ANXY.ECS.Systems;
+using ANXY.Start;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Linq;
-using static ANXY.EntityComponent.Components.BoxCollider;
+using static ANXY.ECS.Components.BoxCollider;
 
-namespace ANXY.EntityComponent.Components;
+namespace ANXY.ECS.Components;  
 
 /// <summary>
 /// Player is the Main Game Character
