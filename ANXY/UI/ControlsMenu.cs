@@ -34,256 +34,310 @@ namespace ANXY.UI
         internal ControlsMenu()
         {
             //Row 0: Title
-            var lblTitle = new Label();
-            lblTitle.Text = "Controls";
-            lblTitle.Padding = new Thickness(-50, 0, 0, 0);
-            lblTitle.HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment.Center;
-            lblTitle.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Bottom;
-            lblTitle.GridColumn = 0;
-            lblTitle.GridColumnSpan = 3;
-            lblTitle.GridRow = 0;
-            lblTitle.Scale = new Vector2(2, 2);
+            var lblTitle = new Label
+            {
+                Text = "Controls",
+                Padding = new Thickness(-35, 5, 0, 0),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                GridColumn = 0,
+                GridColumnSpan = 3,
+                GridRow = 0,
+                Scale = new Vector2(2, 2)
+            };
 
             //Row 1: General
-            var lblGeneral = new Label();
-            lblGeneral.Text = "General";
-            lblGeneral.VerticalAlignment = VerticalAlignment.Bottom;
-            lblGeneral.GridRow = 1;
-            lblGeneral.Padding = new Thickness(50, 0, 0, 0);
-            lblGeneral.GridColumnSpan = 2;
+            var lblGeneral = new Label
+            {
+                Text = "General",
+                VerticalAlignment = VerticalAlignment.Bottom,
+                GridRow = 1,
+                Padding = new Thickness(50, 0, 0, 0),
+                GridColumnSpan = 2
+            };
 
-            lblWaitingForKeyPress = new Label();
-            lblWaitingForKeyPress.Text = "Waiting for Key Press";
-            lblWaitingForKeyPress.VerticalAlignment = VerticalAlignment.Center;
-            lblWaitingForKeyPress.HorizontalAlignment = HorizontalAlignment.Right;
-            lblWaitingForKeyPress.GridColumn = 2;
-            lblWaitingForKeyPress.GridRow = 1;
-            lblWaitingForKeyPress.TextColor = Color.Red;
-            lblWaitingForKeyPress.Id = "lblWaitingForKeyPress";
-            lblWaitingForKeyPress.Visible = false;
+            lblWaitingForKeyPress = new Label
+            {
+                Text = "Waiting for Key Press",
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                GridColumn = 2,
+                GridRow = 1,
+                TextColor = Color.Red,
+                Id = "lblWaitingForKeyPress",
+                Visible = false
+            };
 
             //Row 2
-            var lblMenu = new Label();
-            lblMenu.Text = "Menu";
-            lblMenu.VerticalAlignment = VerticalAlignment.Center;
-            lblMenu.GridColumn = 1;
-            lblMenu.GridRow = 2;
+            var lblMenu = new Label
+            {
+                Text = "Menu",
+                VerticalAlignment = VerticalAlignment.Center,
+                GridColumn = 1,
+                GridRow = 2
+            };
 
-            btnMenu = new TextButton();
-            btnMenu.Text = "Esc";
-            btnMenu.MinWidth = 100;
-            btnMenu.Padding = new Thickness(10, 5, 10, 5);
-            btnMenu.VerticalAlignment = VerticalAlignment.Center;
-            btnMenu.HorizontalAlignment = HorizontalAlignment.Left;
-            btnMenu.GridColumn = 2;
-            btnMenu.GridRow = 2;
-            btnMenu.Id = "btnMenu";
+            btnMenu = new TextButton
+            {
+                Text = "Esc",
+                MinWidth = 100,
+                Padding = new Thickness(10, 5, 10, 5),
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                GridColumn = 2,
+                GridRow = 2,
+                Id = "btnMenu"
+            };
             btnMenu.Click += OnInputButtonClicked;
 
             //Row 3
-            var lblFullscreen = new Label();
-            lblFullscreen.Text = "Fullscreen on/off";
-            lblFullscreen.VerticalAlignment = VerticalAlignment.Center;
-            lblFullscreen.GridColumn = 1;
-            lblFullscreen.GridRow = 3;
+            var lblFullscreen = new Label
+            {
+                Text = "Fullscreen on/off",
+                VerticalAlignment = VerticalAlignment.Center,
+                GridColumn = 1,
+                GridRow = 3
+            };
 
-            btnFullscreen = new TextButton();
-            btnFullscreen.Text = "F11";
-            btnFullscreen.MinWidth = 100;
-            btnFullscreen.Padding = new Thickness(10, 5, 10, 5);
-            btnFullscreen.VerticalAlignment = VerticalAlignment.Center;
-            btnFullscreen.HorizontalAlignment = HorizontalAlignment.Left;
-            btnFullscreen.GridColumn = 2;
-            btnFullscreen.GridRow = 3;
-            btnFullscreen.Id = "btnFullscreen";
+            btnFullscreen = new TextButton
+            {
+                Text = "F11",
+                MinWidth = 100,
+                Padding = new Thickness(10, 5, 10, 5),
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                GridColumn = 2,
+                GridRow = 3,
+                Id = "btnFullscreen"
+            };
             btnFullscreen.Click += OnInputButtonClicked;
 
             //Row 4: Movement
-            var lblMovement = new Label();
-            lblMovement.Text = "Movement";
-            lblMovement.VerticalAlignment = VerticalAlignment.Bottom;
-            lblMovement.GridRow = 4;
-            lblMovement.Padding = new Thickness(50, 0, 0, 0);
-            lblMovement.GridColumnSpan = 2;
+            var lblMovement = new Label
+            {
+                Text = "Movement",
+                VerticalAlignment = VerticalAlignment.Bottom,
+                GridRow = 4,
+                Padding = new Thickness(50, 0, 0, 0),
+                GridColumnSpan = 2
+            };
 
             //Row 5
-            var lblMoveLeft = new Label();
-            lblMoveLeft.Text = "Move Left";
-            lblMoveLeft.VerticalAlignment = VerticalAlignment.Center;
-            lblMoveLeft.GridColumn = 1;
-            lblMoveLeft.GridRow = 5;
+            var lblMoveLeft = new Label
+            {
+                Text = "Move Left",
+                VerticalAlignment = VerticalAlignment.Center,
+                GridColumn = 1,
+                GridRow = 5
+            };
 
-            btnMovementLeft = new TextButton();
-            btnMovementLeft.Text = "A";
-            btnMovementLeft.MinWidth = 100;
-            btnMovementLeft.Padding = new Thickness(10, 5, 10, 5);
-            btnMovementLeft.VerticalAlignment = VerticalAlignment.Center;
-            btnMovementLeft.HorizontalAlignment = HorizontalAlignment.Left;
-            btnMovementLeft.GridColumn = 2;
-            btnMovementLeft.GridRow = 5;
-            btnMovementLeft.Id = "btnMovementLeft";
+            btnMovementLeft = new TextButton
+            {
+                Text = "A",
+                MinWidth = 100,
+                Padding = new Thickness(10, 5, 10, 5),
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                GridColumn = 2,
+                GridRow = 5,
+                Id = "btnMovementLeft"
+            };
             btnMovementLeft.Click += OnInputButtonClicked;
 
             //Row 6
-            var lblMoveRight = new Label();
-            lblMoveRight.Text = "Move Right";
-            lblMoveRight.VerticalAlignment = VerticalAlignment.Center;
-            lblMoveRight.GridColumn = 1;
-            lblMoveRight.GridRow = 6;
+            var lblMoveRight = new Label
+            {
+                Text = "Move Right",
+                VerticalAlignment = VerticalAlignment.Center,
+                GridColumn = 1,
+                GridRow = 6
+            };
 
-            btnMovementRight = new TextButton();
-            btnMovementRight.Text = "D";
-            btnMovementRight.MinWidth = 100;
-            btnMovementRight.Padding = new Thickness(10, 5, 10, 5);
-            btnMovementRight.VerticalAlignment = VerticalAlignment.Center;
-            btnMovementRight.HorizontalAlignment = HorizontalAlignment.Left;
-            btnMovementRight.GridColumn = 2;
-            btnMovementRight.GridRow = 6;
-            btnMovementRight.Id = "btnMovementRight";
+            btnMovementRight = new TextButton
+            {
+                Text = "D",
+                MinWidth = 100,
+                Padding = new Thickness(10, 5, 10, 5),
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                GridColumn = 2,
+                GridRow = 6,
+                Id = "btnMovementRight"
+            };
             btnMovementRight.Click += OnInputButtonClicked;
 
             //Row 7
-            var lblJump = new Label();
-            lblJump.Text = "Jump";
-            lblJump.VerticalAlignment = VerticalAlignment.Center;
-            lblJump.GridColumn = 1;
-            lblJump.GridRow = 7;
+            var lblJump = new Label
+            {
+                Text = "Jump",
+                VerticalAlignment = VerticalAlignment.Center,
+                GridColumn = 1,
+                GridRow = 7
+            };
 
-            btnMovementJump = new TextButton();
-            btnMovementJump.Text = "Space";
-            btnMovementJump.MinWidth = 100;
-            btnMovementJump.Padding = new Thickness(10, 5, 10, 5);
-            btnMovementJump.VerticalAlignment = VerticalAlignment.Center;
-            btnMovementJump.HorizontalAlignment = HorizontalAlignment.Left;
-            btnMovementJump.GridColumn = 2;
-            btnMovementJump.GridRow = 7;
-            btnMovementJump.Id = "btnMovementJump";
+            btnMovementJump = new TextButton
+            {
+                Text = "Space",
+                MinWidth = 100,
+                Padding = new Thickness(10, 5, 10, 5),
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                GridColumn = 2,
+                GridRow = 7,
+                Id = "btnMovementJump"
+            };
             btnMovementJump.Click += OnInputButtonClicked;
 
             //Row 8: FPS
-            var lblFps = new Label();
-            lblFps.Text = "FPS";
-            lblFps.VerticalAlignment = VerticalAlignment.Bottom;
-            lblFps.GridRow = 8;
-            lblFps.Padding = new Thickness(50, 0, 0, 0);
-            lblFps.GridColumnSpan = 2;
+            var lblFps = new Label
+            {
+                Text = "FPS",
+                VerticalAlignment = VerticalAlignment.Bottom,
+                GridRow = 8,
+                Padding = new Thickness(50, 0, 0, 0),
+                GridColumnSpan = 2
+            };
 
             //Row 9
-            var lblShowFps = new Label();
-            lblShowFps.Text = "Show FPS";
-            lblShowFps.VerticalAlignment = VerticalAlignment.Center;
-            lblShowFps.GridColumn = 1;
-            lblShowFps.GridRow = 9;
+            var lblShowFps = new Label
+            {
+                Text = "Show FPS",
+                VerticalAlignment = VerticalAlignment.Center,
+                GridColumn = 1,
+                GridRow = 9
+            };
 
-            btnShowFps = new TextButton();
-            btnShowFps.Text = "F1";
-            btnShowFps.MinWidth = 100;
-            btnShowFps.Padding = new Thickness(10, 5, 10, 5);
-            btnShowFps.VerticalAlignment = VerticalAlignment.Center;
-            btnShowFps.HorizontalAlignment = HorizontalAlignment.Left;
-            btnShowFps.GridColumn = 2;
-            btnShowFps.GridRow = 9;
-            btnShowFps.Id = "btnShowFps";
+            btnShowFps = new TextButton
+            {
+                Text = "F1",
+                MinWidth = 100,
+                Padding = new Thickness(10, 5, 10, 5),
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                GridColumn = 2,
+                GridRow = 9,
+                Id = "btnShowFps"
+            };
             btnShowFps.Click += OnInputButtonClicked;
 
             //Row 10
-            var lblFpsCap = new Label();
-            lblFpsCap.Text = "V Sync (FPS cap)";
-            lblFpsCap.VerticalAlignment = VerticalAlignment.Center;
-            lblFpsCap.GridColumn = 1;
-            lblFpsCap.GridRow = 10;
+            var lblFpsCap = new Label
+            {
+                Text = "V Sync (FPS cap)",
+                VerticalAlignment = VerticalAlignment.Center,
+                GridColumn = 1,
+                GridRow = 10
+            };
 
-            btnCapFps = new TextButton();
-            btnCapFps.Text = "F4";
-            btnCapFps.MinWidth = 100;
-            btnCapFps.Padding = new Thickness(10, 5, 10, 5);
-            btnCapFps.VerticalAlignment = VerticalAlignment.Center;
-            btnCapFps.HorizontalAlignment = HorizontalAlignment.Left;
-            btnCapFps.GridColumn = 2;
-            btnCapFps.GridRow = 10;
-            btnCapFps.Id = "btnCapFps";
+            btnCapFps = new TextButton
+            {
+                Text = "F4",
+                MinWidth = 100,
+                Padding = new Thickness(10, 5, 10, 5),
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                GridColumn = 2,
+                GridRow = 10,
+                Id = "btnCapFps"
+            };
             btnCapFps.Click += OnInputButtonClicked;
 
             //Row 11: Debug
-            var lblDebugSection = new Label();
-            lblDebugSection.Text = "Debug";
-            lblDebugSection.VerticalAlignment = VerticalAlignment.Bottom;
-            lblDebugSection.GridRow = 11;
-            lblDebugSection.Padding = new Thickness(50, 0, 0, 0);
-            lblDebugSection.GridColumnSpan = 2;
+            var lblDebugSection = new Label
+            {
+                Text = "Debug",
+                VerticalAlignment = VerticalAlignment.Bottom,
+                GridRow = 11,
+                Padding = new Thickness(50, 0, 0, 0),
+                GridColumnSpan = 2
+            };
 
             //Row 12
-            var lblDebugToggle = new Label();
-            lblDebugToggle.Text = "Enter/Leave Debug Mode";
-            lblDebugToggle.VerticalAlignment = VerticalAlignment.Center;
-            lblDebugToggle.GridColumn = 1;
-            lblDebugToggle.GridRow = 12;
+            var lblDebugToggle = new Label
+            {
+                Text = "Enter/Leave Debug Mode",
+                VerticalAlignment = VerticalAlignment.Center,
+                GridColumn = 1,
+                GridRow = 12
+            };
 
-            btnDebugToggle = new TextButton();
-            btnDebugToggle.Text = "F5";
-            btnDebugToggle.MinWidth = 100;
-            btnDebugToggle.Padding = new Thickness(10, 5, 10, 5);
-            btnDebugToggle.VerticalAlignment = VerticalAlignment.Center;
-            btnDebugToggle.HorizontalAlignment = HorizontalAlignment.Left;
-            btnDebugToggle.GridColumn = 2;
-            btnDebugToggle.GridRow = 12;
-            btnDebugToggle.Id = "btnDebugToggle";
+            btnDebugToggle = new TextButton
+            {
+                Text = "F5",
+                MinWidth = 100,
+                Padding = new Thickness(10, 5, 10, 5),
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                GridColumn = 2,
+                GridRow = 12,
+                Id = "btnDebugToggle"
+            };
             btnDebugToggle.Click += OnInputButtonClicked;
 
             //Row 13: Error/Hint Messages
-            lblMultipleIdenticalKeys = new Label();
-            lblMultipleIdenticalKeys.Text = "Multiple identical Keys";
-            lblMultipleIdenticalKeys.VerticalAlignment = VerticalAlignment.Center;
-            lblMultipleIdenticalKeys.HorizontalAlignment = HorizontalAlignment.Right;
-            lblMultipleIdenticalKeys.Left = -40;
-            lblMultipleIdenticalKeys.GridColumn = 0;
-            lblMultipleIdenticalKeys.GridColumnSpan = 3;
-            lblMultipleIdenticalKeys.GridRow = 13;
-            lblMultipleIdenticalKeys.TextColor = Color.Red;
-            lblMultipleIdenticalKeys.Id = "lblMultipleIdenticalKeys";
+            lblMultipleIdenticalKeys = new Label
+            {
+                Text = "Multiple identical Keys",
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                Left = -40,
+                GridColumn = 0,
+                GridColumnSpan = 3,
+                GridRow = 13,
+                TextColor = Color.Red,
+                Id = "lblMultipleIdenticalKeys"
+            };
 
-            lblDontForgetToSaveChanges = new Label();
-            lblDontForgetToSaveChanges.Text = "Don't forget to save changes";
-            lblDontForgetToSaveChanges.VerticalAlignment = VerticalAlignment.Center;
-            lblDontForgetToSaveChanges.HorizontalAlignment = HorizontalAlignment.Right;
-            lblDontForgetToSaveChanges.Left = -40;
-            lblDontForgetToSaveChanges.GridColumn = 0;
-            lblDontForgetToSaveChanges.GridColumnSpan = 3;
-            lblDontForgetToSaveChanges.GridRow = 13;
-            lblDontForgetToSaveChanges.TextColor = Color.Red;
-            lblDontForgetToSaveChanges.Id = "lblDontForgetToSaveChanges";
-            lblDontForgetToSaveChanges.Visible = false;
+            lblDontForgetToSaveChanges = new Label
+            {
+                Text = "Don't forget to save changes",
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                Left = -40,
+                GridColumn = 0,
+                GridColumnSpan = 3,
+                GridRow = 13,
+                TextColor = Color.Red,
+                Id = "lblDontForgetToSaveChanges",
+                Visible = false
+            };
 
             //Row 14: Return/Reset/Save
-            btnReturnFromControls = new TextButton();
-            btnReturnFromControls.Text = "Return";
-            btnReturnFromControls.MinWidth = 100;
-            btnReturnFromControls.Padding = new Thickness(10);
-            btnReturnFromControls.VerticalAlignment = VerticalAlignment.Center;
-            btnReturnFromControls.GridRow = 14;
-            btnReturnFromControls.Id = "btnReturnFromControls";
+            btnReturnFromControls = new TextButton
+            {
+                Text = "Return",
+                MinWidth = 100,
+                Padding = new Thickness(10),
+                VerticalAlignment = VerticalAlignment.Center,
+                GridRow = 14,
+                Id = "btnReturnFromControls"
+            };
             btnReturnFromControls.Click += OnReturnClicked;
 
-            btnLoadDefaults = new TextButton();
-            btnLoadDefaults.Text = "Reset to Defaults";
-            btnLoadDefaults.MinWidth = 100;
-            btnLoadDefaults.Padding = new Thickness(10);
-            btnLoadDefaults.VerticalAlignment = VerticalAlignment.Center;
-            btnLoadDefaults.HorizontalAlignment = HorizontalAlignment.Right;
-            btnLoadDefaults.GridColumn = 1;
-            btnLoadDefaults.GridRow = 14;
-            btnLoadDefaults.Id = "btnLoadDefaults";
+            btnLoadDefaults = new TextButton
+            {
+                Text = "Reset to Defaults",
+                MinWidth = 100,
+                Padding = new Thickness(10),
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                GridColumn = 1,
+                GridRow = 14,
+                Id = "btnLoadDefaults"
+            };
             btnLoadDefaults.Click += OnLoadDefaultsClicked;
 
-            btnSaveChanges = new TextButton();
-            btnSaveChanges.Text = "Save Changes";
-            btnSaveChanges.MinWidth = 100;
-            btnSaveChanges.Padding = new Thickness(10);
-            btnSaveChanges.VerticalAlignment = VerticalAlignment.Center;
-            btnSaveChanges.HorizontalAlignment = HorizontalAlignment.Left;
-            btnSaveChanges.GridColumn = 2;
-            btnSaveChanges.GridRow = 14;
-            btnSaveChanges.Id = "btnSaveChanges";
+            btnSaveChanges = new TextButton
+            {
+                Text = "Save Changes",
+                MinWidth = 100,
+                Padding = new Thickness(10),
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                GridColumn = 2,
+                GridRow = 14,
+                Id = "btnSaveChanges"
+            };
             btnSaveChanges.Click += OnSaveChangesClicked;
 
             //Controls UI Properties

@@ -100,7 +100,7 @@ public class PlayerInput : Component
             EnableMenuKey();
         }
 
-        if (UIManager.Instance._showWelcomeAndTutorial && IsMovementKeyPressed())
+        if (UIManager.Instance.ShowWelcomeAndTutorial && IsMovementKeyPressed())
         {
             AnyMovementKeyPressed?.Invoke();
         }

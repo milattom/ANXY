@@ -12,110 +12,110 @@ namespace ANXY.UI
 
         public Credits()
         {
-            var label1 = new Label();
-            label1.Text = "ANXY";
-            label1.TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center;
-            label1.HorizontalAlignment = HorizontalAlignment.Center;
-            label1.GridColumnSpan = 2;
-            label1.Scale = new Microsoft.Xna.Framework.Vector2(2, 2);
+            var lblAnxyName = new Label();
+            lblAnxyName.Text = "ANXY";
+            lblAnxyName.TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center;
+            lblAnxyName.HorizontalAlignment = HorizontalAlignment.Center;
+            lblAnxyName.GridColumnSpan = 2;
+            lblAnxyName.Scale = new Microsoft.Xna.Framework.Vector2(2, 2);
 
-            var label2 = new Label();
-            label2.Text = "Game Developers";
-            label2.GridRow = 3;
+            var lblGameDevs = new Label();
+            lblGameDevs.Text = "Game Developers";
+            lblGameDevs.GridRow = 3;
 
-            var label3 = new Label();
-            label3.Text = "Dominic Akeret";
-            label3.GridColumn = 1;
-            label3.GridRow = 3;
+            var lblDominic = new Label();
+            lblDominic.Text = "Dominic Akeret";
+            lblDominic.GridColumn = 1;
+            lblDominic.GridRow = 3;
 
-            var label4 = new Label();
-            label4.Text = "Tomas Stefan Milata";
-            label4.GridColumn = 1;
-            label4.GridRow = 4;
+            var lblTomas = new Label();
+            lblTomas.Text = "Tomas Stefan Milata";
+            lblTomas.GridColumn = 1;
+            lblTomas.GridRow = 4;
 
-            var label5 = new Label();
-            label5.Text = "Game Publisher";
-            label5.GridRow = 6;
+            var lblGamePublisher = new Label();
+            lblGamePublisher.Text = "Game Publisher";
+            lblGamePublisher.GridRow = 6;
 
-            var label6 = new Label();
-            label6.Text = "mayfly studios";
-            label6.GridColumn = 1;
-            label6.GridRow = 6;
+            var lblMayflyStudios = new Label();
+            lblMayflyStudios.Text = "mayfly studios";
+            lblMayflyStudios.GridColumn = 1;
+            lblMayflyStudios.GridRow = 6;
 
-            var label7 = new Label();
-            label7.Text = "Contributors";
-            label7.GridRow = 8;
+            var lblContributors = new Label();
+            lblContributors.Text = "Contributors";
+            lblContributors.GridRow = 8;
 
-            var label8 = new Label();
-            label8.Text = "Andreas Meier (Professor)";
-            label8.GridColumn = 1;
-            label8.GridRow = 8;
+            var lblAndreas = new Label();
+            lblAndreas.Text = "Andreas Meier (Professor)";
+            lblAndreas.GridColumn = 1;
+            lblAndreas.GridRow = 8;
 
-            var label9 = new Label();
-            label9.Text = "pixlhero (Game Testing)";
-            label9.GridColumn = 1;
-            label9.GridRow = 9;
+            var lblPixlhero = new Label();
+            lblPixlhero.Text = "pixlhero (Game Testing)";
+            lblPixlhero.GridColumn = 1;
+            lblPixlhero.GridRow = 9;
 
-            var label10 = new Label();
-            label10.Text = "Art and Graphics";
-            label10.GridRow = 11;
+            var lblArtDesign = new Label();
+            lblArtDesign.Text = "Art and Graphics";
+            lblArtDesign.GridRow = 11;
 
-            var label11 = new Label();
-            label11.Text = "Dominic Akeret";
-            label11.GridColumn = 1;
-            label11.GridRow = 11;
+            var lblArtDominic = new Label();
+            lblArtDominic.Text = "Dominic Akeret";
+            lblArtDominic.GridColumn = 1;
+            lblArtDominic.GridRow = 11;
 
-            var label12 = new Label();
-            label12.Text = "Pixel Frog (Tileset)";
-            label12.GridColumn = 1;
-            label12.GridRow = 12;
+            var lblPixelFrog = new Label();
+            lblPixelFrog.Text = "Pixel Frog (Tileset)";
+            lblPixelFrog.GridColumn = 1;
+            lblPixelFrog.GridRow = 12;
 
-            var label13 = new Label();
-            label13.Text = "Daniel Ap (Background)";
-            label13.GridColumn = 1;
-            label13.GridRow = 13;
+            var lblDanielAp = new Label();
+            lblDanielAp.Text = "Daniel Ap (Background)";
+            lblDanielAp.GridColumn = 1;
+            lblDanielAp.GridRow = 13;
 
-            var label14 = new Label();
-            label14.Text = "GameEngine";
-            label14.GridRow = 15;
+            var lblGameEngine = new Label();
+            lblGameEngine.Text = "GameEngine";
+            lblGameEngine.GridRow = 15;
 
-            var label15 = new Label();
-            label15.Text = "ANXY Game Engine";
-            label15.GridColumn = 1;
-            label15.GridRow = 15;
+            var lblAnxyGameEngine = new Label();
+            lblAnxyGameEngine.Text = "ANXY Game Engine";
+            lblAnxyGameEngine.GridColumn = 1;
+            lblAnxyGameEngine.GridRow = 15;
 
-            var label16 = new Label();
-            label16.Text = "Framework";
-            label16.GridRow = 16;
+            var lblFramework = new Label();
+            lblFramework.Text = "Framework";
+            lblFramework.GridRow = 16;
 
-            var label17 = new Label();
-            label17.Text = "MonoGame";
-            label17.GridColumn = 1;
-            label17.GridRow = 16;
+            var lblMonogame = new Label();
+            lblMonogame.Text = "MonoGame";
+            lblMonogame.GridColumn = 1;
+            lblMonogame.GridRow = 16;
 
-            var label18 = new Label();
-            label18.Text = ".NET";
-            label18.GridColumn = 1;
-            label18.GridRow = 17;
+            var lblDotNet = new Label();
+            lblDotNet.Text = ".NET";
+            lblDotNet.GridColumn = 1;
+            lblDotNet.GridRow = 17;
 
-            var label19 = new Label();
-            label19.Text = "Tools";
-            label19.GridRow = 19;
+            var lblTools = new Label();
+            lblTools.Text = "Tools";
+            lblTools.GridRow = 19;
 
-            var label20 = new Label();
-            label20.Text = "Myra";
-            label20.GridColumn = 1;
-            label20.GridRow = 19;
+            var lblMyra = new Label();
+            lblMyra.Text = "Myra";
+            lblMyra.GridColumn = 1;
+            lblMyra.GridRow = 19;
 
-            var label21 = new Label();
-            label21.Text = "Tiled";
-            label21.GridColumn = 1;
-            label21.GridRow = 20;
+            var lblTiled = new Label();
+            lblTiled.Text = "Tiled";
+            lblTiled.GridColumn = 1;
+            lblTiled.GridRow = 20;
 
-            var label22 = new Label();
-            label22.Text = "Visual Studio";
-            label22.GridColumn = 1;
-            label22.GridRow = 21;
+            var lblVisualStudio = new Label();
+            lblVisualStudio.Text = "Visual Studio";
+            lblVisualStudio.GridColumn = 1;
+            lblVisualStudio.GridRow = 21;
 
             var lblLegalStuff = new Label();
             lblLegalStuff.Text = "Legal Notice";
@@ -135,14 +135,14 @@ namespace ANXY.UI
             lblVersionNr.GridColumn = 1;
             lblVersionNr.GridRow = 23;
 
-            var label25 = new Label();
-            label25.Text = "Contact Information";
-            label25.GridRow = 25;
+            var lblContactInformation = new Label();
+            lblContactInformation.Text = "Contact Information";
+            lblContactInformation.GridRow = 25;
 
-            var label26 = new Label();
-            label26.Text = "GitHub.com/milattom/ANXY";
-            label26.GridColumn = 1;
-            label26.GridRow = 25;
+            var lblGitHub = new Label();
+            lblGitHub.Text = "GitHub.com/milattom/ANXY";
+            lblGitHub.GridColumn = 1;
+            lblGitHub.GridRow = 25;
 
             btnReturn = new TextButton();
             btnReturn.Text = "Return";
@@ -161,34 +161,34 @@ namespace ANXY.UI
             Margin = new Thickness(10);
             Padding = new Thickness(10, 30, 10, 10);
             Background = new SolidBrush("#0000FFAA");
-            Widgets.Add(label1);
-            Widgets.Add(label2);
-            Widgets.Add(label3);
-            Widgets.Add(label4);
-            Widgets.Add(label5);
-            Widgets.Add(label6);
-            Widgets.Add(label7);
-            Widgets.Add(label8);
-            Widgets.Add(label9);
-            Widgets.Add(label10);
-            Widgets.Add(label11);
-            Widgets.Add(label12);
-            Widgets.Add(label13);
-            Widgets.Add(label14);
-            Widgets.Add(label15);
-            Widgets.Add(label16);
-            Widgets.Add(label17);
-            Widgets.Add(label18);
-            Widgets.Add(label19);
-            Widgets.Add(label20);
-            Widgets.Add(label21);
-            Widgets.Add(label22);
+            Widgets.Add(lblAnxyName);
+            Widgets.Add(lblGameDevs);
+            Widgets.Add(lblDominic);
+            Widgets.Add(lblTomas);
+            Widgets.Add(lblGamePublisher);
+            Widgets.Add(lblMayflyStudios);
+            Widgets.Add(lblContributors);
+            Widgets.Add(lblAndreas);
+            Widgets.Add(lblPixlhero);
+            Widgets.Add(lblArtDesign);
+            Widgets.Add(lblArtDominic);
+            Widgets.Add(lblPixelFrog);
+            Widgets.Add(lblDanielAp);
+            Widgets.Add(lblGameEngine);
+            Widgets.Add(lblAnxyGameEngine);
+            Widgets.Add(lblFramework);
+            Widgets.Add(lblMonogame);
+            Widgets.Add(lblDotNet);
+            Widgets.Add(lblTools);
+            Widgets.Add(lblMyra);
+            Widgets.Add(lblTiled);
+            Widgets.Add(lblVisualStudio);
             Widgets.Add(lblVersion);
             Widgets.Add(lblVersionNr);
             Widgets.Add(lblLegalStuff);
             Widgets.Add(lblCreativeCommons);
-            Widgets.Add(label25);
-            Widgets.Add(label26);
+            Widgets.Add(lblContactInformation);
+            Widgets.Add(lblGitHub);
             Widgets.Add(btnReturn);
         }
 

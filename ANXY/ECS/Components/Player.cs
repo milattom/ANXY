@@ -1,7 +1,6 @@
 ﻿using ANXY.ECS.Systems;
 using ANXY.Start;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Linq;
 using static ANXY.ECS.Components.BoxCollider;
@@ -21,7 +20,7 @@ public class Player : Component
     //TODO remove GroundLevel or reduce it to Window Bottom Edge when Level is fully implemented in Tiled.
     private const float Gravity = 350;
     private const float JumpVelocity = 300;
-    public bool _midAir { get; private set; } = true;
+    public bool MidAir { get; private set; } = true;
 
     private const float WalkAcceleration = 150;
 
@@ -64,10 +63,10 @@ public class Player : Component
         var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
         var acceleration = new Vector2(WalkAcceleration * InputDirection.X, Gravity);
         _velocity += acceleration * dt;
-        if (PlayerInput.Instance.IsJumping && !_midAir)
+        if (PlayerInput.Instance.IsJumping && !MidAir)
         {
             _velocity.Y = -JumpVelocity;
-            _midAir = true;
+            MidAir = true;
         }
 
         _velocity.X = InputDirection.X * WalkAcceleration;
@@ -97,27 +96,21 @@ public class Player : Component
             var detectedEdge = BoxColliderSystem.DetectEdge(playerBoxCollider, col);
             return detectedEdge == Edge.Left || detectedEdge == Edge.Right;
         });
-        foreach (var collider in leftRightColliders)
+        foreach (var collider in leftRightColliders.Where(collider => BoxColliderSystem.Instance.IsColliding(playerBoxCollider, collider)))
         {
-            if (BoxColliderSystem.Instance.IsColliding(playerBoxCollider, collider))
-            {
-                ActOnCollider(collider);
-            }
+            ActOnCollider(collider);
         }
 
         var restColliders = BoxColliderSystem.Instance.GetCollisions(playerBoxCollider);
 
         if (restColliders.Count == 0)
         {
-            _midAir = true;
+            MidAir = true;
         }
 
-        foreach (var collider in restColliders)
+        foreach (var collider in restColliders.Where(collider => BoxColliderSystem.Instance.IsColliding(playerBoxCollider, collider)))
         {
-            if (BoxColliderSystem.Instance.IsColliding(playerBoxCollider, collider))
-            {
-                ActOnCollider(collider);
-            }
+            ActOnCollider(collider);
         }
     }
 
@@ -131,7 +124,7 @@ public class Player : Component
             case BoxCollider.Edge.Top:
                 if (Velocity.Y >= 0)
                 {
-                    _midAir = false;
+                    MidAir = false;
                     _velocity = new Vector2(Velocity.X, 0);
                 }
 
@@ -153,22 +146,6 @@ public class Player : Component
             default:
                 throw new ArgumentOutOfRangeException("Collision happened but no edge case");
         }
-    }
-
-    // ########################################################## future TO DO section #####################################################################
-    /// <summary>
-    /// Draw
-    /// </summary>
-    public override void Draw(GameTime gameTime, SpriteBatch spriteBatch) { }
-
-    /// <summary>
-    /// TODO implementation idea for DoubleJump
-    /// set DoubleJump to true or set Player State to Double jump. only one Double Jump Possible, not infinite or multiple.
-    /// </summary>
-    /// <returns>true if jumped.</returns>
-    public bool DoubleJump()
-    {
-        return true;
     }
 
     public void Reset()

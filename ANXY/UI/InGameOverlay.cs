@@ -11,31 +11,31 @@ namespace ANXY.UI
 {
     internal class InGameOverlay : Grid
     {
-        public float FpsValue = -1;
-        public float MaxFpsValue = float.MinValue;
-        public float MinFpsValue = float.MaxValue;
+        private float FpsValue = -1;
+        private float MaxFpsValue = float.MinValue;
+        private float MinFpsValue = float.MaxValue;
         private float lastFpsTextUpdate = 0.0f;
         private float lastMinMaxFpsTextUpdate = 0.0f;
         private readonly NumberFormatInfo nfi;
 
 
         //UI Elements
-        Label lblCurrentFps;
-        Label lblMaxFps;
-        Label lblMinFps;
-        VerticalStackPanel uiFPS;
-        VerticalStackPanel uiDebug;
-        VerticalStackPanel uiWelcomeAndTutorial;
-        Label lblFastestTime;
-        VerticalStackPanel uiFastestTime;
+        private Label lblCurrentFps;
+        private Label lblMaxFps;
+        private Label lblMinFps;
+        private VerticalStackPanel uiFPS;
+        private VerticalStackPanel uiDebug;
+        private VerticalStackPanel uiWelcomeAndTutorial;
+        private Label lblFastestTime;
+        private VerticalStackPanel uiFastestTime;
 
         //StopWatch elements
         private double StopWatchTime;
         private Label _lblStopWatch;
-        private double _currentFpsRefreshTime = 1 / 3.0;
-        private double _minMaxFpsRefreshTime = 2;
+        private readonly double _currentFpsRefreshTime = 1 / 3.0;
+        private readonly double _minMaxFpsRefreshTime = 2;
 
-        private StringBuilder _stopWatchStringBuilder;
+        private readonly StringBuilder _stopWatchStringBuilder;
 
         internal InGameOverlay()
         {
@@ -48,28 +48,36 @@ namespace ANXY.UI
 
         private void BuildUI()
         {
-            lblCurrentFps = new Label();
-            lblCurrentFps.Text = "Current FPS:";
-
-            lblMinFps = new Label();
-            lblMinFps.Text = "Min:";
-
-            lblMaxFps = new Label();
-            lblMaxFps.Text = "Max:";
-
-            var lblFpsRefreshExplanation = new Label();
-            lblFpsRefreshExplanation.Text = "FPS refreshing every " + string.Format("{0:0.00}", _currentFpsRefreshTime) + "s";
-            lblFpsRefreshExplanation.Padding = new Thickness(0, 7, 0, 0);
-
-            var lblMinMaxFpsRefreshExplanation = new Label();
-            lblMinMaxFpsRefreshExplanation.Text = "Min/Max refreshing every " + string.Format("{0:0}", _minMaxFpsRefreshTime) + "s";
-
-            uiFPS = new VerticalStackPanel();
-            uiFPS.Spacing = 2;
-            uiFPS.HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment.Left;
-            uiFPS.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Top;
-            uiFPS.Padding = new Thickness(5);
-            uiFPS.Background = new SolidBrush("#000000DD");
+            //FPS Overlay
+            lblCurrentFps = new Label
+            {
+                Text = "Current FPS:"
+            };
+            lblMinFps = new Label
+            {
+                Text = "Min:"
+            };
+            lblMaxFps = new Label
+            {
+                Text = "Max:"
+            };
+            var lblFpsRefreshExplanation = new Label
+            {
+                Text = "FPS refreshing every " + string.Format("{0:0.00}", _currentFpsRefreshTime) + "s",
+                Padding = new Thickness(0, 7, 0, 0)
+            };
+            var lblMinMaxFpsRefreshExplanation = new Label
+            {
+                Text = "Min/Max refreshing every " + string.Format("{0:0}", _minMaxFpsRefreshTime) + "s"
+            };
+            uiFPS = new VerticalStackPanel
+            {
+                Spacing = 2,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                Padding = new Thickness(5),
+                Background = new SolidBrush("#000000DD")
+            };
             uiFPS.Widgets.Add(lblCurrentFps);
             uiFPS.Widgets.Add(lblMinFps);
             uiFPS.Widgets.Add(lblMaxFps);
@@ -77,34 +85,42 @@ namespace ANXY.UI
             uiFPS.Widgets.Add(lblMinMaxFpsRefreshExplanation);
             uiFPS.Visible = false;
 
-            var lblDebugTitle = new Label();
-            lblDebugTitle.Text = "Debuggin Mode";
-            lblDebugTitle.Padding = new Thickness(0, 0, 0, 7);
-            lblDebugTitle.HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment.Center;
-
-            var lblDebugPlayerLocation = new Label();
-            lblDebugPlayerLocation.Text = "XY: 12.34 / 56.78";
-            lblDebugPlayerLocation.HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment.Center;
-
-            var lblDebugPlayerFacingDirection = new Label();
-            lblDebugPlayerFacingDirection.Text = "Facing: Right";
-            lblDebugPlayerFacingDirection.HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment.Center;
-
-            var lblDebugPlayerMidair = new Label();
-            lblDebugPlayerMidair.Text = "Midair: false";
-            lblDebugPlayerMidair.HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment.Center;
-
-            var lblDebugToggleHitboxesControls = new Label();
-            lblDebugToggleHitboxesControls.Text = "Toggle Hitboxes with F6";
-            lblDebugToggleHitboxesControls.Padding = new Thickness(0, 7, 0, 0);
-            lblDebugToggleHitboxesControls.HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment.Center;
-
-            uiDebug = new VerticalStackPanel();
-            uiDebug.HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment.Center;
-            uiDebug.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Top;
-            uiDebug.Padding = new Thickness(5);
-            uiDebug.GridColumn = 1;
-            uiDebug.Background = new SolidBrush("#FF0000DD");
+            //Debug Overlay
+            var lblDebugTitle = new Label
+            {
+                Text = "Debuggin Mode",
+                Padding = new Thickness(0, 0, 0, 7),
+                HorizontalAlignment = HorizontalAlignment.Center
+            };
+            var lblDebugPlayerLocation = new Label
+            {
+                Text = "XY: 12.34 / 56.78",
+                HorizontalAlignment = HorizontalAlignment.Center
+            };
+            var lblDebugPlayerFacingDirection = new Label
+            {
+                Text = "Facing: Right",
+                HorizontalAlignment = HorizontalAlignment.Center
+            };
+            var lblDebugPlayerMidair = new Label
+            {
+                Text = "Midair: false",
+                HorizontalAlignment = HorizontalAlignment.Center
+            };
+            var lblDebugToggleHitboxesControls = new Label
+            {
+                Text = "Toggle Hitboxes with F6",
+                Padding = new Thickness(0, 7, 0, 0),
+                HorizontalAlignment = HorizontalAlignment.Center
+            };
+            uiDebug = new VerticalStackPanel
+            {
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Top,
+                Padding = new Thickness(5),
+                GridColumn = 1,
+                Background = new SolidBrush("#FF0000DD")
+            };
             uiDebug.Widgets.Add(lblDebugTitle);
             uiDebug.Widgets.Add(lblDebugPlayerLocation);
             uiDebug.Widgets.Add(lblDebugPlayerFacingDirection);
@@ -112,95 +128,114 @@ namespace ANXY.UI
             uiDebug.Widgets.Add(lblDebugToggleHitboxesControls);
             uiDebug.Visible = false;
 
-            _lblStopWatch = new Label();
-            _lblStopWatch.Text = "0.00";
-            _lblStopWatch.HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment.Right;
-
-            var lblFastestTimeDescription = new Label();
-            lblFastestTimeDescription.Text = "Fastest time:";
-            lblFastestTimeDescription.HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment.Right;
-
-            lblFastestTime = new Label();
-            lblFastestTime.Text = "12:34:56.78";
-            lblFastestTime.HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment.Right;
-
-            uiFastestTime = new VerticalStackPanel();
-            uiFastestTime.Spacing = 2;
-            uiFastestTime.Padding = new Thickness(5);
+            //StopWatch Overlay
+            _lblStopWatch = new Label
+            {
+                Text = "0.00",
+                HorizontalAlignment = HorizontalAlignment.Right
+            };
+            var lblFastestTimeDescription = new Label
+            {
+                Text = "Fastest time:",
+                HorizontalAlignment = HorizontalAlignment.Right
+            };
+            lblFastestTime = new Label
+            {
+                Text = "12:34:56.78",
+                HorizontalAlignment = HorizontalAlignment.Right
+            };
+            uiFastestTime = new VerticalStackPanel
+            {
+                Spacing = 2,
+                Padding = new Thickness(5)
+            };
             uiFastestTime.Widgets.Add(lblFastestTimeDescription);
             uiFastestTime.Widgets.Add(lblFastestTime);
             uiFastestTime.Visible = false;
-
-            var uiStopWatch = new VerticalStackPanel();
-            uiStopWatch.Spacing = 4;
-            uiStopWatch.HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment.Right;
-            uiStopWatch.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Top;
-            uiStopWatch.Padding = new Thickness(5);
-            uiStopWatch.GridColumn = 2;
-            uiStopWatch.Background = new SolidBrush("#000000AA");
+            var uiStopWatch = new VerticalStackPanel
+            {
+                Spacing = 4,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Top,
+                Padding = new Thickness(5),
+                GridColumn = 2,
+                Background = new SolidBrush("#000000AA")
+            };
             uiStopWatch.Widgets.Add(_lblStopWatch);
             uiStopWatch.Widgets.Add(uiFastestTime);
 
-            var label15 = new Label();
-            label15.Text = "ANXY";
-            label15.Padding = new Thickness(0, 0, 0, 4);
-            label15.HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment.Center;
-            label15.Scale = new Vector2(2, 2);
+            //Welcome and Tutorial Overlay
+            var lblAnxy = new Label
+            {
+                Text = "ANXY",
+                Padding = new Thickness(0, 0, 0, 4),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Scale = new Vector2(2, 2)
+            };
+            var lblWelcome = new Label
+            {
+                Text = "Welcome to",
+                Padding = new Thickness(0, 0, 0, 3),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            var lblFiller = new Label();
+            var lblMoveTutorial = new Label
+            {
+                Text = "Move with A & D",
+                HorizontalAlignment = HorizontalAlignment.Center
+            };
+            var lblJumpTutorial = new Label
+            {
+                Text = "Jump with Space",
+                HorizontalAlignment = HorizontalAlignment.Center
+            };
+            var lblMenuTutorial = new Label
+            {
+                Text = "Open the Menu with ESC",
+                HorizontalAlignment = HorizontalAlignment.Center
+            };
+            uiWelcomeAndTutorial = new VerticalStackPanel
+            {
+                Spacing = 2,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Padding = new Thickness(10, 10, 10, 10),
+                GridColumn = 1,
+                GridRow = 1,
+                Background = new SolidBrush("#0000FFAA")
+            };
+            uiWelcomeAndTutorial.Widgets.Add(lblWelcome);
+            uiWelcomeAndTutorial.Widgets.Add(lblAnxy);
+            uiWelcomeAndTutorial.Widgets.Add(lblFiller);
+            uiWelcomeAndTutorial.Widgets.Add(lblMoveTutorial);
+            uiWelcomeAndTutorial.Widgets.Add(lblJumpTutorial);
+            uiWelcomeAndTutorial.Widgets.Add(lblMenuTutorial);
 
-            var label16 = new Label();
-            label16.Text = "Welcome to";
-            label16.Padding = new Thickness(0, 0, 0, 3);
-            label16.HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment.Center;
-            label16.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
-
-            var label17 = new Label();
-
-            var label18 = new Label();
-            label18.Text = "Move with A & D";
-            label18.HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment.Center;
-
-            var label19 = new Label();
-            label19.Text = "Jump with Space";
-            label19.HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment.Center;
-
-            var label20 = new Label();
-            label20.Text = "Open the Menu with ESC";
-            label20.HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment.Center;
-
-            uiWelcomeAndTutorial = new VerticalStackPanel();
-            uiWelcomeAndTutorial.Spacing = 2;
-            uiWelcomeAndTutorial.HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment.Center;
-            uiWelcomeAndTutorial.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
-            uiWelcomeAndTutorial.Padding = new Thickness(10, 10, 10, 10);
-            uiWelcomeAndTutorial.GridColumn = 1;
-            uiWelcomeAndTutorial.GridRow = 1;
-            uiWelcomeAndTutorial.Background = new SolidBrush("#0000FFAA");
-            uiWelcomeAndTutorial.Widgets.Add(label16);
-            uiWelcomeAndTutorial.Widgets.Add(label15);
-            uiWelcomeAndTutorial.Widgets.Add(label17);
-            uiWelcomeAndTutorial.Widgets.Add(label18);
-            uiWelcomeAndTutorial.Widgets.Add(label19);
-            uiWelcomeAndTutorial.Widgets.Add(label20);
-
-            var label21 = new Label();
-            label21.Text = "Anxiety meter:";
-
-            var lblAnxietyMeter = new Label();
-            lblAnxietyMeter.Text = "#########################--------------------------------------------------------" +
-    "-------------------";
-
-            var uiAnxietyMeter = new HorizontalStackPanel();
-            uiAnxietyMeter.Spacing = 2;
-            uiAnxietyMeter.HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment.Center;
-            uiAnxietyMeter.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Bottom;
-            uiAnxietyMeter.Padding = new Thickness(5);
-            uiAnxietyMeter.GridRow = 2;
-            uiAnxietyMeter.GridColumnSpan = 3;
-            uiAnxietyMeter.Background = new SolidBrush("#000000AA");
-            uiAnxietyMeter.Widgets.Add(label21);
+            //Anxiety Meter Overlay
+            var lblAnxietyMeterDescription = new Label
+            {
+                Text = "Anxiety meter:"
+            };
+            var lblAnxietyMeter = new Label
+            {
+                Text = "#########################--------------------------------------------------------" +
+    "-------------------"
+            };
+            var uiAnxietyMeter = new HorizontalStackPanel
+            {
+                Spacing = 2,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                Padding = new Thickness(5),
+                GridRow = 2,
+                GridColumnSpan = 3,
+                Background = new SolidBrush("#000000AA")
+            };
+            uiAnxietyMeter.Widgets.Add(lblAnxietyMeterDescription);
             uiAnxietyMeter.Widgets.Add(lblAnxietyMeter);
 
-
+            //Assemble the In Game Overlay and set Properties
             Padding = new Thickness(15, 15, 15, 5);
             Widgets.Add(uiFPS);
             Widgets.Add(uiDebug);

@@ -19,7 +19,7 @@ public class UIManager
     private readonly Credits _credits;
 
     private bool _showFps = false;
-    public bool _showWelcomeAndTutorial { get; private set; } = true;
+    public bool ShowWelcomeAndTutorial { get; private set; } = true;
 
     // Singleton Pattern.
     private static readonly Lazy<UIManager> lazy = new(() => new UIManager());
@@ -53,8 +53,10 @@ public class UIManager
 
 
         // Desktop is the root of UI
-        _desktop = new Desktop();
-        _desktop.Root = _inGameOverlay;
+        _desktop = new Desktop
+        {
+            Root = _inGameOverlay
+        };
         _desktop.Root.Visible = true;
 
         // Event handlers
@@ -103,14 +105,12 @@ public class UIManager
     private void OnResetGameBtnPressed()
     {
         var player = (Player)SystemManager.Instance.FindSystemByType<Player>().GetComponent();
-        //var player = EntityManager.Instance.FindEntitiesByType<Player>()[0].GetComponent<Player>();
         player.Reset();
         var camera = (Camera)SystemManager.Instance.FindSystemByType<Camera>().GetComponent();
-        //var camera = EntityManager.Instance.FindEntitiesByType<Camera>()[0].GetComponent<Camera>();
         camera.Reset();
 
         _inGameOverlay.Reset();
-        _showWelcomeAndTutorial = true;
+        ShowWelcomeAndTutorial = true;
         PlayerInput.Instance.AnyMovementKeyPressed += OnStartMoving;
         ANXYGame.Instance.SetGamePaused(false);
 
@@ -198,8 +198,8 @@ public class UIManager
 
     private void OnStartMoving()
     {
-        _showWelcomeAndTutorial = false;
-        _inGameOverlay.ShowWelcomeAndTutorial(_showWelcomeAndTutorial);
+        ShowWelcomeAndTutorial = false;
+        _inGameOverlay.ShowWelcomeAndTutorial(ShowWelcomeAndTutorial);
 
         PlayerInput.Instance.AnyMovementKeyPressed -= OnStartMoving;
     }

@@ -75,12 +75,12 @@ public class PlayerSpriteRenderer : Component
         var currentAnimationTime = gameTime.TotalGameTime.TotalMilliseconds % (_millisecondsPerFrame * _numberOfFrames);
         var currentFrame = (int)(currentAnimationTime / _millisecondsPerFrame);
 
-        if (_player.Velocity.X == 0 && !_player._midAir)
+        if (_player.Velocity.X == 0 && !_player.MidAir)
         {
             currentFrame = 0;
         }
 
-        if (_player._midAir)
+        if (_player.MidAir)
         {
             currentFrame += _numberOfFrames;
         }
