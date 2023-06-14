@@ -20,7 +20,7 @@ public class PlayerSpriteRenderer : Component
     private Texture2D PlayerAtlas { get; }
 
     /// <summary>
-    ///     set the playerAtlas with all Player Movement Frames
+    /// set the playerAtlas with all Player Movement Frames
     /// </summary>
     public PlayerSpriteRenderer(Texture2D playerAtlas)
     {
@@ -60,42 +60,11 @@ public class PlayerSpriteRenderer : Component
     }
 
     /// <summary>
-    /// Get the parent Player Entity.
-    /// Set the _outputRectangle, where to draw the Animation Frame.
+    /// Sets the player component.
     /// </summary>
     public override void Initialize()
     {
         _player = Entity.GetComponent<Player>();
-    }
-
-    /// <summary>
-    /// TODO implement destroy
-    /// </summary>
-    /// <exception cref="NotImplementedException"></exception>
-    public override void Destroy()
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <summary>
-    /// TODO future ideas, changing the walking direction here.
-    /// </summary>
-    public void WalkingLeft()
-    {
-    }
-
-    /// <summary>
-    /// TODO set the walking Direction here
-    /// </summary>
-    public void WalkingRight()
-    {
-    }
-
-    /// <summary>
-    /// TODO set the jumping animation here
-    /// </summary>
-    public void Jumping()
-    {
     }
 
     /// <summary>

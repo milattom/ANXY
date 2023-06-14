@@ -1,4 +1,194 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ANXY.UI.ControlsMenu" Collapsed="true">
+    <Position X="9.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAUAIISgAAIAQEBCIAEQAAAAACCBAAAAgAgAJAAA=</HashCode>
+      <FileName>UI\ControlsMenu.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ANXY.UI.Credits" Collapsed="true">
+    <Position X="11.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAQAAAA=</HashCode>
+      <FileName>UI\Credits.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ANXY.UI.InGameOverlay" Collapsed="true">
+    <Position X="13" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AASAAAAwAAhCRAAAAACVRAAAACEEARAMAAggAAAAABA=</HashCode>
+      <FileName>UI\InGameOverlay.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ANXY.UI.PauseMenu" Collapsed="true">
+    <Position X="9.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAIAQAAAQAAAAAAAAAAQCIAAAAQEAAAAAAAAAAA=</HashCode>
+      <FileName>UI\PauseMenu.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ANXY.UI.UIManager" Collapsed="true">
+    <Position X="11.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CARgQAAKAAABAgABABEQgAIAAAAAAAAAQAAABhAAAAI=</HashCode>
+      <FileName>UI\UIManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ANXY.ECS.Components.Anxiety" Collapsed="true">
+    <Position X="3.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ECS\Components\Anxiety.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ANXY.ECS.Components.Background" Collapsed="true">
+    <Position X="10.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAgAEAAAACAwAAAAAACAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ECS\Components\Background.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ANXY.ECS.Components.BoxCollider" Collapsed="true">
+    <Position X="14.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>YAQEAAAAAAAAAxAIAEAAAAJAAAAABEgAAAAAAARIgAA=</HashCode>
+      <FileName>ECS\Components\BoxCollider.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ANXY.ECS.Components.Camera" Collapsed="true">
+    <Position X="19.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAABAAAAABQAAAAAACAAAAAAQAAAEAAAAAAAQAAg=</HashCode>
+      <FileName>ECS\Components\Camera.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ANXY.ECS.Components.Component" Collapsed="true">
+    <Position X="13.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAQAAAAAAAAAAwAAEAAAAAAAAABAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ECS\Components\Component.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ANXY.ECS.Components.Player" Collapsed="true">
+    <Position X="5.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAQAIAAAIKDwAAAAAAAIAAAAEAAAAAAJAABAAEAAA=</HashCode>
+      <FileName>ECS\Components\Player.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ANXY.ECS.Components.PlayerInput" Collapsed="true">
+    <Position X="12.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAQpgIAAAAYKgwQAEAAggEAIAgBgoAAAQCgBALhhAQA=</HashCode>
+      <FileName>ECS\Components\PlayerInput.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ANXY.ECS.Components.PlayerSpriteRenderer" Collapsed="true">
+    <Position X="17" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAQEAEAAAAAAEwAAAAAACAAAAAIAAAAAAgAAAAAAACA=</HashCode>
+      <FileName>ECS\Components\PlayerSpriteRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ANXY.ECS.Components.ScoreTracker" Collapsed="true">
+    <Position X="21.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>ECS\Components\ScoreTracker.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ANXY.ECS.Components.SingleSpriteRenderer" Collapsed="true">
+    <Position X="23.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAAgAAAAAAAAAAAAAAAAAAAAAAAACAAAA=</HashCode>
+      <FileName>ECS\Components\SingleSpriteRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ANXY.ECS.Components.TextRenderer" Collapsed="true">
+    <Position X="8" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAgAAAAAAAAAAAACAAAAIAAAAgAAAAAA=</HashCode>
+      <FileName>ECS\Components\TextRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ANXY.ECS.Systems.BoxColliderSystem" Collapsed="true">
+    <Position X="7.75" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAAAAAAAAAAAAAABAAAEACUgBAAAIAAAA=</HashCode>
+      <FileName>ECS\Systems\BoxColliderSystem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ANXY.ECS.Systems.System&lt;T&gt;" Collapsed="true">
+    <Position X="11" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAwAAAACAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ECS\Systems\System.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ANXY.ECS.Systems.PlayerSystem" Collapsed="true">
+    <Position X="16.75" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>ECS\Systems\System.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ANXY.ECS.Systems.PlayerInputSystem" Collapsed="true">
+    <Position X="3.25" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>ECS\Systems\System.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ANXY.ECS.Systems.PlayerSpriteSystem" Collapsed="true">
+    <Position X="10" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>ECS\Systems\System.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ANXY.ECS.Systems.SpriteSystem" Collapsed="true">
+    <Position X="12.25" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>ECS\Systems\System.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ANXY.ECS.Systems.TextRendererSystem" Collapsed="true">
+    <Position X="14.5" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>ECS\Systems\System.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ANXY.ECS.Systems.CameraSystem" Collapsed="true">
+    <Position X="19" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>ECS\Systems\System.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ANXY.ECS.Systems.BackgroundSystem" Collapsed="true">
+    <Position X="5.5" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>ECS\Systems\System.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ANXY.ECS.Entity" Collapsed="true">
+    <Position X="26.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAIoAAgAAAABBAgAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ECS\Entity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="ANXY.ECS.Systems.ISystem" Collapsed="true">
+    <Position X="26.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ECS\Systems\ISystem.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

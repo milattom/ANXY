@@ -102,9 +102,11 @@ namespace ANXY.UI
         /// </summary>
         private void OnResetGameBtnPressed()
         {
-            var player = EntitySystem.Instance.FindEntitiesByType<Player>()[0].GetComponent<Player>();
+            var player = (Player)SystemManager.Instance.FindSystemByType<Player>().GetComponent();
+            //var player = EntityManager.Instance.FindEntitiesByType<Player>()[0].GetComponent<Player>();
             player.Reset();
-            var camera = EntitySystem.Instance.FindEntitiesByType<Camera>()[0].GetComponent<Camera>();
+            var camera = (Camera)SystemManager.Instance.FindSystemByType<Camera>().GetComponent();
+            //var camera = EntityManager.Instance.FindEntitiesByType<Camera>()[0].GetComponent<Camera>();
             camera.Reset();
 
             _inGameOverlay.Reset();

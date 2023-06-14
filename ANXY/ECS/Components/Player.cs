@@ -23,42 +23,22 @@ public class Player : Component
     private const float JumpVelocity = 300;
     public bool _midAir { get; private set; } = true;
 
-    private const float MaxWalkSpeed = 300;
     private const float WalkAcceleration = 150;
-    private const float FloorFriction = 25;
 
-    private bool _isAlive = true;
-
+    /// <summary>
+    /// Registers the player in the system
+    /// </summary>
     public Player()
     {
         PlayerSystem.Instance.Register(this);
     }
-    /* TODO maybe implement later. Ideas for now
-    public bool Crouch()
-    {
-        return true;
-    }
-    public bool Dash()
-    {
-        return true;
-    }
-    */
 
     /// <summary>
-    /// TODO implement Initialize
+    /// Sets the Event GamePausedChanged
     /// </summary>
     public override void Initialize()
     {
         ANXYGame.Instance.GamePausedChanged += OnGamePausedChanged;
-    }
-
-    /// <summary>
-    /// TODO implement Destroy
-    /// </summary>
-    /// <exception cref="NotImplementedException"></exception>
-    public override void Destroy()
-    {
-        throw new NotImplementedException();
     }
 
     /// <summary>

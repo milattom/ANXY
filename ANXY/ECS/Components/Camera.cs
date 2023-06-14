@@ -1,12 +1,10 @@
 ﻿using ANXY.ECS.Systems;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace ANXY.ECS.Components;
 
 /// <summary>
-/// TODO implement Camera
-/// Camera will shift over the Level and shift everything accordingly. _player needed as Parameter.
+/// Camera that follows the player and shifts over the Level in respect to the set bounderies.
 /// </summary>
 public class Camera : Component
 {
@@ -17,6 +15,13 @@ public class Camera : Component
     public readonly Vector2 _minPosition;
     public readonly Vector2 _maxPosition;
 
+    /// <summary>
+    /// sets the player, the dimensions of the window and its boundaries
+    /// </summary>
+    /// <param name="player">player component</param>
+    /// <param name="windowDimensions">dimension of the window</param>
+    /// <param name="minPosition">minimum boundery</param>
+    /// <param name="maxPosition">maximum boundery</param>
     public Camera(Player player, Vector2 windowDimensions, Vector2 minPosition, Vector2 maxPosition)
     {
         _player = player;
@@ -30,7 +35,7 @@ public class Camera : Component
 
 
     /// <summary>
-    /// TODO implement Update
+    /// Updates the camera's position.
     /// </summary>
     /// <param name="gameTime"></param>
     public override void Update(GameTime gameTime)
@@ -44,16 +49,7 @@ public class Camera : Component
     }
 
     /// <summary>
-    /// TODO implement Draw
-    /// </summary>
-    /// <param name="gameTime"></param>
-    /// <param name="spriteBatch"></param>
-    public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-    {
-    }
-
-    /// <summary>
-    /// TODO implement initialize
+    /// Sets .this to ActiveCamera and the camera position to the player.
     /// </summary>
     public override void Initialize()
     {
@@ -63,12 +59,8 @@ public class Camera : Component
     }
 
     /// <summary>
-    /// TODO implement Destroy
+    /// Sets camera position back to player.
     /// </summary>
-    public override void Destroy()
-    {
-    }
-
     public void Reset()
     {
         Entity.Position = _player.Entity.Position;

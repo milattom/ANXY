@@ -178,7 +178,6 @@ public class ANXYGame : Game
     private void InitializeBackgroundPicture()
     {
         var backgroundEntity = new Entity();
-        EntitySystem.Instance.AddEntity(backgroundEntity);
         backgroundEntity.Position -= new Vector2(0.5f * _windowWidth, 0.5f * _windowHeight);
 
         Background background = new(_windowWidth, _windowHeight);
@@ -238,8 +237,6 @@ public class ANXYGame : Game
             {
                 Position = new Vector2(singleTile.X * _levelTileMap.TileWidth, singleTile.Y * _levelTileMap.TileHeight)
             };
-            EntitySystem.Instance.AddEntity(newTileEntity);
-            newTileEntity.AddComponent(new Level());
 
             // Add Sprite to Tile Entity.
             var tileSprite = new SingleSpriteRenderer(_levelTileMap.Tilesets[0].Texture, _levelTileMap.Tilesets[0].GetTileRegion(singleTile.GlobalIdentifier - 1));
@@ -309,7 +306,6 @@ public class ANXYGame : Game
     {
         // Create player entity with necessary components.
         var playerEntity = new Entity { Position = new Vector2(1200, 540) };
-        EntitySystem.Instance.AddEntity(playerEntity);
 
         var player = new Player();
         playerEntity.AddComponent(player);
@@ -323,7 +319,6 @@ public class ANXYGame : Game
 
         // Add camera entity, components and reference to player.
         var cameraEntity = new Entity();
-        EntitySystem.Instance.AddEntity(cameraEntity);
 
         var camera = new Camera(player, new Vector2(_windowWidth, _windowHeight), new Vector2(0.25f * _windowWidth, 0.5f * _windowHeight), new Vector2(float.PositiveInfinity, 0.85f * _windowHeight));
         cameraEntity.AddComponent(camera);
@@ -373,7 +368,7 @@ public class ANXYGame : Game
     {
         _windowWidth = Window.ClientBounds.Width;
         _windowHeight = Window.ClientBounds.Height;
-        var camera = EntitySystem.Instance.FindEntitiesByType<Camera>()[0].GetComponent<Camera>();
+        var camera = (Camera)SystemManager.Instance.FindSystemByType<Camera>().GetComponent();
         camera._windowDimensions = new Vector2(_windowWidth, _windowHeight);
     }
 
