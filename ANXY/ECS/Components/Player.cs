@@ -54,17 +54,17 @@ public class Player : Component
         //keyboard input
         InputDirection = Vector2.Zero;
 
-        if (PlayerInput.Instance.IsWalkingRight())
+        if (PlayerInput.Instance.IsWalkingRight)
             InputDirection += new Vector2(1, 0);
 
-        if (PlayerInput.Instance.IsWalkingLeft())
+        if (PlayerInput.Instance.IsWalkingLeft)
             InputDirection += new Vector2(-1, 0);
 
         //velocity update
         var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
         var acceleration = new Vector2(WalkAcceleration * InputDirection.X, Gravity);
         _velocity += acceleration * dt;
-        if (PlayerInput.Instance.IsJumping() && !_midAir)
+        if (PlayerInput.Instance.IsJumping && !_midAir)
         {
             _velocity.Y = -JumpVelocity;
             _midAir = true;

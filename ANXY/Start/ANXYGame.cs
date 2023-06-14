@@ -1,6 +1,5 @@
 ﻿using ANXY.ECS;
 using ANXY.ECS.Components;
-using ANXY.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Tiled;
@@ -110,6 +109,8 @@ public class ANXYGame : Game
         // Register event handlers.
         GamePausedChanged += OnGamePausedChanged;
         Window.ClientSizeChanged += OnClientSizeChanged;
+
+        ToggleFullscreen();
     }
 
     /// <summary>
@@ -152,8 +153,8 @@ public class ANXYGame : Game
         _spriteBatch.End();
 
         // Update UI and draw
-        UIManager.Instance.Update(gameTime);
-        UIManager.Instance.Draw();
+        UI.UIManager.Instance.Update(gameTime);
+        UI.UIManager.Instance.Draw();
     }
 
     // Other methods.
@@ -295,7 +296,7 @@ public class ANXYGame : Game
     /// </summary>
     private void InitializePlayerInput()
     {
-        PlayerInput.Instance.LimitFpsKeyPressed += ToggleFpsLimit;
+        PlayerInput.Instance.FpsCapKeyPressed += ToggleFpsLimit;
         PlayerInput.Instance.FullscreenKeyPressed += ToggleFullscreen;
     }
 
