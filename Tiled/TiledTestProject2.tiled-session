@@ -10,11 +10,11 @@
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "C:/Users/Gamer/Documents/Git/ANXY/ANXY/Content/JumpNRun-1.tmx": {
-            "scale": 0.75,
+            "scale": 2,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 190.66666666666663,
-                "y": 962.6666666666666
+                "x": 2,
+                "y": 865.5
             }
         },
         "C:/Users/Gamer/Documents/Git/ANXY/ANXY/Content/TileMapSet2.tmx": {

@@ -1,6 +1,7 @@
 {
   "Debug": {
-    "Toggle": "F5"
+    "Toggle": "F5",
+    "SpawnNewPlayer": "F7"
   },
   "Fps": {
     "Cap": "F3",

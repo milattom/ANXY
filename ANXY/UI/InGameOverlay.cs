@@ -28,9 +28,10 @@ namespace ANXY.UI
         private VerticalStackPanel uiFPS;
         private Label lblDebugPlayerLocation;
         private Label lblDebugPlayerMidair;
+        private Label lblDebugToggleHitboxesControls;
         private VerticalStackPanel uiDebug;
         private float _lastDebugTextUpdate = 0.0f;
-        private readonly float _debugTextUpdateTime = 1 / 4.0f;
+        private readonly float _debugTextUpdateTime = 1 / 3.0f;
         private VerticalStackPanel uiWelcomeAndTutorial;
         private Label lblMoveTutorial;
         private Label lblJumpTutorial;
@@ -112,14 +113,12 @@ namespace ANXY.UI
                 Text = "Midair: false",
                 HorizontalAlignment = HorizontalAlignment.Center
             };
-            /*
-            var lblDebugToggleHitboxesControls = new Label
+            lblDebugToggleHitboxesControls = new Label
             {
-                Text = "Toggle Hitboxes with F6",
+                Text = "Spawn new Players with " + PlayerInput.Instance.InputSettings.Debug.SpawnNewPlayer,
                 Padding = new Thickness(0, 7, 0, 0),
                 HorizontalAlignment = HorizontalAlignment.Center
             };
-            */
             uiDebug = new VerticalStackPanel
             {
                 HorizontalAlignment = HorizontalAlignment.Center,
@@ -131,6 +130,7 @@ namespace ANXY.UI
             uiDebug.Widgets.Add(lblDebugTitle);
             uiDebug.Widgets.Add(lblDebugPlayerLocation);
             uiDebug.Widgets.Add(lblDebugPlayerMidair);
+            uiDebug.Widgets.Add(lblDebugToggleHitboxesControls);
             uiDebug.Visible = false;
 
             //StopWatch Overlay
@@ -331,12 +331,12 @@ namespace ANXY.UI
             var gameTimeElapsedSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
             _lastDebugTextUpdate += gameTimeElapsedSeconds;
 
+            lblDebugToggleHitboxesControls.Text = "Spawn new Players with " + PlayerInput.Instance.InputSettings.Debug.SpawnNewPlayer;
+
             if (ANXYGame.Instance.GamePaused || !uiDebug.Visible || _lastDebugTextUpdate < _debugTextUpdateTime)
-            {
                 return;
-            }
             _lastDebugTextUpdate = 0.0f;
-            lblDebugPlayerLocation.Text = "XY: " + string.Format("{0:0.0}", _player.Entity.Position.X/10.0) + " / " + string.Format("{0:0.0}", _player.Entity.Position.Y/10.0);
+            lblDebugPlayerLocation.Text = "XY: " + _player.Entity.Position.X.ToString("n", nfi) + " / " + _player.Entity.Position.Y.ToString("n", nfi);
             lblDebugPlayerMidair.Text = "Midair: " + _player.MidAir.ToString();
         }
 

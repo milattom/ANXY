@@ -60,14 +60,6 @@ public class PlayerSpriteRenderer : Component
     }
 
     /// <summary>
-    /// Sets the player component.
-    /// </summary>
-    public override void Initialize()
-    {
-        _player = Entity.GetComponent<Player>();
-    }
-
-    /// <summary>
     /// Update the Animation frame to the next frame.
     /// </summary>
     private void UpdateAnimation(GameTime gameTime)
@@ -85,5 +77,10 @@ public class PlayerSpriteRenderer : Component
             currentFrame += _numberOfFrames;
         }
         CurrentPlayerRectangle.X = XOffsetRectangle * currentFrame;
+    }
+
+    internal void SetPlayerEntity(Entity playerEntity)
+    {
+        _player = Entity.GetComponent<Player>();
     }
 }

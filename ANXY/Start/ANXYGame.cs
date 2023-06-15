@@ -31,8 +31,8 @@ public class ANXYGame : Game
     private readonly GraphicsDeviceManager _graphics;
     private readonly Rectangle _screenBounds;
     private Rectangle _1080pSize = new(0, 0, 1920, 1080);
-    private int _windowHeight;
-    private int _windowWidth;
+    public int WindowHeight { get; private set;}
+    public int WindowWidth { get; private set;}
 
     // Game Map: TileSet, TileMap, Background, Layers.
     private SpriteBatch _spriteBatch;
@@ -42,7 +42,7 @@ public class ANXYGame : Game
     private readonly string[] _foregroundLayerNames = { "" };
     private readonly string[] _spawnLayerNames = { "Spawn" };
     private readonly string[] _endLayerNames = { "End" };
-    public Vector2 SpawnPosition { get; private set; } = new Vector2(1200, 540);
+    public Vector2 SpawnPosition { get; private set; } = Vector2.Zero;
 
     // Player: Sprite.
     private Texture2D _playerSprite;
@@ -76,8 +76,8 @@ public class ANXYGame : Game
         }
         Content.RootDirectory = contentRootDirectory;
 
-        _windowWidth = _graphics.PreferredBackBufferWidth;
-        _windowHeight = _graphics.PreferredBackBufferHeight;
+        WindowWidth = _graphics.PreferredBackBufferWidth;
+        WindowHeight = _graphics.PreferredBackBufferHeight;
 
         _graphics.GraphicsProfile = GraphicsProfile.HiDef;
 
@@ -107,14 +107,13 @@ public class ANXYGame : Game
         SystemManager.Instance.InitializeAll();
 
         // Center window on screen and set size.
-        var xOffset = (_screenBounds.Width - _windowWidth) / 2;
-        var yOffset = (_screenBounds.Height - _windowHeight) / 2;
+        var xOffset = (_screenBounds.Width - WindowWidth) / 2;
+        var yOffset = (_screenBounds.Height - WindowHeight) / 2;
         Window.Position = new Point(xOffset, yOffset);
 
         // Register event handlers.
         GamePausedChanged += OnGamePausedChanged;
         Window.ClientSizeChanged += OnClientSizeChanged;
-        PlayerInput.Instance.DebugToggleKeyPressed += SetDebugMode;
 
         ToggleFullscreen();
     }
@@ -188,11 +187,11 @@ public class ANXYGame : Game
     private void InitializeBackgroundPicture()
     {
         var backgroundEntity = new Entity();
-        backgroundEntity.Position -= new Vector2(0.5f * _windowWidth, 0.5f * _windowHeight);
+        backgroundEntity.Position -= new Vector2(0.5f * WindowWidth, 0.5f * WindowHeight);
 
-        Background background = new(_windowWidth, _windowHeight);
+        Background background = new(WindowWidth, WindowHeight);
         backgroundEntity.AddComponent(background);
-        backgroundEntity.AddComponent(new Background(_windowWidth, _windowHeight));
+        backgroundEntity.AddComponent(new Background(WindowWidth, WindowHeight));
 
         SingleSpriteRenderer backgroundSprite = new(_backgroundSprite);
         backgroundEntity.AddComponent(backgroundSprite);
@@ -342,6 +341,8 @@ public class ANXYGame : Game
     {
         PlayerInput.Instance.FpsCapKeyPressed += ToggleFpsLimit;
         PlayerInput.Instance.FullscreenKeyPressed += ToggleFullscreen;
+        PlayerInput.Instance.DebugToggleKeyPressed += SetDebugMode;
+        PlayerInput.Instance.DebugSpawnNewPlayerPressed += OnDebugSpawnNewPlayerPressed;
     }
 
     /// <summary>
@@ -350,22 +351,13 @@ public class ANXYGame : Game
     private void InitializePlayer()
     {
         // Create player entity with necessary components.
-        var playerEntity = new Entity { Position = SpawnPosition };
-
-        var player = new Player();
-        playerEntity.AddComponent(player);
-
-        var playerSpriteRenderer = new PlayerSpriteRenderer(_playerSprite);
-        playerEntity.AddComponent(playerSpriteRenderer);
-
-        var playerBox = new Rectangle(1, 6, 32, 64);
-        var playerCollider = new BoxCollider(playerBox, "Player");
-        playerEntity.AddComponent(playerCollider);
+        var playerEntity = PlayerFactory.Instance.CreatePlayer(SpawnPosition, _playerSprite);
+        var player = playerEntity.GetComponent<Player>();
 
         // Add camera entity, components and reference to player.
         var cameraEntity = new Entity();
 
-        var camera = new Camera(player, new Vector2(_windowWidth, _windowHeight), new Vector2(0.25f * _windowWidth, 0.5f * _windowHeight), new Vector2(float.PositiveInfinity, 0.85f * _windowHeight));
+        var camera = new Camera(player, new Vector2(WindowWidth, WindowHeight), new Vector2(0.25f * WindowWidth, 0.5f * WindowHeight), new Vector2(float.PositiveInfinity, 0.85f * WindowHeight));
         cameraEntity.AddComponent(camera);
     }
 
@@ -408,6 +400,11 @@ public class ANXYGame : Game
         BoxColliderSystem.Instance.EnableDebugMode(GraphicsDevice);
     }
 
+    private void OnDebugSpawnNewPlayerPressed()
+    {
+        PlayerFactory.Instance.CreatePlayers(10, _playerSprite);
+    }
+
     // Event handlers.
     /// <summary>
     ///     Handle window resize by user, reset the window size and center the camera.
@@ -416,10 +413,10 @@ public class ANXYGame : Game
     /// <param name="eventArgs"></param>
     private void OnClientSizeChanged(object sender, EventArgs eventArgs)
     {
-        _windowWidth = Window.ClientBounds.Width;
-        _windowHeight = Window.ClientBounds.Height;
+        WindowWidth = Window.ClientBounds.Width;
+        WindowHeight = Window.ClientBounds.Height;
         var camera = (Camera)SystemManager.Instance.FindSystemByType<Camera>().GetComponent();
-        camera._windowDimensions = new Vector2(_windowWidth, _windowHeight);
+        camera._windowDimensions = new Vector2(WindowWidth, WindowHeight);
     }
 
     /// <summary>

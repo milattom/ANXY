@@ -18,6 +18,7 @@ namespace ANXY.ECS.Components;
 public class PlayerInput : Component
 {
     public event Action DebugToggleKeyPressed;
+    public event Action DebugSpawnNewPlayerPressed;
     public event Action FpsCapKeyPressed;
     public event Action FpsToggleShowKeyPressed;
     public event Action FullscreenKeyPressed;
@@ -34,6 +35,7 @@ public class PlayerInput : Component
     public class DebugKeys
     {
         public string Toggle;
+        public string SpawnNewPlayer;
     }
     public class FpsKeys
     {
@@ -55,7 +57,7 @@ public class PlayerInput : Component
     private KeyboardState currentKeyboardState;
     private KeyboardState lastKeyboardState;
     public InputKeyStrings InputSettings { get; private set; }
-    private Keys fpsCapKey, fpsToggleShowKey, debugKey, fullscreenKey, menuKey, movementJumpKey, movementLeftKey, movementRightKey;
+    private Keys fpsCapKey, fpsToggleShowKey, debugKey, debugSpawnNewPlayer, fullscreenKey, menuKey, movementJumpKey, movementLeftKey, movementRightKey;
     private String userValuePath;
     private String defaultValuePath;
     private bool IsMenuKeyDisabled = false;
@@ -83,6 +85,8 @@ public class PlayerInput : Component
         }
         if (WasDebugToggleKeyJustPressed)
             DebugToggleKeyPressed?.Invoke();
+        if (WasDebugSpawnNewPlayerKeyJustPressed)
+            DebugSpawnNewPlayerPressed?.Invoke();
         if (WasFpsCapKeyJustPressed)
             FpsCapKeyPressed?.Invoke();
         if (WasFpsToggleShowKeyJustPressed)
@@ -201,6 +205,7 @@ public class PlayerInput : Component
             fpsCapKey = Enum.Parse<Keys>(InputSettings.Fps.Cap);
             fpsToggleShowKey = Enum.Parse<Keys>(InputSettings.Fps.ToggleShow);
             debugKey = Enum.Parse<Keys>(InputSettings.Debug.Toggle);
+            debugSpawnNewPlayer = Enum.Parse<Keys>(InputSettings.Debug.SpawnNewPlayer);
             fullscreenKey = Enum.Parse<Keys>(InputSettings.General.Fullscreen);
             menuKey = Enum.Parse<Keys>(InputSettings.General.Menu);
             movementJumpKey = Enum.Parse<Keys>(InputSettings.Movement.Jump);
@@ -210,12 +215,13 @@ public class PlayerInput : Component
         catch (Exception e)
         {
             Debug.WriteLine(e.Message);
-            throw new ApplicationException("Failed to update keys.", e);
+            throw new FormatException("Failed to update keys.", e);
         }
     }
 
 // check input keys
     public bool WasDebugToggleKeyJustPressed => WasKeyJustPressed(debugKey);
+    public bool WasDebugSpawnNewPlayerKeyJustPressed => WasKeyJustPressed(debugSpawnNewPlayer);
     public bool WasFpsCapKeyJustPressed => WasKeyJustPressed(fpsCapKey);
     public bool WasFpsToggleShowKeyJustPressed => WasKeyJustPressed(fpsToggleShowKey);
     public bool WasFullscreenKeyJustPressed => WasKeyJustPressed(fullscreenKey);
