@@ -40,6 +40,9 @@ public class ANXYGame : Game
     private Texture2D _backgroundSprite;
     private readonly string[] _backgroundLayerNames = { "Ground" };
     private readonly string[] _foregroundLayerNames = { "" };
+    private readonly string[] _spawnLayerNames = { "Spawn" };
+    private readonly string[] _endLayerNames = { "End" };
+    public Vector2 SpawnPosition { get; private set; } = new Vector2(1200, 540);
 
     // Player: Sprite.
     private Texture2D _playerSprite;
@@ -169,11 +172,14 @@ public class ANXYGame : Game
         InitializeBackgroundPicture();
 
         InitializeLevelBackgroundLayers();
+        InitializeSpawn();
 
         InitializePlayerInput();
         InitializePlayer();
 
         InitializeLevelForegroundLayers();
+
+        InitializeEnd();
     }
 
     /// <summary>
@@ -209,6 +215,41 @@ public class ANXYGame : Game
     private void InitializeLevelForegroundLayers()
     {
         foreach (String layerName in _foregroundLayerNames)
+        {
+            InitializeLevelLayer(layerName);
+        }
+    }
+
+    /// <summary>
+    ///     Create all Layers that are set behind the player.
+    /// </summary>
+    private void InitializeSpawn()
+    {
+        foreach (String layerName in _spawnLayerNames)
+        {
+            var tilesIndex = GetLayerIndexByLayerName(layerName);
+            if (tilesIndex == -1)
+                return;
+            var tiles = _levelTileMap.TileLayers[tilesIndex].Tiles;
+
+            foreach (var singleTile in tiles)
+            {
+                if (singleTile.GlobalIdentifier == 0)
+                    continue;
+
+                SpawnPosition = new Vector2(singleTile.X * _levelTileMap.TileWidth, singleTile.Y * _levelTileMap.TileHeight);
+                return;
+            }
+        }
+        SpawnPosition = new Vector2(1200, 540);
+    }
+
+    /// <summary>
+    ///     Create all Layers that are set behind the player.
+    /// </summary>
+    private void InitializeEnd()
+    {
+        foreach (String layerName in _endLayerNames)
         {
             InitializeLevelLayer(layerName);
         }
@@ -309,7 +350,7 @@ public class ANXYGame : Game
     private void InitializePlayer()
     {
         // Create player entity with necessary components.
-        var playerEntity = new Entity { Position = new Vector2(1200, 540) };
+        var playerEntity = new Entity { Position = SpawnPosition };
 
         var player = new Player();
         playerEntity.AddComponent(player);
