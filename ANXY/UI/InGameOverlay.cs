@@ -1,4 +1,5 @@
-﻿using ANXY.Start;
+﻿using ANXY.ECS.Components;
+using ANXY.Start;
 using Microsoft.Xna.Framework;
 using Myra.Graphics2D;
 using Myra.Graphics2D.Brushes;
@@ -6,6 +7,7 @@ using Myra.Graphics2D.UI;
 using System;
 using System.Globalization;
 using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ANXY.UI
 {
@@ -17,15 +19,22 @@ namespace ANXY.UI
         private float lastFpsTextUpdate = 0.0f;
         private float lastMinMaxFpsTextUpdate = 0.0f;
         private readonly NumberFormatInfo nfi;
-
+        private readonly Player _player;
 
         //UI Elements
         private Label lblCurrentFps;
         private Label lblMaxFps;
         private Label lblMinFps;
         private VerticalStackPanel uiFPS;
+        private Label lblDebugPlayerLocation;
+        private Label lblDebugPlayerMidair;
         private VerticalStackPanel uiDebug;
+        private float _lastDebugTextUpdate = 0.0f;
+        private readonly float _debugTextUpdateTime = 1 / 4.0f;
         private VerticalStackPanel uiWelcomeAndTutorial;
+        private Label lblMoveTutorial;
+        private Label lblJumpTutorial;
+        private Label lblMenuTutorial;
         private Label lblFastestTime;
         private VerticalStackPanel uiFastestTime;
 
@@ -44,6 +53,7 @@ namespace ANXY.UI
             nfi = (NumberFormatInfo)
             CultureInfo.InvariantCulture.NumberFormat.Clone();
             nfi.NumberGroupSeparator = "'";
+            _player = (Player)SystemManager.Instance.FindSystemByType<Player>().GetComponent();
         }
 
         private void BuildUI()
@@ -92,27 +102,24 @@ namespace ANXY.UI
                 Padding = new Thickness(0, 0, 0, 7),
                 HorizontalAlignment = HorizontalAlignment.Center
             };
-            var lblDebugPlayerLocation = new Label
+            lblDebugPlayerLocation = new Label
             {
                 Text = "XY: 12.34 / 56.78",
                 HorizontalAlignment = HorizontalAlignment.Center
             };
-            var lblDebugPlayerFacingDirection = new Label
-            {
-                Text = "Facing: Right",
-                HorizontalAlignment = HorizontalAlignment.Center
-            };
-            var lblDebugPlayerMidair = new Label
+            lblDebugPlayerMidair = new Label
             {
                 Text = "Midair: false",
                 HorizontalAlignment = HorizontalAlignment.Center
             };
+            /*
             var lblDebugToggleHitboxesControls = new Label
             {
                 Text = "Toggle Hitboxes with F6",
                 Padding = new Thickness(0, 7, 0, 0),
                 HorizontalAlignment = HorizontalAlignment.Center
             };
+            */
             uiDebug = new VerticalStackPanel
             {
                 HorizontalAlignment = HorizontalAlignment.Center,
@@ -123,9 +130,7 @@ namespace ANXY.UI
             };
             uiDebug.Widgets.Add(lblDebugTitle);
             uiDebug.Widgets.Add(lblDebugPlayerLocation);
-            uiDebug.Widgets.Add(lblDebugPlayerFacingDirection);
             uiDebug.Widgets.Add(lblDebugPlayerMidair);
-            uiDebug.Widgets.Add(lblDebugToggleHitboxesControls);
             uiDebug.Visible = false;
 
             //StopWatch Overlay
@@ -180,19 +185,19 @@ namespace ANXY.UI
                 VerticalAlignment = VerticalAlignment.Center
             };
             var lblFiller = new Label();
-            var lblMoveTutorial = new Label
+            lblMoveTutorial = new Label
             {
-                Text = "Move with A & D",
+                Text = "Move with " + PlayerInput.Instance.InputSettings.Movement.Left + " & " + PlayerInput.Instance.InputSettings.Movement.Right,
                 HorizontalAlignment = HorizontalAlignment.Center
             };
-            var lblJumpTutorial = new Label
+            lblJumpTutorial = new Label
             {
-                Text = "Jump with Space",
+                Text = "Jump with " + PlayerInput.Instance.InputSettings.Movement.Jump,
                 HorizontalAlignment = HorizontalAlignment.Center
             };
-            var lblMenuTutorial = new Label
+            lblMenuTutorial = new Label
             {
-                Text = "Open the Menu with ESC",
+                Text = "Open the Menu with " + PlayerInput.Instance.InputSettings.General.Menu,
                 HorizontalAlignment = HorizontalAlignment.Center
             };
             uiWelcomeAndTutorial = new VerticalStackPanel
@@ -248,11 +253,12 @@ namespace ANXY.UI
         {
             UpdateFPS(gameTime);
             UpdateStopWatch(gameTime);
+            UpdateDebug(gameTime);
         }
 
         private void UpdateFPS(GameTime gameTime)
         {
-            if (!uiFPS.Visible)
+            if (ANXYGame.Instance.GamePaused ||!uiFPS.Visible)
             {
                 return;
             }
@@ -320,10 +326,24 @@ namespace ANXY.UI
             _stopWatchStringBuilder.Clear();
         }
 
+        private void UpdateDebug(GameTime gameTime)
+        {
+            var gameTimeElapsedSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _lastDebugTextUpdate += gameTimeElapsedSeconds;
+
+            if (ANXYGame.Instance.GamePaused || !uiDebug.Visible || _lastDebugTextUpdate < _debugTextUpdateTime)
+            {
+                return;
+            }
+            _lastDebugTextUpdate = 0.0f;
+            lblDebugPlayerLocation.Text = "XY: " + string.Format("{0:0.0}", _player.Entity.Position.X/10.0) + " / " + string.Format("{0:0.0}", _player.Entity.Position.Y/10.0);
+            lblDebugPlayerMidair.Text = "Midair: " + _player.MidAir.ToString();
+        }
+
         public void Reset()
         {
             ResetStopWatch();
-            uiWelcomeAndTutorial.Visible = true;
+            ResetTutorial();
             ResetFpsUI();
         }
 
@@ -332,7 +352,17 @@ namespace ANXY.UI
             StopWatchTime = 0;
             _lblStopWatch.Text = string.Format("{0:0.00}", StopWatchTime);
         }
-
+        private void ResetTutorial()
+        {
+            RewriteTutorialText();
+            uiWelcomeAndTutorial.Visible = true;
+        }
+        public void RewriteTutorialText()
+        {
+            lblMoveTutorial.Text = "Move with " + PlayerInput.Instance.InputSettings.Movement.Left + " & " + PlayerInput.Instance.InputSettings.Movement.Right;
+            lblJumpTutorial.Text = "Jump with " + PlayerInput.Instance.InputSettings.Movement.Jump;
+            lblMenuTutorial.Text = "Open the Menu with " + PlayerInput.Instance.InputSettings.General.Menu;
+        }
         public void ResetFpsUI()
         {
             lblCurrentFps.Text = "Current FPS:";
@@ -348,6 +378,11 @@ namespace ANXY.UI
         public void ShowFps(bool show)
         {
             uiFPS.Visible = show;
+        }
+
+        public void ShowDebug(bool show)
+        {
+            uiDebug.Visible = show;
         }
 
         public void ShowWelcomeAndTutorial(bool show)

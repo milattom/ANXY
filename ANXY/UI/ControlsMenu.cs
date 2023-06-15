@@ -498,7 +498,7 @@ namespace ANXY.UI
         {
             var noChangesMade = true;
 
-            var inputSettings = PlayerInput.Instance.inputSettings;
+            var inputSettings = PlayerInput.Instance.InputSettings;
             foreach (TextButton txtBtn in Widgets.OfType<TextButton>())
             {
                 if (txtBtn.Id == null)
@@ -561,7 +561,7 @@ namespace ANXY.UI
 
         public void LoadButtonLayout()
         {
-            var inputSettings = PlayerInput.Instance.inputSettings;
+            var inputSettings = PlayerInput.Instance.InputSettings;
 
             foreach (TextButton txtBtn in Widgets.OfType<TextButton>())
             {

@@ -19,6 +19,7 @@ public class UIManager
     private readonly Credits _credits;
 
     private bool _showFps = false;
+    private bool _showDebug = false;
     public bool ShowWelcomeAndTutorial { get; private set; } = true;
 
     // Singleton Pattern.
@@ -61,7 +62,8 @@ public class UIManager
 
         // Event handlers
         ANXYGame.Instance.GamePausedChanged += OnGamePausedChanged;
-        PlayerInput.Instance.FpsToggleShowKeyPressed += OnShowFpsKeyPressed;
+        PlayerInput.Instance.FpsToggleShowKeyPressed += OnFpsToggleShowKeyPressed;
+        PlayerInput.Instance.DebugToggleKeyPressed += OnDebugToggleKeyPressed;
         PlayerInput.Instance.AnyMovementKeyPressed += OnStartMoving;
     }
 
@@ -155,6 +157,7 @@ public class UIManager
     private void OnReturnClicked()
     {
         _desktop.Root = _pauseMenu;
+        _inGameOverlay.RewriteTutorialText();
     }
 
     /// <summary>
@@ -184,7 +187,7 @@ public class UIManager
     /// <summary>
     ///     Toggles the FPS overlay.
     /// </summary>
-    private void OnShowFpsKeyPressed()
+    private void OnFpsToggleShowKeyPressed()
     {
         if (ANXYGame.Instance.GamePaused)
         {
@@ -194,6 +197,17 @@ public class UIManager
         _showFps = !_showFps;
         _inGameOverlay.ShowFps(_showFps);
         _inGameOverlay.ResetFpsUI();
+    }
+
+    private void OnDebugToggleKeyPressed()
+    {
+        if (ANXYGame.Instance.GamePaused)
+        {
+            return;
+        }
+
+        _showDebug = !_showDebug;
+        _inGameOverlay.ShowDebug(_showDebug);
     }
 
     private void OnStartMoving()

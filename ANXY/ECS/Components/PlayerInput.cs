@@ -2,13 +2,10 @@
 using ANXY.Start;
 using ANXY.UI;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing.Printing;
 using System.IO;
 using System.Reflection;
 
@@ -57,7 +54,7 @@ public class PlayerInput : Component
 
     private KeyboardState currentKeyboardState;
     private KeyboardState lastKeyboardState;
-    public InputKeyStrings inputSettings { get; private set; }
+    public InputKeyStrings InputSettings { get; private set; }
     private Keys fpsCapKey, fpsToggleShowKey, debugKey, fullscreenKey, menuKey, movementJumpKey, movementLeftKey, movementRightKey;
     private String userValuePath;
     private String defaultValuePath;
@@ -136,8 +133,6 @@ public class PlayerInput : Component
         string contentRootPath = Path.GetDirectoryName(assemblyLocation);
         string tempLocation = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
-        Debug.WriteLine("\nThis is temp: " + tempLocation + "\n");
-
         string tempFolderANXY = Path.Combine(tempLocation, "ANXY");
         Directory.CreateDirectory(tempFolderANXY);
         string tempFilePath = Path.Combine(tempFolderANXY, "InputUserValues.json");
@@ -168,12 +163,12 @@ public class PlayerInput : Component
     private void Load(string fileName)
     {
         string json = File.ReadAllText(fileName);
-        inputSettings = JsonConvert.DeserializeObject<InputKeyStrings>(json);
+        InputSettings = JsonConvert.DeserializeObject<InputKeyStrings>(json);
         try
         {
             UpdateKeys();
         }
-        catch (Exception e)
+        catch (Exception)
         {
             ResetToDefaults();
         }
@@ -181,12 +176,12 @@ public class PlayerInput : Component
 
     public void SetInputSettings(InputKeyStrings inputSettings)
     {
-        this.inputSettings = inputSettings;
+        this.InputSettings = inputSettings;
     }
 
     public void Save()
     {
-        string json = JsonConvert.SerializeObject(inputSettings, Formatting.Indented);
+        string json = JsonConvert.SerializeObject(InputSettings, Formatting.Indented);
         File.WriteAllText(userValuePath, json);
         UpdateKeys();
     }
@@ -203,14 +198,14 @@ public class PlayerInput : Component
         // Convert the MovementSettings keys
         try
         {
-            fpsCapKey = Enum.Parse<Keys>(inputSettings.Fps.Cap);
-            fpsToggleShowKey = Enum.Parse<Keys>(inputSettings.Fps.ToggleShow);
-            debugKey = Enum.Parse<Keys>(inputSettings.Debug.Toggle);
-            fullscreenKey = Enum.Parse<Keys>(inputSettings.General.Fullscreen);
-            menuKey = Enum.Parse<Keys>(inputSettings.General.Menu);
-            movementJumpKey = Enum.Parse<Keys>(inputSettings.Movement.Jump);
-            movementLeftKey = Enum.Parse<Keys>(inputSettings.Movement.Left);
-            movementRightKey = Enum.Parse<Keys>(inputSettings.Movement.Right);
+            fpsCapKey = Enum.Parse<Keys>(InputSettings.Fps.Cap);
+            fpsToggleShowKey = Enum.Parse<Keys>(InputSettings.Fps.ToggleShow);
+            debugKey = Enum.Parse<Keys>(InputSettings.Debug.Toggle);
+            fullscreenKey = Enum.Parse<Keys>(InputSettings.General.Fullscreen);
+            menuKey = Enum.Parse<Keys>(InputSettings.General.Menu);
+            movementJumpKey = Enum.Parse<Keys>(InputSettings.Movement.Jump);
+            movementLeftKey = Enum.Parse<Keys>(InputSettings.Movement.Left);
+            movementRightKey = Enum.Parse<Keys>(InputSettings.Movement.Right);
         }
         catch (Exception e)
         {

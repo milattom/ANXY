@@ -1,5 +1,7 @@
 ﻿using ANXY.ECS;
 using ANXY.ECS.Components;
+using ANXY.ECS.Systems;
+using ANXY.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Tiled;
@@ -109,6 +111,7 @@ public class ANXYGame : Game
         // Register event handlers.
         GamePausedChanged += OnGamePausedChanged;
         Window.ClientSizeChanged += OnClientSizeChanged;
+        PlayerInput.Instance.DebugToggleKeyPressed += SetDebugMode;
 
         ToggleFullscreen();
     }
@@ -357,6 +360,11 @@ public class ANXYGame : Game
     {
         GamePaused = gamePaused;
         GamePausedChanged?.Invoke(gamePaused);
+    }
+
+    private void SetDebugMode()
+    {
+        BoxColliderSystem.Instance.EnableDebugMode(GraphicsDevice);
     }
 
     // Event handlers.
