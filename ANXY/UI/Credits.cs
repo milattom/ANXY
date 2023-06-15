@@ -131,7 +131,7 @@ namespace ANXY.UI
             lblVersion.GridRow = 23;
 
             var lblVersionNr = new Label();
-            lblVersionNr.Text = "v0.1.8-alpha";
+            lblVersionNr.Text = "v0.1.9-alpha";
             lblVersionNr.GridColumn = 1;
             lblVersionNr.GridRow = 23;
 
