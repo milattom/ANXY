@@ -63,13 +63,17 @@ public sealed class SystemManager
         foreach (var system in _systems) system.Update(gameTime);
     }
 
+    /// <summary>
+    /// Sets a new resolution for the camera
+    /// </summary>
+    /// <param name="resolution"></param>
     public void UpdateResolution(Vector2 resolution)
     {
         foreach (var system in _systems)
         {
-            if (system is CameraSystem cameraSystem)
+            if (system is CameraSystem)
             {
-                cameraSystem.SetResolution(resolution);
+                CameraSystem.SetResolution(resolution);
             }
         }
     }

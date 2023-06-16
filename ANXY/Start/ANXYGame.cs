@@ -104,6 +104,7 @@ public class ANXYGame : Game
         base.Initialize();
         CreateDefaultScene();
         SystemManager.Instance.InitializeAll();
+        PlayerInput.Instance.Initialize();
 
         // Center window on screen and set size.
         var xOffset = (_screenBounds.Width - _windowWidth) / 2;
@@ -138,6 +139,7 @@ public class ANXYGame : Game
     protected override void Update(GameTime gameTime)
     {
         SystemManager.Instance.UpdateAll(gameTime);
+        PlayerInput.Instance.Update(gameTime);
     }
 
     /// <summary>
@@ -154,7 +156,7 @@ public class ANXYGame : Game
         SystemManager.Instance.DrawAll(gameTime, _spriteBatch);
         _spriteBatch.End();
 
-        // Update UI and draw
+        // Update UI and draw TODO: move Instance.Update to update
         UIManager.Instance.Update(gameTime);
         UIManager.Instance.Draw();
     }
@@ -265,7 +267,7 @@ public class ANXYGame : Game
     /// </summary>
     private void CreateCamera()
     {
-        _cameraEntity = EntityFactory.Instance.CreateEntity(EntityType.Camera, new Object[] { _windowHeight, _windowWidth });
+        EntityFactory.Instance.CreateEntity(EntityType.Camera, new Object[] { _windowHeight, _windowWidth });
     }
 
     /// <summary>

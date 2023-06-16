@@ -1,4 +1,4 @@
-﻿using ANXY.ECS.Components;
+﻿using ANXY.Start;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Myra.Graphics2D;

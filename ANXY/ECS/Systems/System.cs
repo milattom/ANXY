@@ -84,15 +84,6 @@ class PlayerSystem : System<Player>
         SystemManager.Instance.Register(this);
     }
 }
-class PlayerInputSystem : System<PlayerInput>
-{
-    private static readonly Lazy<PlayerInputSystem> _lazy = new(() => new PlayerInputSystem());
-    public static PlayerInputSystem Instance => _lazy.Value;
-    private PlayerInputSystem()
-    {
-        SystemManager.Instance.Register(this);
-    }
-}
 class PlayerSpriteSystem : System<PlayerSpriteRenderer>
 {
     private static readonly Lazy<PlayerSpriteSystem> _lazy = new(() => new PlayerSpriteSystem());
@@ -124,7 +115,7 @@ class CameraSystem : System<Camera>
 {
     private static readonly Lazy<CameraSystem> _lazy = new(() => new CameraSystem());
     public static CameraSystem Instance => _lazy.Value;
-    public void SetResolution(Vector2 resolution)
+    public static void SetResolution(Vector2 resolution)
     {
         foreach (Camera camera in components)
         {

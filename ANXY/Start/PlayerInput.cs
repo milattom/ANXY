@@ -1,5 +1,5 @@
-﻿using ANXY.ECS.Systems;
-using ANXY.Start;
+﻿using ANXY.ECS.Components;
+using ANXY.ECS.Systems;
 using ANXY.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,13 +11,13 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
-namespace ANXY.ECS.Components;
+namespace ANXY.Start;
 
 /// <summary>
 /// TODO Player Input Controller
 /// Checking for Keyboard input and setting everything accordingly. Every Class needing to check the Keyboard input must check it through this Class.
 /// </summary>
-public class PlayerInput : Component
+public class PlayerInput
 {
     public event Action ShowFpsKeyPressed;
     public event Action LimitFpsKeyPressed;
@@ -51,13 +51,8 @@ public class PlayerInput : Component
     public InputSettings inputSettings { get; private set; }
     private Keys leftKey, rightKey, jumpKey, menuKey, showFpsKey, limitFpsKey, fullscreenKey;
     private List<Keys> keys = new List<Keys>();
-    private String userValuePath;
-    private String defaultValuePath;
-
-    private PlayerInput()
-    {
-        PlayerInputSystem.Instance.Register(this);
-    }
+    private string userValuePath;
+    private string defaultValuePath;
 
     ///Singleton Pattern
     private static readonly Lazy<PlayerInput> lazy = new(() => new PlayerInput());
@@ -67,7 +62,44 @@ public class PlayerInput : Component
     /// </summary>
     public static PlayerInput Instance => lazy.Value;
 
-    public override void Update(GameTime gameTime)
+    public void Initialize()
+    // Access the content files
+    {
+        string assemblyLocation = Assembly.GetEntryAssembly().Location;
+
+        string contentRootPath = Path.GetDirectoryName(assemblyLocation);
+        string tempLocation = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+
+        Debug.WriteLine("\nThis is temp: " + tempLocation + "\n");
+
+        string tempFolderANXY = Path.Combine(tempLocation, "ANXY");
+        Directory.CreateDirectory(tempFolderANXY);
+        string tempFilePath = Path.Combine(tempFolderANXY, "InputUserValues.json");
+        if (OperatingSystem.IsMacCatalyst() || OperatingSystem.IsMacOS())
+        {
+            contentRootPath = Path.Combine(contentRootPath, "..", "Resources");
+        }
+
+        string assemblyFilePath = Path.Combine(contentRootPath, "Content", "InputDefaults.json");
+
+        if (!File.Exists(tempFilePath))
+        {
+            File.Copy(assemblyFilePath, tempFilePath);
+        }
+        userValuePath = tempFilePath;
+        defaultValuePath = assemblyFilePath;
+
+        if (File.Exists(userValuePath))
+        {
+            Load(userValuePath);
+        }
+        else
+        {
+            ResetToDefaults();
+        }
+    }
+
+    public void Update(GameTime gameTime)
     {
         SetCurrentState();
 
@@ -126,49 +158,6 @@ public class PlayerInput : Component
     private bool IsMovementKeyPressed()
     {
         return IsWalkingLeft() || IsWalkingRight() || IsJumping();
-    }
-
-    public override void Draw(GameTime gameTime, SpriteBatch spriteBatch) { }
-
-    public override void Initialize()
-    // Access the content files
-    {
-        string assemblyLocation = Assembly.GetEntryAssembly().Location;
-
-        string contentRootPath = Path.GetDirectoryName(assemblyLocation);
-        string tempLocation = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-
-        Debug.WriteLine("\nThis is temp: " + tempLocation + "\n");
-
-        string tempFolderANXY = Path.Combine(tempLocation, "ANXY");
-        Directory.CreateDirectory(tempFolderANXY);
-        string tempFilePath = Path.Combine(tempFolderANXY, "InputUserValues.json");
-        if (OperatingSystem.IsMacCatalyst() || OperatingSystem.IsMacOS())
-        {
-            contentRootPath = Path.Combine(contentRootPath, "..", "Resources");
-        }
-
-        string assemblyFilePath = Path.Combine(contentRootPath, "Content", "InputDefaults.json");
-
-        if (!File.Exists(tempFilePath))
-        {
-            File.Copy(assemblyFilePath, tempFilePath);
-        }
-        userValuePath = tempFilePath;
-        defaultValuePath = assemblyFilePath;
-
-        if (File.Exists(userValuePath))
-        {
-            Load(userValuePath);
-        }
-        else
-        {
-            ResetToDefaults();
-        }
-    }
-
-    public override void Destroy()
-    {
     }
 
     private void Load(string fileName)
