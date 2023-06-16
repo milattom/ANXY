@@ -69,7 +69,7 @@ public class System<T> : ISystem where T : Component
     /// Returns first component of the list
     /// </summary>
     /// <returns></returns>
-    public Component GetComponent()
+    public Component GetFirstComponent()
     {
         return components[0];
     }

@@ -16,19 +16,19 @@ namespace ANXY.UI
         public event Action LoadDefaultsPressed;
         public event Action SaveChangesPressed;
 
-        public TextButton btnMovementLeft;
-        public TextButton btnMovementRight;
-        public TextButton btnMovementJump;
-        public TextButton btnMenu;
-        public TextButton btnShowFps;
-        public TextButton btnCapFps;
-        public TextButton btnFullscreen;
-        public TextButton btnReturnFromControls;
-        public TextButton btnLoadDefaults;
-        public TextButton btnSaveChanges;
-        public Label lblWaitingForKeyPress;
-        public Label lblMultipleIdenticalKeys;
-        private TextButton oldSenderTextButton;
+        private readonly TextButton _btnMovementLeft;
+        private readonly TextButton _btnMovementRight;
+        private readonly TextButton _btnMovementJump;
+        private readonly TextButton _btnMenu;
+        private readonly TextButton __btnShowFps;
+        private readonly TextButton _btnCapFps;
+        private readonly TextButton _btnFullscreen;
+        private readonly TextButton _btnReturnFromControls;
+        private readonly TextButton _btnLoadDefaults;
+        private readonly TextButton _btnSaveChanges;
+        private readonly Label _lblWaitingForKeyPress;
+        private readonly Label _lblMultipleIdenticalKeys;
+        private TextButton _oldSenderTextButton;
 
         public ControlsMenu()
         {
@@ -42,15 +42,15 @@ namespace ANXY.UI
             lblMovement.VerticalAlignment = VerticalAlignment.Center;
             lblMovement.GridRow = 1;
 
-            lblMultipleIdenticalKeys = new Label();
-            lblMultipleIdenticalKeys.Text = "Multiple identical Keys";
-            lblMultipleIdenticalKeys.VerticalAlignment = VerticalAlignment.Center;
-            lblMultipleIdenticalKeys.HorizontalAlignment = HorizontalAlignment.Center;
-            lblMultipleIdenticalKeys.Left = -40;
-            lblMultipleIdenticalKeys.GridColumn = 2;
-            lblMultipleIdenticalKeys.GridRow = 1;
-            lblMultipleIdenticalKeys.TextColor = Color.Red;
-            lblMultipleIdenticalKeys.Id = "lblMultipleIdenticalKeys";
+            _lblMultipleIdenticalKeys = new Label();
+            _lblMultipleIdenticalKeys.Text = "Multiple identical Keys";
+            _lblMultipleIdenticalKeys.VerticalAlignment = VerticalAlignment.Center;
+            _lblMultipleIdenticalKeys.HorizontalAlignment = HorizontalAlignment.Center;
+            _lblMultipleIdenticalKeys.Left = -40;
+            _lblMultipleIdenticalKeys.GridColumn = 2;
+            _lblMultipleIdenticalKeys.GridRow = 1;
+            _lblMultipleIdenticalKeys.TextColor = Color.Red;
+            _lblMultipleIdenticalKeys.Id = "lblMultipleIdenticalKeys";
 
             var lblMoveLeft = new Label();
             lblMoveLeft.Text = "Move Left";
@@ -58,15 +58,15 @@ namespace ANXY.UI
             lblMoveLeft.GridColumn = 1;
             lblMoveLeft.GridRow = 2;
 
-            btnMovementLeft = new TextButton();
-            btnMovementLeft.Text = "A";
-            btnMovementLeft.MinWidth = 100;
-            btnMovementLeft.Padding = new Thickness(10);
-            btnMovementLeft.VerticalAlignment = VerticalAlignment.Center;
-            btnMovementLeft.GridColumn = 2;
-            btnMovementLeft.GridRow = 2;
-            btnMovementLeft.Id = "btnMovementLeft";
-            btnMovementLeft.Click += OnInputButtonClicked;
+            _btnMovementLeft = new TextButton();
+            _btnMovementLeft.Text = "A";
+            _btnMovementLeft.MinWidth = 100;
+            _btnMovementLeft.Padding = new Thickness(10);
+            _btnMovementLeft.VerticalAlignment = VerticalAlignment.Center;
+            _btnMovementLeft.GridColumn = 2;
+            _btnMovementLeft.GridRow = 2;
+            _btnMovementLeft.Id = "btnMovementLeft";
+            _btnMovementLeft.Click += OnInputButtonClicked;
 
             var lblMoveRight = new Label();
             lblMoveRight.Text = "Move Right";
@@ -74,15 +74,15 @@ namespace ANXY.UI
             lblMoveRight.GridColumn = 1;
             lblMoveRight.GridRow = 3;
 
-            btnMovementRight = new TextButton();
-            btnMovementRight.Text = "D";
-            btnMovementRight.MinWidth = 100;
-            btnMovementRight.Padding = new Thickness(10);
-            btnMovementRight.VerticalAlignment = VerticalAlignment.Center;
-            btnMovementRight.GridColumn = 2;
-            btnMovementRight.GridRow = 3;
-            btnMovementRight.Id = "btnMovementRight";
-            btnMovementRight.Click += OnInputButtonClicked;
+            _btnMovementRight = new TextButton();
+            _btnMovementRight.Text = "D";
+            _btnMovementRight.MinWidth = 100;
+            _btnMovementRight.Padding = new Thickness(10);
+            _btnMovementRight.VerticalAlignment = VerticalAlignment.Center;
+            _btnMovementRight.GridColumn = 2;
+            _btnMovementRight.GridRow = 3;
+            _btnMovementRight.Id = "btnMovementRight";
+            _btnMovementRight.Click += OnInputButtonClicked;
 
             var lblJump = new Label();
             lblJump.Text = "Jump";
@@ -90,30 +90,30 @@ namespace ANXY.UI
             lblJump.GridColumn = 1;
             lblJump.GridRow = 4;
 
-            btnMovementJump = new TextButton();
-            btnMovementJump.Text = "Space";
-            btnMovementJump.MinWidth = 100;
-            btnMovementJump.Padding = new Thickness(10);
-            btnMovementJump.VerticalAlignment = VerticalAlignment.Center;
-            btnMovementJump.GridColumn = 2;
-            btnMovementJump.GridRow = 4;
-            btnMovementJump.Id = "btnMovementJump";
-            btnMovementJump.Click += OnInputButtonClicked;
+            _btnMovementJump = new TextButton();
+            _btnMovementJump.Text = "Space";
+            _btnMovementJump.MinWidth = 100;
+            _btnMovementJump.Padding = new Thickness(10);
+            _btnMovementJump.VerticalAlignment = VerticalAlignment.Center;
+            _btnMovementJump.GridColumn = 2;
+            _btnMovementJump.GridRow = 4;
+            _btnMovementJump.Id = "btnMovementJump";
+            _btnMovementJump.Click += OnInputButtonClicked;
 
             var lblGeneral = new Label();
             lblGeneral.Text = "General";
             lblGeneral.VerticalAlignment = VerticalAlignment.Center;
             lblGeneral.GridRow = 5;
 
-            lblWaitingForKeyPress = new Label();
-            lblWaitingForKeyPress.Text = "Waiting for Key Press";
-            lblWaitingForKeyPress.VerticalAlignment = VerticalAlignment.Center;
-            lblWaitingForKeyPress.HorizontalAlignment = HorizontalAlignment.Center;
-            lblWaitingForKeyPress.Left = -40;
-            lblWaitingForKeyPress.GridColumn = 2;
-            lblWaitingForKeyPress.GridRow = 5;
-            lblWaitingForKeyPress.TextColor = Color.Red;
-            lblWaitingForKeyPress.Id = "lblWaitingForKeyPress";
+            _lblWaitingForKeyPress = new Label();
+            _lblWaitingForKeyPress.Text = "Waiting for Key Press";
+            _lblWaitingForKeyPress.VerticalAlignment = VerticalAlignment.Center;
+            _lblWaitingForKeyPress.HorizontalAlignment = HorizontalAlignment.Center;
+            _lblWaitingForKeyPress.Left = -40;
+            _lblWaitingForKeyPress.GridColumn = 2;
+            _lblWaitingForKeyPress.GridRow = 5;
+            _lblWaitingForKeyPress.TextColor = Color.Red;
+            _lblWaitingForKeyPress.Id = "lblWaitingForKeyPress";
 
             var lblMenu = new Label();
             lblMenu.Text = "Menu";
@@ -121,15 +121,15 @@ namespace ANXY.UI
             lblMenu.GridColumn = 1;
             lblMenu.GridRow = 6;
 
-            btnMenu = new TextButton();
-            btnMenu.Text = "Menu Key TESTING";
-            btnMenu.MinWidth = 100;
-            btnMenu.Padding = new Thickness(10);
-            btnMenu.VerticalAlignment = VerticalAlignment.Center;
-            btnMenu.GridColumn = 2;
-            btnMenu.GridRow = 6;
-            btnMenu.Id = "btnMenu";
-            btnMenu.Click += OnInputButtonClicked;
+            _btnMenu = new TextButton();
+            _btnMenu.Text = "Menu Key TESTING";
+            _btnMenu.MinWidth = 100;
+            _btnMenu.Padding = new Thickness(10);
+            _btnMenu.VerticalAlignment = VerticalAlignment.Center;
+            _btnMenu.GridColumn = 2;
+            _btnMenu.GridRow = 6;
+            _btnMenu.Id = "btnMenu";
+            _btnMenu.Click += OnInputButtonClicked;
 
             var lblShowFps = new Label();
             lblShowFps.Text = "Show FPS";
@@ -137,15 +137,15 @@ namespace ANXY.UI
             lblShowFps.GridColumn = 1;
             lblShowFps.GridRow = 7;
 
-            btnShowFps = new TextButton();
-            btnShowFps.Text = "F1";
-            btnShowFps.MinWidth = 100;
-            btnShowFps.Padding = new Thickness(10);
-            btnShowFps.VerticalAlignment = VerticalAlignment.Center;
-            btnShowFps.GridColumn = 2;
-            btnShowFps.GridRow = 7;
-            btnShowFps.Id = "btnShowFps";
-            btnShowFps.Click += OnInputButtonClicked;
+            __btnShowFps = new TextButton();
+            __btnShowFps.Text = "F1";
+            __btnShowFps.MinWidth = 100;
+            __btnShowFps.Padding = new Thickness(10);
+            __btnShowFps.VerticalAlignment = VerticalAlignment.Center;
+            __btnShowFps.GridColumn = 2;
+            __btnShowFps.GridRow = 7;
+            __btnShowFps.Id = "btnShowFps";
+            __btnShowFps.Click += OnInputButtonClicked;
 
             var lblFpsCap = new Label();
             lblFpsCap.Text = "V Sync (FPS cap)";
@@ -153,15 +153,15 @@ namespace ANXY.UI
             lblFpsCap.GridColumn = 1;
             lblFpsCap.GridRow = 8;
 
-            btnCapFps = new TextButton();
-            btnCapFps.Text = "F4";
-            btnCapFps.MinWidth = 100;
-            btnCapFps.Padding = new Thickness(10);
-            btnCapFps.VerticalAlignment = VerticalAlignment.Center;
-            btnCapFps.GridColumn = 2;
-            btnCapFps.GridRow = 8;
-            btnCapFps.Id = "btnCapFps";
-            btnCapFps.Click += OnInputButtonClicked;
+            _btnCapFps = new TextButton();
+            _btnCapFps.Text = "F4";
+            _btnCapFps.MinWidth = 100;
+            _btnCapFps.Padding = new Thickness(10);
+            _btnCapFps.VerticalAlignment = VerticalAlignment.Center;
+            _btnCapFps.GridColumn = 2;
+            _btnCapFps.GridRow = 8;
+            _btnCapFps.Id = "btnCapFps";
+            _btnCapFps.Click += OnInputButtonClicked;
 
             var lblFullscreen = new Label();
             lblFullscreen.Text = "Fullscreen on/off";
@@ -169,46 +169,46 @@ namespace ANXY.UI
             lblFullscreen.GridColumn = 1;
             lblFullscreen.GridRow = 9;
 
-            btnFullscreen = new TextButton();
-            btnFullscreen.Text = "F11";
-            btnFullscreen.MinWidth = 100;
-            btnFullscreen.Padding = new Thickness(10);
-            btnFullscreen.VerticalAlignment = VerticalAlignment.Center;
-            btnFullscreen.GridColumn = 2;
-            btnFullscreen.GridRow = 9;
-            btnFullscreen.Id = "btnFullscreen";
-            btnFullscreen.Click += OnInputButtonClicked;
+            _btnFullscreen = new TextButton();
+            _btnFullscreen.Text = "F11";
+            _btnFullscreen.MinWidth = 100;
+            _btnFullscreen.Padding = new Thickness(10);
+            _btnFullscreen.VerticalAlignment = VerticalAlignment.Center;
+            _btnFullscreen.GridColumn = 2;
+            _btnFullscreen.GridRow = 9;
+            _btnFullscreen.Id = "btnFullscreen";
+            _btnFullscreen.Click += OnInputButtonClicked;
 
-            btnReturnFromControls = new TextButton();
-            btnReturnFromControls.Text = "Return";
-            btnReturnFromControls.MinWidth = 100;
-            btnReturnFromControls.Padding = new Thickness(10);
-            btnReturnFromControls.VerticalAlignment = VerticalAlignment.Center;
-            btnReturnFromControls.GridRow = 11;
-            btnReturnFromControls.Id = "btnReturnFromControls";
-            btnReturnFromControls.Click += OnReturnClicked;
+            _btnReturnFromControls = new TextButton();
+            _btnReturnFromControls.Text = "Return";
+            _btnReturnFromControls.MinWidth = 100;
+            _btnReturnFromControls.Padding = new Thickness(10);
+            _btnReturnFromControls.VerticalAlignment = VerticalAlignment.Center;
+            _btnReturnFromControls.GridRow = 11;
+            _btnReturnFromControls.Id = "btnReturnFromControls";
+            _btnReturnFromControls.Click += OnReturnClicked;
 
-            btnLoadDefaults = new TextButton();
-            btnLoadDefaults.Text = "Load Defaults";
-            btnLoadDefaults.MinWidth = 100;
-            btnLoadDefaults.Padding = new Thickness(10);
-            btnLoadDefaults.VerticalAlignment = VerticalAlignment.Center;
-            btnLoadDefaults.HorizontalAlignment = HorizontalAlignment.Right;
-            btnLoadDefaults.GridColumn = 1;
-            btnLoadDefaults.GridRow = 11;
-            btnLoadDefaults.Id = "btnLoadDefaults";
-            btnLoadDefaults.Click += OnLoadDefaultsClicked;
+            _btnLoadDefaults = new TextButton();
+            _btnLoadDefaults.Text = "Load Defaults";
+            _btnLoadDefaults.MinWidth = 100;
+            _btnLoadDefaults.Padding = new Thickness(10);
+            _btnLoadDefaults.VerticalAlignment = VerticalAlignment.Center;
+            _btnLoadDefaults.HorizontalAlignment = HorizontalAlignment.Right;
+            _btnLoadDefaults.GridColumn = 1;
+            _btnLoadDefaults.GridRow = 11;
+            _btnLoadDefaults.Id = "btnLoadDefaults";
+            _btnLoadDefaults.Click += OnLoadDefaultsClicked;
 
-            btnSaveChanges = new TextButton();
-            btnSaveChanges.Text = "Save Changes";
-            btnSaveChanges.MinWidth = 100;
-            btnSaveChanges.Padding = new Thickness(10);
-            btnSaveChanges.VerticalAlignment = VerticalAlignment.Center;
-            btnSaveChanges.HorizontalAlignment = HorizontalAlignment.Left;
-            btnSaveChanges.GridColumn = 2;
-            btnSaveChanges.GridRow = 11;
-            btnSaveChanges.Id = "btnSaveChanges";
-            btnSaveChanges.Click += OnSaveChangesClicked;
+            _btnSaveChanges = new TextButton();
+            _btnSaveChanges.Text = "Save Changes";
+            _btnSaveChanges.MinWidth = 100;
+            _btnSaveChanges.Padding = new Thickness(10);
+            _btnSaveChanges.VerticalAlignment = VerticalAlignment.Center;
+            _btnSaveChanges.HorizontalAlignment = HorizontalAlignment.Left;
+            _btnSaveChanges.GridColumn = 2;
+            _btnSaveChanges.GridRow = 11;
+            _btnSaveChanges.Id = "btnSaveChanges";
+            _btnSaveChanges.Click += OnSaveChangesClicked;
 
             ColumnSpacing = 10;
             RowSpacing = 5;
@@ -229,42 +229,42 @@ namespace ANXY.UI
             Widgets.Add(lblKey);
             Widgets.Add(lblMovement);
             Widgets.Add(lblMoveLeft);
-            Widgets.Add(btnMovementLeft);
+            Widgets.Add(_btnMovementLeft);
             Widgets.Add(lblMoveRight);
-            Widgets.Add(btnMovementRight);
+            Widgets.Add(_btnMovementRight);
             Widgets.Add(lblJump);
-            Widgets.Add(btnMovementJump);
+            Widgets.Add(_btnMovementJump);
             Widgets.Add(lblGeneral);
             Widgets.Add(lblMenu);
-            Widgets.Add(btnMenu);
+            Widgets.Add(_btnMenu);
             Widgets.Add(lblShowFps);
-            Widgets.Add(btnShowFps);
+            Widgets.Add(__btnShowFps);
             Widgets.Add(lblFpsCap);
-            Widgets.Add(btnCapFps);
+            Widgets.Add(_btnCapFps);
             Widgets.Add(lblFullscreen);
-            Widgets.Add(btnFullscreen);
-            Widgets.Add(btnReturnFromControls);
-            Widgets.Add(btnLoadDefaults);
-            Widgets.Add(btnSaveChanges);
+            Widgets.Add(_btnFullscreen);
+            Widgets.Add(_btnReturnFromControls);
+            Widgets.Add(_btnLoadDefaults);
+            Widgets.Add(_btnSaveChanges);
         }
 
         private void OnSaveChangesClicked(object sender, EventArgs e)
         {
-            if (!CheckMultiple())
+            if(!CheckMultiple())
             {
                 var inputSettings = new PlayerInput.InputSettings();
                 inputSettings.Movement = new PlayerInput.MovementSettings();
-                inputSettings.Movement.Left = btnMovementLeft.Text;
-                inputSettings.Movement.Right = btnMovementRight.Text;
-                inputSettings.Movement.Jump = btnMovementJump.Text;
+                inputSettings.Movement.Left = _btnMovementLeft.Text;
+                inputSettings.Movement.Right = _btnMovementRight.Text;
+                inputSettings.Movement.Jump = _btnMovementJump.Text;
                 inputSettings.Menu = new PlayerInput.KeySetting();
-                inputSettings.Menu.Key = btnMenu.Text;
+                inputSettings.Menu.Key = _btnMenu.Text;
                 inputSettings.ShowFps = new PlayerInput.KeySetting();
-                inputSettings.ShowFps.Key = btnShowFps.Text;
+                inputSettings.ShowFps.Key = __btnShowFps.Text;
                 inputSettings.CapFps = new PlayerInput.KeySetting();
-                inputSettings.CapFps.Key = btnCapFps.Text;
+                inputSettings.CapFps.Key = _btnCapFps.Text;
                 inputSettings.Fullscreen = new PlayerInput.KeySetting();
-                inputSettings.Fullscreen.Key = btnFullscreen.Text;
+                inputSettings.Fullscreen.Key = _btnFullscreen.Text;
 
                 PlayerInput.Instance.SetInputSettings(inputSettings);
 
@@ -286,24 +286,24 @@ namespace ANXY.UI
         private void OnInputButtonClicked(object sender, EventArgs e)
         {
             TextButton senderTextButton = sender as TextButton;
-            if (oldSenderTextButton != null && senderTextButton.Id == oldSenderTextButton.Id && Widgets.Contains(lblWaitingForKeyPress))
+            if(_oldSenderTextButton != null && senderTextButton.Id == _oldSenderTextButton.Id && Widgets.Contains(_lblWaitingForKeyPress))
             {
-                Widgets.Remove(lblWaitingForKeyPress);
+                Widgets.Remove(_lblWaitingForKeyPress);
                 PlayerInput.Instance.AnyKeyPressed -= OnAnyKeyPress;
                 return;
             }
-            else if (!Widgets.Contains(lblWaitingForKeyPress))
+            else if(!Widgets.Contains(_lblWaitingForKeyPress))
             {
-                Widgets.Add(lblWaitingForKeyPress);
+                Widgets.Add(_lblWaitingForKeyPress);
             }
-            oldSenderTextButton = senderTextButton;
+            _oldSenderTextButton = senderTextButton;
 
             PlayerInput.Instance.AnyKeyPressed += OnAnyKeyPress;
         }
         private void OnAnyKeyPress(Keys key)
         {
-            oldSenderTextButton.Text = key.ToString();
-            Widgets.Remove(lblWaitingForKeyPress);
+            _oldSenderTextButton.Text = key.ToString();
+            Widgets.Remove(_lblWaitingForKeyPress);
             PlayerInput.Instance.AnyKeyPressed -= OnAnyKeyPress;
             CheckMultiple();
         }
@@ -311,13 +311,13 @@ namespace ANXY.UI
         private bool CheckMultiple()
         {
             var result = false;
-            Widgets.Remove(lblMultipleIdenticalKeys);
-            btnSaveChanges.TextColor = Color.White;
+            Widgets.Remove(_lblMultipleIdenticalKeys);
+            _btnSaveChanges.TextColor = Color.White;
 
             Dictionary<string, int> dict = new();
-            foreach (TextButton txtBtn in Widgets.OfType<TextButton>())
+            foreach(TextButton txtBtn in Widgets.OfType<TextButton>())
             {
-                if (!dict.ContainsKey(txtBtn.Text))
+                if(!dict.ContainsKey(txtBtn.Text))
                 {
                     dict.Add(txtBtn.Text, 1);
                 }
@@ -328,10 +328,10 @@ namespace ANXY.UI
                 }
             }
 
-            foreach (TextButton txtBtn in Widgets.OfType<TextButton>())
+            foreach(TextButton txtBtn in Widgets.OfType<TextButton>())
             {
                 dict.TryGetValue(txtBtn.Text, out var i);
-                if (i > 1)
+                if(i > 1)
                 {
                     txtBtn.TextColor = Color.Red;
                 }
@@ -341,10 +341,10 @@ namespace ANXY.UI
                 }
             }
 
-            if (result)
+            if(result)
             {
-                Widgets.Add(lblMultipleIdenticalKeys);
-                btnSaveChanges.TextColor = Color.Red;
+                Widgets.Add(_lblMultipleIdenticalKeys);
+                _btnSaveChanges.TextColor = Color.Red;
             }
 
             return result;
@@ -353,11 +353,11 @@ namespace ANXY.UI
         {
             var inputSettings = PlayerInput.Instance.inputSettings;
 
-            foreach (TextButton txtBtn in Widgets.OfType<TextButton>())
+            foreach(TextButton txtBtn in Widgets.OfType<TextButton>())
             {
-                if (txtBtn.Id == null)
+                if(txtBtn.Id == null)
                     continue;
-                switch (txtBtn.Id)
+                switch(txtBtn.Id)
                 {
                     case "btnMovementLeft":
                         txtBtn.Text = inputSettings.Movement.Left.ToString();

@@ -57,6 +57,6 @@ public class Background : Component
     /// </summary>
     public override void Initialize()
     {
-        _player = (Player)SystemManager.Instance.FindSystemByType<Player>().GetComponent();
+        _player = (Player)SystemManager.Instance.FindSystemByType<Player>().GetFirstComponent();
     }
 }

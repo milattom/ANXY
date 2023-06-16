@@ -97,7 +97,7 @@ public class PlayerInput : Component
             FullscreenKeyPressed?.Invoke();
         }
 
-        if (UIManager.Instance._showWelcomeAndTutorial)
+        if (UIManager.Instance.ShowWelcomeAndTutorial)
         {
             if (IsMovementKeyPressed())
             {

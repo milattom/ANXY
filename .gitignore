@@ -399,3 +399,6 @@ FodyWeavers.xsd
 ANXY/Content/Content.mgcb
 ANXY/Content/Tiled/TileSet2_0.mgcontent
 ANXY/Content/Tiled/TileSetTest2_0.mgcontent
+ANXY/out
+ANXY/plantuml
+ANXY/ClassDiagram1.cd

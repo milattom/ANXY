@@ -1,5 +1,5 @@
-﻿using ANXY.ECS.Systems;
-using ANXY.ECS.Components;
+﻿using ANXY.ECS.Components;
+using ANXY.ECS.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -81,12 +81,6 @@ public sealed class SystemManager
     /// <returns></returns>
     public ISystem FindSystemByType<T>() where T : Component
     {
-
-        //foreach (var system in _systems)
-        //{
-        //    var type = system.GetType().BaseType.GetGenericArguments()[0];
-        //    if (type == typeof(T)) return system;
-        //}
         return _systems.FirstOrDefault(s => s.GetType().BaseType.GetGenericArguments().First() == typeof(T));
     }
 }
