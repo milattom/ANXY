@@ -13,7 +13,7 @@ public class Background : Component
     public int WindowHeight { get; }
     public int WindowWidth { get; }
     private Player _player;
-    public float MinDistance;
+    private float _minDistance;
 
     /// <summary>
     /// Class Constructor
@@ -37,19 +37,10 @@ public class Background : Component
     public override void Update(GameTime gameTime)
     {
         var currentPosition = WindowWidth - _player.Entity.Position.X;
-        if(currentPosition < MinDistance)
+        if(currentPosition < _minDistance)
         {
             //shift background
         }
-    }
-
-    /// <summary>
-    /// Draw called once every Frame.
-    /// </summary>
-    /// <param name="gameTime">gameTime</param>
-    /// <param name="spriteBatch">the Sprite Batch of the Background</param>
-    public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-    {
     }
 
     /// <summary>
@@ -57,6 +48,6 @@ public class Background : Component
     /// </summary>
     public override void Initialize()
     {
-        _player = (Player)SystemManager.Instance.FindSystemByType<Player>().GetComponent();
+        _player = (Player)SystemManager.Instance.FindSystemByType<Player>().GetFirstComponent();
     }
 }

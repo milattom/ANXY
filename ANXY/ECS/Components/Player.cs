@@ -6,7 +6,7 @@ using System;
 using System.Linq;
 using static ANXY.ECS.Components.BoxCollider;
 
-namespace ANXY.ECS.Components;  
+namespace ANXY.ECS.Components;
 
 /// <summary>
 /// Player is the Main Game Character

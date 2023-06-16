@@ -1,5 +1,5 @@
-﻿using ANXY.ECS.Systems;
-using ANXY.Start;
+﻿using ANXY.ECS.Components;
+using ANXY.ECS.Systems;
 using ANXY.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,13 +11,13 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
-namespace ANXY.ECS.Components;
+namespace ANXY.Start;
 
 /// <summary>
 /// TODO Player Input Controller
 /// Checking for Keyboard input and setting everything accordingly. Every Class needing to check the Keyboard input must check it through this Class.
 /// </summary>
-public class PlayerInput : Component
+public class PlayerInput
 {
     public event Action ShowFpsKeyPressed;
     public event Action LimitFpsKeyPressed;
@@ -51,13 +51,8 @@ public class PlayerInput : Component
     public InputSettings inputSettings { get; private set; }
     private Keys leftKey, rightKey, jumpKey, menuKey, showFpsKey, limitFpsKey, fullscreenKey;
     private List<Keys> keys = new List<Keys>();
-    private String userValuePath;
-    private String defaultValuePath;
-
-    private PlayerInput()
-    {
-        PlayerInputSystem.Instance.Register(this);
-    }
+    private string userValuePath;
+    private string defaultValuePath;
 
     ///Singleton Pattern
     private static readonly Lazy<PlayerInput> lazy = new(() => new PlayerInput());
@@ -67,70 +62,7 @@ public class PlayerInput : Component
     /// </summary>
     public static PlayerInput Instance => lazy.Value;
 
-    public override void Update(GameTime gameTime)
-    {
-        SetCurrentState();
-
-        if (currentKeyboardState.GetPressedKeys().Length > 0 && !lastKeyboardState.IsKeyDown(currentKeyboardState.GetPressedKeys()[0]))
-        {
-            // Raise the key press event
-            KeyPressed(currentKeyboardState.GetPressedKeys()[0]);
-        }
-
-        if (IsLimitFpsKeyPressed())
-        {
-            LimitFpsKeyPressed?.Invoke();
-        }
-
-        if (IsMenuKeyPressed)
-        {
-            ANXYGame.Instance.SetGamePaused(!ANXYGame.Instance.GamePaused);
-        }
-
-        if (IsShowFpsKeyPressed())
-        {
-            ShowFpsKeyPressed?.Invoke();
-        }
-
-        if (IsFullscreenPressed())
-        {
-            FullscreenKeyPressed?.Invoke();
-        }
-
-        if (UIManager.Instance._showWelcomeAndTutorial)
-        {
-            if (IsMovementKeyPressed())
-            {
-                MovementKeyPressed?.Invoke();
-            }
-        }
-
-        SetLastState();
-    }
-
-    public void SetCurrentState()
-    {
-        currentKeyboardState = Keyboard.GetState();
-    }
-
-    public void SetLastState()
-    {
-        lastKeyboardState = currentKeyboardState;
-    }
-
-    private void KeyPressed(Keys key)
-    {
-        AnyKeyPressed?.Invoke(key);
-    }
-
-    private bool IsMovementKeyPressed()
-    {
-        return IsWalkingLeft() || IsWalkingRight() || IsJumping();
-    }
-
-    public override void Draw(GameTime gameTime, SpriteBatch spriteBatch) { }
-
-    public override void Initialize()
+    public void Initialize()
     // Access the content files
     {
         string assemblyLocation = Assembly.GetEntryAssembly().Location;
@@ -167,8 +99,65 @@ public class PlayerInput : Component
         }
     }
 
-    public override void Destroy()
+    public void Update(GameTime gameTime)
     {
+        SetCurrentState();
+
+        if (currentKeyboardState.GetPressedKeys().Length > 0 && !lastKeyboardState.IsKeyDown(currentKeyboardState.GetPressedKeys()[0]))
+        {
+            // Raise the key press event
+            KeyPressed(currentKeyboardState.GetPressedKeys()[0]);
+        }
+
+        if (IsLimitFpsKeyPressed())
+        {
+            LimitFpsKeyPressed?.Invoke();
+        }
+
+        if (IsMenuKeyPressed)
+        {
+            ANXYGame.Instance.SetGamePaused(!ANXYGame.Instance.GamePaused);
+        }
+
+        if (IsShowFpsKeyPressed())
+        {
+            ShowFpsKeyPressed?.Invoke();
+        }
+
+        if (IsFullscreenPressed())
+        {
+            FullscreenKeyPressed?.Invoke();
+        }
+
+        if (UIManager.Instance.ShowWelcomeAndTutorial)
+        {
+            if (IsMovementKeyPressed())
+            {
+                MovementKeyPressed?.Invoke();
+            }
+        }
+
+        SetLastState();
+    }
+
+    public void SetCurrentState()
+    {
+        currentKeyboardState = Keyboard.GetState();
+    }
+
+    public void SetLastState()
+    {
+        lastKeyboardState = currentKeyboardState;
+    }
+
+    private void KeyPressed(Keys key)
+    {
+        AnyKeyPressed?.Invoke(key);
+    }
+
+    private bool IsMovementKeyPressed()
+    {
+        return IsWalkingLeft() || IsWalkingRight() || IsJumping();
     }
 
     private void Load(string fileName)
