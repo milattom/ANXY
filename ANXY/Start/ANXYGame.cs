@@ -1,5 +1,4 @@
 ﻿using ANXY.ECS;
-using ANXY.ECS.Components;
 using ANXY.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -46,6 +45,9 @@ public class ANXYGame : Game
 
     // Content: Root Directory.
     private readonly string contentRootDirectory = "Content";
+
+    // Entities
+    private Entity _cameraEntity;
 
     // Singelton Pattern.
     private static readonly Lazy<ANXYGame> lazy = new(() => new ANXYGame());
@@ -263,7 +265,7 @@ public class ANXYGame : Game
     /// </summary>
     private void CreateCamera()
     {
-        EntityFactory.Instance.CreateEntity(EntityType.Camera, new Object[] { _windowHeight, _windowWidth });
+        _cameraEntity = EntityFactory.Instance.CreateEntity(EntityType.Camera, new Object[] { _windowHeight, _windowWidth });
     }
 
     /// <summary>
@@ -310,8 +312,7 @@ public class ANXYGame : Game
     {
         _windowWidth = Window.ClientBounds.Width;
         _windowHeight = Window.ClientBounds.Height;
-        var camera = (Camera)SystemManager.Instance.FindSystemByType<Camera>().GetFirstComponent();
-        camera._windowDimensions = new Vector2(_windowWidth, _windowHeight);
+        SystemManager.Instance.UpdateResolution(new Vector2(_windowWidth, _windowHeight));
     }
 
     /// <summary>

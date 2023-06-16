@@ -9,11 +9,12 @@ namespace ANXY.ECS.Components;
 public class Camera : Component
 {
     public static Camera ActiveCamera { get; private set; }
-    private Player _player;
-    public Vector2 _windowDimensions;
     public Vector2 DrawOffset { get; private set; }
-    public readonly Vector2 _minPosition;
-    public readonly Vector2 _maxPosition;
+    public readonly Vector2 MinPosition;
+    public readonly Vector2 MaxPosition;
+
+    private Player _player;
+    private Vector2 _resolution;
 
     /// <summary>
     /// sets the player, the dimensions of the window and its boundaries
@@ -26,10 +27,10 @@ public class Camera : Component
     {
         _player = player;
 
-        _windowDimensions = windowDimensions;
+        _resolution = windowDimensions;
 
-        _minPosition = minPosition;
-        _maxPosition = maxPosition;
+        MinPosition = minPosition;
+        MaxPosition = maxPosition;
         CameraSystem.Instance.Register(this);
     }
 
@@ -41,11 +42,11 @@ public class Camera : Component
     public override void Update(GameTime gameTime)
     {
         var ClampedEntityPosition = Entity.Position;
-        ClampedEntityPosition = Vector2.Clamp(ClampedEntityPosition, _player.Entity.Position - new Vector2(0.25f, 0.15f) * _windowDimensions,
-            _player.Entity.Position + new Vector2(0.25f, 0.15f) * _windowDimensions);
+        ClampedEntityPosition = Vector2.Clamp(ClampedEntityPosition, _player.Entity.Position - new Vector2(0.25f, 0.15f) * _resolution,
+            _player.Entity.Position + new Vector2(0.25f, 0.15f) * _resolution);
 
-        Entity.Position = Vector2.Clamp(ClampedEntityPosition, _minPosition, _maxPosition);
-        DrawOffset = Entity.Position - 0.5f * _windowDimensions;
+        Entity.Position = Vector2.Clamp(ClampedEntityPosition, MinPosition, MaxPosition);
+        DrawOffset = Entity.Position - 0.5f * _resolution;
     }
 
     /// <summary>
@@ -64,5 +65,14 @@ public class Camera : Component
     public void Reset()
     {
         Entity.Position = _player.Entity.Position;
+    }
+
+    /// <summary>
+    /// Sets the resolution of the camera.
+    /// </summary>
+    /// <param name="resolution"> resolution as hight x width</param>
+    public void SetResolution(Vector2 resolution)
+    {
+        _resolution = resolution;
     }
 }

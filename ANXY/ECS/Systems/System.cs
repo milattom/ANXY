@@ -124,6 +124,13 @@ class CameraSystem : System<Camera>
 {
     private static readonly Lazy<CameraSystem> _lazy = new(() => new CameraSystem());
     public static CameraSystem Instance => _lazy.Value;
+    public void SetResolution(Vector2 resolution)
+    {
+        foreach (Camera camera in components)
+        {
+            camera.SetResolution(resolution);
+        }
+    }
     private CameraSystem()
     {
         SystemManager.Instance.Register(this);

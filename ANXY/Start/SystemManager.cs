@@ -63,6 +63,17 @@ public sealed class SystemManager
         foreach (var system in _systems) system.Update(gameTime);
     }
 
+    public void UpdateResolution(Vector2 resolution)
+    {
+        foreach (var system in _systems)
+        {
+            if (system is CameraSystem cameraSystem)
+            {
+                cameraSystem.SetResolution(resolution);
+            }
+        }
+    }
+
     /// <summary>
     /// Calls Draw() in all systems
     /// </summary>
