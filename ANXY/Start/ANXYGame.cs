@@ -46,9 +46,6 @@ public class ANXYGame : Game
     // Content: Root Directory.
     private readonly string contentRootDirectory = "Content";
 
-    // Entities
-    private Entity _cameraEntity;
-
     // Singelton Pattern.
     private static readonly Lazy<ANXYGame> lazy = new(() => new ANXYGame());
     public static ANXYGame Instance => lazy.Value;
