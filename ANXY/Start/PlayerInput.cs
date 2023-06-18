@@ -19,11 +19,17 @@ namespace ANXY.Start;
 /// </summary>
 public class PlayerInput
 {
+    ///Singleton Pattern
+    private static readonly Lazy<PlayerInput> lazy = new(() => new PlayerInput());
+    public static PlayerInput Instance => lazy.Value;
+
     public event Action ShowFpsKeyPressed;
     public event Action LimitFpsKeyPressed;
     public event Action FullscreenKeyPressed;
     public event Action<Keys> AnyKeyPressed;
     public event Action MovementKeyPressed;
+
+    public InputSettings inputSettings { get; private set; }
 
     public class InputSettings
     {
@@ -48,19 +54,10 @@ public class PlayerInput
 
     private KeyboardState currentKeyboardState;
     private KeyboardState lastKeyboardState;
-    public InputSettings inputSettings { get; private set; }
     private Keys leftKey, rightKey, jumpKey, menuKey, showFpsKey, limitFpsKey, fullscreenKey;
     private List<Keys> keys = new List<Keys>();
     private string userValuePath;
     private string defaultValuePath;
-
-    ///Singleton Pattern
-    private static readonly Lazy<PlayerInput> lazy = new(() => new PlayerInput());
-
-    /// <summary>
-    ///     Singleton Pattern return the only instance there is
-    /// </summary>
-    public static PlayerInput Instance => lazy.Value;
 
     public void Initialize()
     // Access the content files
@@ -150,30 +147,6 @@ public class PlayerInput
         lastKeyboardState = currentKeyboardState;
     }
 
-    private void KeyPressed(Keys key)
-    {
-        AnyKeyPressed?.Invoke(key);
-    }
-
-    private bool IsMovementKeyPressed()
-    {
-        return IsWalkingLeft() || IsWalkingRight() || IsJumping();
-    }
-
-    private void Load(string fileName)
-    {
-        string json = File.ReadAllText(fileName);
-        inputSettings = JsonConvert.DeserializeObject<InputSettings>(json);
-        try
-        {
-            UpdateKeys();
-        }
-        catch
-        {
-            ResetToDefaults();
-        }
-    }
-
     public void SetInputSettings(InputSettings inputSettings)
     {
         this.inputSettings = inputSettings;
@@ -191,30 +164,6 @@ public class PlayerInput
         File.Delete(userValuePath);
         File.Copy(defaultValuePath, userValuePath);
         Load(userValuePath);
-    }
-
-    private void UpdateKeys()
-    {
-        // Convert the MovementSettings keys
-        keys.Clear();
-        Enum.TryParse(inputSettings.Movement.Left, out leftKey);
-        keys.Add(leftKey);
-        Enum.TryParse(inputSettings.Movement.Right, out rightKey);
-        keys.Add(rightKey);
-        Enum.TryParse(inputSettings.Movement.Jump, out jumpKey);
-        keys.Add(jumpKey);
-        Enum.TryParse(inputSettings.Menu.Key, out menuKey);
-        keys.Add(menuKey);
-        Enum.TryParse(inputSettings.ShowFps.Key, out showFpsKey);
-        keys.Add(showFpsKey);
-        Enum.TryParse(inputSettings.CapFps.Key, out limitFpsKey);
-        keys.Add(limitFpsKey);
-        Enum.TryParse(inputSettings.Fullscreen.Key, out fullscreenKey);
-        keys.Add(fullscreenKey);
-        if (keys.Contains(Keys.None))
-        {
-            throw new Exception("One or more keys are not set in the InputUserValues.json file");
-        }
     }
 
     public bool IsWalkingRight()
@@ -252,5 +201,53 @@ public class PlayerInput
     private bool IsKeyPressed(Keys key)
     {
         return currentKeyboardState.IsKeyDown(key) && !lastKeyboardState.IsKeyDown(key);
+    }
+
+    private void KeyPressed(Keys key)
+    {
+        AnyKeyPressed?.Invoke(key);
+    }
+
+    private bool IsMovementKeyPressed()
+    {
+        return IsWalkingLeft() || IsWalkingRight() || IsJumping();
+    }
+
+    private void Load(string fileName)
+    {
+        string json = File.ReadAllText(fileName);
+        inputSettings = JsonConvert.DeserializeObject<InputSettings>(json);
+        try
+        {
+            UpdateKeys();
+        }
+        catch
+        {
+            ResetToDefaults();
+        }
+    }
+
+    private void UpdateKeys()
+    {
+        // Convert the MovementSettings keys
+        keys.Clear();
+        Enum.TryParse(inputSettings.Movement.Left, out leftKey);
+        keys.Add(leftKey);
+        Enum.TryParse(inputSettings.Movement.Right, out rightKey);
+        keys.Add(rightKey);
+        Enum.TryParse(inputSettings.Movement.Jump, out jumpKey);
+        keys.Add(jumpKey);
+        Enum.TryParse(inputSettings.Menu.Key, out menuKey);
+        keys.Add(menuKey);
+        Enum.TryParse(inputSettings.ShowFps.Key, out showFpsKey);
+        keys.Add(showFpsKey);
+        Enum.TryParse(inputSettings.CapFps.Key, out limitFpsKey);
+        keys.Add(limitFpsKey);
+        Enum.TryParse(inputSettings.Fullscreen.Key, out fullscreenKey);
+        keys.Add(fullscreenKey);
+        if (keys.Contains(Keys.None))
+        {
+            throw new Exception("One or more keys are not set in the InputUserValues.json file");
+        }
     }
 }

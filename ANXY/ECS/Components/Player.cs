@@ -18,10 +18,23 @@ public class Player : Component
     public PlayerState State { get; private set; } = PlayerState.Idle;
     public Vector2 InputDirection { get; private set; } = Vector2.Zero;
 
+    /// <summary>
+    /// PlayerState describes in what movement state the Player currently is
+    /// </summary>
+    public enum PlayerState
+    {
+        Idle,
+        Running,
+        Jumping,
+        DoubleJumping,
+        Ducking,
+        Falling
+    }
+
     //TODO remove GroundLevel or reduce it to Window Bottom Edge when Level is fully implemented in Tiled.
     private const float Gravity = 350;
     private const float JumpVelocity = 300;
-    public bool _midAir { get; private set; } = true;
+    public bool MidAir { get; private set; } = true;
 
     private const float WalkAcceleration = 150;
 
@@ -64,10 +77,10 @@ public class Player : Component
         var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
         var acceleration = new Vector2(WalkAcceleration * InputDirection.X, Gravity);
         _velocity += acceleration * dt;
-        if (PlayerInput.Instance.IsJumping() && !_midAir)
+        if (PlayerInput.Instance.IsJumping() && !MidAir)
         {
             _velocity.Y = -JumpVelocity;
-            _midAir = true;
+            MidAir = true;
         }
 
         _velocity.X = InputDirection.X * WalkAcceleration;
@@ -77,6 +90,12 @@ public class Player : Component
 
         //collisions
         HandleCollisions();
+    }
+
+    public void Reset()
+    {
+        _velocity = Vector2.Zero;
+        Entity.Position = new Vector2(1200, 540);
     }
 
     private void OnGamePausedChanged(bool gamePaused)
@@ -109,7 +128,7 @@ public class Player : Component
 
         if (restColliders.Count == 0)
         {
-            _midAir = true;
+            MidAir = true;
         }
 
         foreach (var collider in restColliders)
@@ -131,7 +150,7 @@ public class Player : Component
             case BoxCollider.Edge.Top:
                 if (Velocity.Y >= 0)
                 {
-                    _midAir = false;
+                    MidAir = false;
                     _velocity = new Vector2(Velocity.X, 0);
                 }
 
@@ -153,40 +172,5 @@ public class Player : Component
             default:
                 throw new ArgumentOutOfRangeException("Collision happened but no edge case");
         }
-    }
-
-    // ########################################################## future TO DO section #####################################################################
-    /// <summary>
-    /// Draw
-    /// </summary>
-    public override void Draw(GameTime gameTime, SpriteBatch spriteBatch) { }
-
-    /// <summary>
-    /// TODO implementation idea for DoubleJump
-    /// set DoubleJump to true or set Player State to Double jump. only one Double Jump Possible, not infinite or multiple.
-    /// </summary>
-    /// <returns>true if jumped.</returns>
-    public bool DoubleJump()
-    {
-        return true;
-    }
-
-    public void Reset()
-    {
-        _velocity = Vector2.Zero;
-        Entity.Position = new Vector2(1200, 540);
-    }
-
-    /// <summary>
-    /// PlayerState describes in what movement state the Player currently is
-    /// </summary>
-    public enum PlayerState
-    {
-        Idle,
-        Running,
-        Jumping,
-        DoubleJumping,
-        Ducking,
-        Falling
     }
 }
