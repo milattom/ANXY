@@ -1,7 +1,6 @@
 ﻿using ANXY.ECS;
 using ANXY.ECS.Components;
 using ANXY.ECS.Systems;
-using ANXY.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Tiled;

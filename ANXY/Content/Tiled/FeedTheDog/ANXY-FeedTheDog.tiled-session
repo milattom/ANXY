@@ -3,20 +3,43 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "FeedTheDog.tmx",
     "expandedProjectPaths": [
+        "."
     ],
     "fileStates": {
+        "#Market": {
+            "dynamicWrapping": false
+        },
         "ANXY.tsx": {
-            "dynamicWrapping": true
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 0.75
+        },
+        "FeedTheDog.tmx": {
+            "scale": 3,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": -98.66666666666666,
+                "y": 416
+            }
+        },
+        "FeedTheDog.tmx#Market": {
+            "scaleInDock": 1.5
         }
     },
-    "last.imagePath": "C:/Users/Gamer/Desktop/BasicPlatformerTileset",
+    "last.imagePath": "C:/Users/Gamer/Documents/Git/ANXY/ANXY/Content/Tiled/FeedTheDog",
+    "map.fixedSize": false,
+    "map.lastUsedFormat": "tmx",
     "openFiles": [
+        "FeedTheDog.tmx"
     ],
     "project": "ANXY-FeedTheDog.tiled-project",
     "recentFiles": [
+        "FeedTheDog.tmx",
+        "ANXY.tsx"
     ],
+    "tileset.embedInMap": true,
     "tileset.lastUsedFormat": "tsx",
-    "tileset.type": 1
+    "tileset.type": 0
 }
