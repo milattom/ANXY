@@ -26,7 +26,7 @@ namespace ANXY.Start
             List<Entity> players = new(amount);
             for (int i = 0; i < amount; i++)
             {
-                var mainPlayer = PlayerSystem.Instance.GetComponent();
+                var mainPlayer = PlayerSystem.Instance.GetFirstComponent();
                 var mainPlayerPosition = mainPlayer.Entity.Position;
                 int xMin = (int)mainPlayerPosition.X - ANXYGame.Instance.WindowWidth / 2;
                 int xMax = (int)mainPlayerPosition.X + ANXYGame.Instance.WindowWidth / 2;

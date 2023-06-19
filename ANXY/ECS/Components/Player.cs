@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using static ANXY.ECS.Components.BoxCollider;
 
-namespace ANXY.ECS.Components;  
+namespace ANXY.ECS.Components;
 
 /// <summary>
 /// Player is the Main Game Character
@@ -14,8 +14,20 @@ public class Player : Component
 {
     public Vector2 Velocity => _velocity;
     private Vector2 _velocity = Vector2.Zero;
-    public PlayerState State { get; private set; } = PlayerState.Idle;
     public Vector2 InputDirection { get; private set; } = Vector2.Zero;
+
+    /// <summary>
+    /// PlayerState describes in what movement state the Player currently is
+    /// </summary>
+    public enum PlayerState
+    {
+        Idle,
+        Running,
+        Jumping,
+        DoubleJumping,
+        Ducking,
+        Falling
+    }
 
     //TODO remove GroundLevel or reduce it to Window Bottom Edge when Level is fully implemented in Tiled.
     private const float Gravity = 350;
@@ -144,7 +156,7 @@ public class Player : Component
                 Entity.Position = new Vector2(edgePosition - playerBoxCollider.Offset.X, Entity.Position.Y);
                 break;
             default:
-                throw new ArgumentOutOfRangeException("Collision happened but no edge case");
+                throw new ArgumentException("Collision happened but no edge case");
         }
     }
 
@@ -152,18 +164,5 @@ public class Player : Component
     {
         _velocity = Vector2.Zero;
         Entity.Position = ANXYGame.Instance.SpawnPosition;
-    }
-
-    /// <summary>
-    /// PlayerState describes in what movement state the Player currently is
-    /// </summary>
-    public enum PlayerState
-    {
-        Idle,
-        Running,
-        Jumping,
-        DoubleJumping,
-        Ducking,
-        Falling
     }
 }

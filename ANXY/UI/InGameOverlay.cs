@@ -13,20 +13,20 @@ namespace ANXY.UI
 {
     internal class InGameOverlay : Grid
     {
-        private float FpsValue = -1;
-        private float MaxFpsValue = float.MinValue;
-        private float MinFpsValue = float.MaxValue;
-        private float lastFpsTextUpdate = 0.0f;
-        private float lastMinMaxFpsTextUpdate = 0.0f;
-        private readonly NumberFormatInfo nfi;
+        private float _fpsValue = -1;
+        private float _maxFpsValue = float.MinValue;
+        private float _minFpsValue = float.MaxValue;
+        private float _lastFpsTextUpdate = 0.0f;
+        private float _lastMinMaxFpsTextUpdate = 0.0f;
+        private readonly NumberFormatInfo _nfi;
         private readonly Player _player;
 
         //UI Elements
-        private Label lblCurrentFps;
-        private Label lblMaxFps;
-        private Label lblMinFps;
-        private VerticalStackPanel uiFPS;
-        private Label lblDebugPlayerLocation;
+        private Label _lblCurrentFps;
+        private Label _lblMaxFps;
+        private Label _lblMinFps;
+        private VerticalStackPanel _uiFPS;
+        private Label _lblDebugPlayerLocation;
         private Label lblDebugPlayerMidair;
         private Label lblDebugToggleHitboxesControls;
         private VerticalStackPanel uiDebug;
@@ -51,24 +51,24 @@ namespace ANXY.UI
         {
             BuildUI();
             _stopWatchStringBuilder = new StringBuilder();
-            nfi = (NumberFormatInfo)
+            _nfi = (NumberFormatInfo)
             CultureInfo.InvariantCulture.NumberFormat.Clone();
-            nfi.NumberGroupSeparator = "'";
-            _player = (Player)SystemManager.Instance.FindSystemByType<Player>().GetComponent();
+            _nfi.NumberGroupSeparator = "'";
+            _player = (Player)SystemManager.Instance.FindSystemByType<Player>().GetFirstComponent();
         }
 
         private void BuildUI()
         {
             //FPS Overlay
-            lblCurrentFps = new Label
+            _lblCurrentFps = new Label
             {
                 Text = "Current FPS:"
             };
-            lblMinFps = new Label
+            _lblMinFps = new Label
             {
                 Text = "Min:"
             };
-            lblMaxFps = new Label
+            _lblMaxFps = new Label
             {
                 Text = "Max:"
             };
@@ -81,7 +81,7 @@ namespace ANXY.UI
             {
                 Text = "Min/Max refreshing every " + string.Format("{0:0}", _minMaxFpsRefreshTime) + "s"
             };
-            uiFPS = new VerticalStackPanel
+            _uiFPS = new VerticalStackPanel
             {
                 Spacing = 2,
                 HorizontalAlignment = HorizontalAlignment.Left,
@@ -89,12 +89,12 @@ namespace ANXY.UI
                 Padding = new Thickness(5),
                 Background = new SolidBrush("#000000DD")
             };
-            uiFPS.Widgets.Add(lblCurrentFps);
-            uiFPS.Widgets.Add(lblMinFps);
-            uiFPS.Widgets.Add(lblMaxFps);
-            uiFPS.Widgets.Add(lblFpsRefreshExplanation);
-            uiFPS.Widgets.Add(lblMinMaxFpsRefreshExplanation);
-            uiFPS.Visible = false;
+            _uiFPS.Widgets.Add(_lblCurrentFps);
+            _uiFPS.Widgets.Add(_lblMinFps);
+            _uiFPS.Widgets.Add(_lblMaxFps);
+            _uiFPS.Widgets.Add(lblFpsRefreshExplanation);
+            _uiFPS.Widgets.Add(lblMinMaxFpsRefreshExplanation);
+            _uiFPS.Visible = false;
 
             //Debug Overlay
             var lblDebugTitle = new Label
@@ -103,7 +103,7 @@ namespace ANXY.UI
                 Padding = new Thickness(0, 0, 0, 7),
                 HorizontalAlignment = HorizontalAlignment.Center
             };
-            lblDebugPlayerLocation = new Label
+            _lblDebugPlayerLocation = new Label
             {
                 Text = "XY: 12.34 / 56.78",
                 HorizontalAlignment = HorizontalAlignment.Center
@@ -128,7 +128,7 @@ namespace ANXY.UI
                 Background = new SolidBrush("#FF0000DD")
             };
             uiDebug.Widgets.Add(lblDebugTitle);
-            uiDebug.Widgets.Add(lblDebugPlayerLocation);
+            uiDebug.Widgets.Add(_lblDebugPlayerLocation);
             uiDebug.Widgets.Add(lblDebugPlayerMidair);
             uiDebug.Widgets.Add(lblDebugToggleHitboxesControls);
             uiDebug.Visible = false;
@@ -242,7 +242,7 @@ namespace ANXY.UI
 
             //Assemble the In Game Overlay and set Properties
             Padding = new Thickness(15, 15, 15, 5);
-            Widgets.Add(uiFPS);
+            Widgets.Add(_uiFPS);
             Widgets.Add(uiDebug);
             Widgets.Add(uiStopWatch);
             Widgets.Add(uiWelcomeAndTutorial);
@@ -258,39 +258,39 @@ namespace ANXY.UI
 
         private void UpdateFPS(GameTime gameTime)
         {
-            if (ANXYGame.Instance.GamePaused ||!uiFPS.Visible)
+            if (ANXYGame.Instance.GamePaused ||!_uiFPS.Visible)
             {
                 return;
             }
 
             var gameTimeElapsedSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            lastFpsTextUpdate += gameTimeElapsedSeconds;
-            lastMinMaxFpsTextUpdate += gameTimeElapsedSeconds;
+            _lastFpsTextUpdate += gameTimeElapsedSeconds;
+            _lastMinMaxFpsTextUpdate += gameTimeElapsedSeconds;
 
-            FpsValue = 1.0f / gameTimeElapsedSeconds;
+            _fpsValue = 1.0f / gameTimeElapsedSeconds;
 
-            if (FpsValue > MaxFpsValue)
+            if (_fpsValue > _maxFpsValue)
             {
-                MaxFpsValue = FpsValue;
+                _maxFpsValue = _fpsValue;
             }
-            else if (FpsValue < MinFpsValue)
+            else if (_fpsValue < _minFpsValue)
             {
-                MinFpsValue = FpsValue;
-            }
-
-            if (lastFpsTextUpdate >= _currentFpsRefreshTime)
-            {
-                lblCurrentFps.Text = "Current FPS: " + FpsValue.ToString("n", nfi);
-                lastFpsTextUpdate = 0;
+                _minFpsValue = _fpsValue;
             }
 
-            if (lastMinMaxFpsTextUpdate >= _minMaxFpsRefreshTime)
+            if (_lastFpsTextUpdate >= _currentFpsRefreshTime)
             {
-                lblMinFps.Text = "Min: " + MinFpsValue.ToString("n", nfi);
-                lblMaxFps.Text = "Max: " + MaxFpsValue.ToString("n", nfi);
-                MaxFpsValue = float.MinValue;
-                MinFpsValue = float.MaxValue;
-                lastMinMaxFpsTextUpdate = 0;
+                _lblCurrentFps.Text = "Current FPS: " + _fpsValue.ToString("n", _nfi);
+                _lastFpsTextUpdate = 0;
+            }
+
+            if (_lastMinMaxFpsTextUpdate >= _minMaxFpsRefreshTime)
+            {
+                _lblMinFps.Text = "Min: " + _minFpsValue.ToString("n", _nfi);
+                _lblMaxFps.Text = "Max: " + _maxFpsValue.ToString("n", _nfi);
+                _maxFpsValue = float.MinValue;
+                _minFpsValue = float.MaxValue;
+                _lastMinMaxFpsTextUpdate = 0;
             }
         }
 
@@ -336,7 +336,7 @@ namespace ANXY.UI
             if (ANXYGame.Instance.GamePaused || !uiDebug.Visible || _lastDebugTextUpdate < _debugTextUpdateTime)
                 return;
             _lastDebugTextUpdate = 0.0f;
-            lblDebugPlayerLocation.Text = "XY: " + _player.Entity.Position.X.ToString("n", nfi) + " / " + _player.Entity.Position.Y.ToString("n", nfi);
+            _lblDebugPlayerLocation.Text = "XY: " + _player.Entity.Position.X.ToString("n", _nfi) + " / " + _player.Entity.Position.Y.ToString("n", _nfi);
             lblDebugPlayerMidair.Text = "Midair: " + _player.MidAir.ToString();
         }
 
@@ -365,19 +365,19 @@ namespace ANXY.UI
         }
         public void ResetFpsUI()
         {
-            lblCurrentFps.Text = "Current FPS:";
-            lblMinFps.Text = "Min: ";
-            lblMaxFps.Text = "Max: ";
-            FpsValue = -1;
-            MaxFpsValue = float.MinValue;
-            MinFpsValue = float.MaxValue;
-            lastFpsTextUpdate = 0.0f;
-            lastMinMaxFpsTextUpdate = 0.0f;
+            _lblCurrentFps.Text = "Current FPS:";
+            _lblMinFps.Text = "Min: ";
+            _lblMaxFps.Text = "Max: ";
+            _fpsValue = -1;
+            _maxFpsValue = float.MinValue;
+            _minFpsValue = float.MaxValue;
+            _lastFpsTextUpdate = 0.0f;
+            _lastMinMaxFpsTextUpdate = 0.0f;
         }
 
         public void ShowFps(bool show)
         {
-            uiFPS.Visible = show;
+            _uiFPS.Visible = show;
         }
 
         public void ShowDebug(bool show)

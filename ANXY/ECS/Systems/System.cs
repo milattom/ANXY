@@ -69,7 +69,7 @@ public class System<T> : ISystem where T : Component
     /// Returns first component of the list
     /// </summary>
     /// <returns></returns>
-    public Component GetComponent()
+    public Component GetFirstComponent()
     {
         return components[0];
     }
@@ -80,15 +80,6 @@ class PlayerSystem : System<Player>
     private static readonly Lazy<PlayerSystem> _lazy = new(() => new PlayerSystem());
     public static PlayerSystem Instance => _lazy.Value;
     private PlayerSystem()
-    {
-        SystemManager.Instance.Register(this);
-    }
-}
-class PlayerInputSystem : System<PlayerInput>
-{
-    private static readonly Lazy<PlayerInputSystem> _lazy = new(() => new PlayerInputSystem());
-    public static PlayerInputSystem Instance => _lazy.Value;
-    private PlayerInputSystem()
     {
         SystemManager.Instance.Register(this);
     }
@@ -124,6 +115,13 @@ class CameraSystem : System<Camera>
 {
     private static readonly Lazy<CameraSystem> _lazy = new(() => new CameraSystem());
     public static CameraSystem Instance => _lazy.Value;
+    public static void SetResolution(Vector2 resolution)
+    {
+        foreach (Camera camera in components)
+        {
+            camera.SetResolution(resolution);
+        }
+    }
     private CameraSystem()
     {
         SystemManager.Instance.Register(this);

@@ -106,9 +106,9 @@ public class UIManager
     /// </summary>
     private void OnResetGameBtnPressed()
     {
-        var player = (Player)SystemManager.Instance.FindSystemByType<Player>().GetComponent();
+        var player = (Player)SystemManager.Instance.FindSystemByType<Player>().GetFirstComponent();
         player.Reset();
-        var camera = (Camera)SystemManager.Instance.FindSystemByType<Camera>().GetComponent();
+        var camera = (Camera)SystemManager.Instance.FindSystemByType<Camera>().GetFirstComponent();
         camera.Reset();
 
         _inGameOverlay.Reset();
@@ -176,18 +176,18 @@ public class UIManager
         PlayerInput.Instance.Save();
     }
 
-    /// <summary>
-    ///     Stops the game and exits the application.
-    /// </summary>
-    private void OnExitGamePressed()
-    {
-        Environment.Exit(0);
-    }
+/// <summary>
+///     Stops the game and exits the application.
+/// </summary>
+private void OnExitGamePressed()
+{
+    Environment.Exit(0);
+}
 
-    /// <summary>
-    ///     Toggles the FPS overlay.
-    /// </summary>
-    private void OnFpsToggleShowKeyPressed()
+/// <summary>
+///     Toggles the FPS overlay.
+/// </summary>
+private void OnFpsToggleShowKeyPressed()
     {
         if (ANXYGame.Instance.GamePaused)
         {

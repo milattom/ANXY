@@ -1,5 +1,5 @@
-﻿using ANXY.ECS.Systems;
-using ANXY.ECS.Components;
+﻿using ANXY.ECS.Components;
+using ANXY.ECS.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -64,6 +64,21 @@ public sealed class SystemManager
     }
 
     /// <summary>
+    /// Sets a new resolution for the camera
+    /// </summary>
+    /// <param name="resolution"></param>
+    public void UpdateResolution(Vector2 resolution)
+    {
+        foreach (var system in _systems)
+        {
+            if (system is CameraSystem)
+            {
+                CameraSystem.SetResolution(resolution);
+            }
+        }
+    }
+
+    /// <summary>
     /// Calls Draw() in all systems
     /// </summary>
     /// <param name="gameTime">current game time</param>
@@ -81,12 +96,6 @@ public sealed class SystemManager
     /// <returns></returns>
     public ISystem FindSystemByType<T>() where T : Component
     {
-
-        //foreach (var system in _systems)
-        //{
-        //    var type = system.GetType().BaseType.GetGenericArguments()[0];
-        //    if (type == typeof(T)) return system;
-        //}
         return _systems.FirstOrDefault(s => s.GetType().BaseType.GetGenericArguments().First() == typeof(T));
     }
 }

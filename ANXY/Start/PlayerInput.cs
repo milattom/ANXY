@@ -1,5 +1,5 @@
-﻿using ANXY.ECS.Systems;
-using ANXY.Start;
+﻿using ANXY.ECS.Components;
+using ANXY.ECS.Systems;
 using ANXY.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -9,14 +9,17 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
-namespace ANXY.ECS.Components;
+namespace ANXY.Start;
 
 /// <summary>
 /// TODO Player Input Controller
 /// Checking for Keyboard input and setting everything accordingly. Every Class needing to check the Keyboard input must check it through this Class.
 /// </summary>
-public class PlayerInput : Component
+public class PlayerInput
 {
+    ///Singleton Pattern
+    private static readonly Lazy<PlayerInput> lazy = new(() => new PlayerInput());
+    public static PlayerInput Instance => lazy.Value;
     public event Action DebugToggleKeyPressed;
     public event Action DebugSpawnNewPlayerPressed;
     public event Action FpsCapKeyPressed;
@@ -25,57 +28,16 @@ public class PlayerInput : Component
     public event Action AnyMovementKeyPressed;
     public event Action<Keys> AnyKeyPressed;
 
-    public class InputKeyStrings
-    {
-        public DebugKeys Debug { get; set; } = new DebugKeys();
-        public FpsKeys Fps { get; set; } = new FpsKeys();
-        public GeneralKeys General { get; set; } = new GeneralKeys();
-        public MovementKeys Movement { get; set; } = new MovementKeys();
-    }
-    public class DebugKeys
-    {
-        public string Toggle;
-        public string SpawnNewPlayer;
-    }
-    public class FpsKeys
-    {
-        public string Cap;
-        public string ToggleShow;
-    }
-    public class GeneralKeys
-    {
-        public string Fullscreen;
-        public string Menu;
-    }
-    public class MovementKeys
-    {
-        public string Jump;
-        public string Left;
-        public string Right;
-    }
 
     private KeyboardState currentKeyboardState;
     private KeyboardState lastKeyboardState;
-    public InputKeyStrings InputSettings { get; private set; }
     private Keys fpsCapKey, fpsToggleShowKey, debugKey, debugSpawnNewPlayer, fullscreenKey, menuKey, movementJumpKey, movementLeftKey, movementRightKey;
+    public InputKeyStrings InputSettings { get; private set; }
     private String userValuePath;
     private String defaultValuePath;
     private bool IsMenuKeyDisabled = false;
 
-    private PlayerInput()
-    {
-        PlayerInputSystem.Instance.Register(this);
-    }
-
-    ///Singleton Pattern
-    private static readonly Lazy<PlayerInput> lazy = new(() => new PlayerInput());
-
-    /// <summary>
-    ///     Singleton Pattern return the only instance there is
-    /// </summary>
-    public static PlayerInput Instance => lazy.Value;
-
-    public override void Update(GameTime gameTime)
+    public void Update(GameTime gameTime)
     {
         SetCurrentState();
 
@@ -129,7 +91,7 @@ public class PlayerInput : Component
         return IsWalkingRight || IsWalkingLeft || IsJumping;
     }
 
-    public override void Initialize()
+    public void Initialize()
     // Access the content files
     {
         string assemblyLocation = Assembly.GetEntryAssembly().Location;
@@ -180,7 +142,7 @@ public class PlayerInput : Component
 
     public void SetInputSettings(InputKeyStrings inputSettings)
     {
-        this.InputSettings = inputSettings;
+        InputSettings = inputSettings;
     }
 
     public void Save()
@@ -249,5 +211,38 @@ public class PlayerInput : Component
     public void DisableMenuKey()
     {
         IsMenuKeyDisabled = true;
+    }
+
+    // Nested Classes
+    /// <summary>
+    /// InputKeyString json file parsing
+    /// </summary>
+    public class InputKeyStrings
+    {
+        public DebugKeys Debug { get; set; } = new DebugKeys();
+        public FpsKeys Fps { get; set; } = new FpsKeys();
+        public GeneralKeys General { get; set; } = new GeneralKeys();
+        public MovementKeys Movement { get; set; } = new MovementKeys();
+    }
+    public class DebugKeys
+    {
+        public string Toggle;
+        public string SpawnNewPlayer;
+    }
+    public class FpsKeys
+    {
+        public string Cap;
+        public string ToggleShow;
+    }
+    public class GeneralKeys
+    {
+        public string Fullscreen;
+        public string Menu;
+    }
+    public class MovementKeys
+    {
+        public string Jump;
+        public string Left;
+        public string Right;
     }
 }

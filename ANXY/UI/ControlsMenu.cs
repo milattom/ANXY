@@ -1,4 +1,4 @@
-﻿using ANXY.ECS.Components;
+﻿using ANXY.Start;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Myra.Graphics2D;
@@ -61,7 +61,9 @@ namespace ANXY.UI
                 Text = "Waiting for Key Press",
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Right,
-                GridColumn = 2,
+                Padding = new Thickness(0, 0, 70, 0),
+                GridColumn = 1,
+                GridColumnSpan = 2,
                 GridRow = 1,
                 TextColor = Color.Red,
                 Id = "lblWaitingForKeyPress",
@@ -280,9 +282,10 @@ namespace ANXY.UI
                 Text = "Multiple identical Keys",
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Right,
+                Padding = new Thickness(0, 0, 40, 0),
                 Left = -40,
-                GridColumn = 0,
-                GridColumnSpan = 3,
+                GridColumn = 1,
+                GridColumnSpan = 2,
                 GridRow = 13,
                 TextColor = Color.Red,
                 Id = "lblMultipleIdenticalKeys"
@@ -293,9 +296,10 @@ namespace ANXY.UI
                 Text = "Don't forget to save changes",
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Right,
+                Padding = new Thickness(0, 0, 40, 0),
                 Left = -40,
-                GridColumn = 0,
-                GridColumnSpan = 3,
+                GridColumn = 1,
+                GridColumnSpan = 2,
                 GridRow = 13,
                 TextColor = Color.Red,
                 Id = "lblDontForgetToSaveChanges",
@@ -392,6 +396,7 @@ namespace ANXY.UI
             {
                 var inputSettings = new PlayerInput.InputKeyStrings();
                 inputSettings.Debug.Toggle = btnDebugToggle.Text;
+                inputSettings.Debug.SpawnNewPlayer = PlayerInput.Instance.InputSettings.Debug.SpawnNewPlayer;
                 inputSettings.Fps.Cap = btnCapFps.Text;
                 inputSettings.Fps.ToggleShow = btnShowFps.Text;
                 inputSettings.General.Fullscreen = btnFullscreen.Text;
@@ -453,9 +458,9 @@ namespace ANXY.UI
             btnSaveChanges.TextColor = Color.White;
 
             Dictionary<string, int> dict = new();
-            foreach (TextButton txtBtn in Widgets.OfType<TextButton>())
+            foreach(TextButton txtBtn in Widgets.OfType<TextButton>())
             {
-                if (!dict.ContainsKey(txtBtn.Text))
+                if(!dict.ContainsKey(txtBtn.Text))
                 {
                     dict.Add(txtBtn.Text, 1);
                 }
@@ -466,10 +471,10 @@ namespace ANXY.UI
                 }
             }
 
-            foreach (TextButton txtBtn in Widgets.OfType<TextButton>())
+            foreach(TextButton txtBtn in Widgets.OfType<TextButton>())
             {
                 dict.TryGetValue(txtBtn.Text, out var i);
-                if (i > 1)
+                if(i > 1)
                 {
                     txtBtn.TextColor = Color.Red;
                 }
@@ -563,11 +568,11 @@ namespace ANXY.UI
         {
             var inputSettings = PlayerInput.Instance.InputSettings;
 
-            foreach (TextButton txtBtn in Widgets.OfType<TextButton>())
+            foreach(TextButton txtBtn in Widgets.OfType<TextButton>())
             {
-                if (txtBtn.Id == null)
+                if(txtBtn.Id == null)
                     continue;
-                switch (txtBtn.Id)
+                switch(txtBtn.Id)
                 {
                     case "btnDebugToggle":
                         txtBtn.Text = inputSettings.Debug.Toggle.ToString();

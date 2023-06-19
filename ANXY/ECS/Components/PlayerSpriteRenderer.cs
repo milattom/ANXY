@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using ANXY.ECS.Systems;
 
 namespace ANXY.ECS.Components;
@@ -10,9 +9,9 @@ namespace ANXY.ECS.Components;
 /// </summary>
 public class PlayerSpriteRenderer : Component
 {
+    public readonly Rectangle StartPlayerRectangle = new(0, 0, 33, 70);
     private const int XOffsetRectangle = 33;
     private const int _numberOfFrames = 7;
-    public readonly Rectangle StartPlayerRectangle = new(0, 0, 33, 70);
     private const int _millisecondsPerFrame = 100; //the smaller the faster animation. 42ms ~= 24fps
     private Player _player;
     private Rectangle CurrentPlayerRectangle;

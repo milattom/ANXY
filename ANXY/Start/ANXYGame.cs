@@ -1,4 +1,5 @@
 ﻿using ANXY.ECS;
+using ANXY.UI;
 using ANXY.ECS.Components;
 using ANXY.ECS.Systems;
 using Microsoft.Xna.Framework;
@@ -6,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Tiled;
 using Myra;
 using System;
+using static ANXY.Start.EntityFactory;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
@@ -102,8 +104,9 @@ public class ANXYGame : Game
     protected override void Initialize()
     {
         base.Initialize();
-        InitializeDefaultScene();
+        CreateDefaultScene();
         SystemManager.Instance.InitializeAll();
+        PlayerInput.Instance.Initialize();
 
         // Center window on screen and set size.
         var xOffset = (_screenBounds.Width - WindowWidth) / 2;
@@ -125,7 +128,7 @@ public class ANXYGame : Game
         // Create a new SpriteBatch. Load background picture, level tile map and player sprite.
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         _backgroundSprite = Content.Load<Texture2D>("Background-2");
-        _levelTileMap = Content.Load<TiledMap>("JumpNRun-1");
+        _levelTileMap = Content.Load<TiledMap>("./Tiled/BA/JumpNRun-1");
         _playerSprite = Content.Load<Texture2D>("playerAtlas");
 
         // Load Myra.
@@ -140,6 +143,7 @@ public class ANXYGame : Game
     protected override void Update(GameTime gameTime)
     {
         SystemManager.Instance.UpdateAll(gameTime);
+        PlayerInput.Instance.Update(gameTime);
     }
 
     /// <summary>
@@ -156,50 +160,40 @@ public class ANXYGame : Game
         SystemManager.Instance.DrawAll(gameTime, _spriteBatch);
         _spriteBatch.End();
 
+        UIManager.Instance.Update(gameTime);
+        UIManager.Instance.Draw();
         // Update UI and draw
-        UI.UIManager.Instance.Update(gameTime);
-        UI.UIManager.Instance.Draw();
     }
 
     // Other methods.
     /// <summary>
     ///     Initializes the default scene.
     /// </summary>
-    private void InitializeDefaultScene()
+    private void CreateDefaultScene()
     {
-        InitializeBackgroundPicture();
+        SetSpawn();
+        SetEnd();
 
-        InitializeLevelBackgroundLayers();
-        InitializeSpawn();
-
-        InitializePlayerInput();
-        InitializePlayer();
-
-        InitializeLevelForegroundLayers();
-
-        InitializeEnd();
+        CreateBackground();
+        CreateBackgroundLayers();
+        CreatePlayerInput();
+        CreatePlayer();
+        CreateCamera();
+        CreateForegroundLayers();
     }
 
     /// <summary>
     ///     Create a Background.
     /// </summary>
-    private void InitializeBackgroundPicture()
+    private void CreateBackground()
     {
-        var backgroundEntity = new Entity();
-        backgroundEntity.Position -= new Vector2(0.5f * WindowWidth, 0.5f * WindowHeight);
-
-        Background background = new(WindowWidth, WindowHeight);
-        backgroundEntity.AddComponent(background);
-        backgroundEntity.AddComponent(new Background(WindowWidth, WindowHeight));
-
-        SingleSpriteRenderer backgroundSprite = new(_backgroundSprite);
-        backgroundEntity.AddComponent(backgroundSprite);
+        EntityFactory.Instance.CreateEntity(EntityType.Background, new Object[] { WindowHeight, WindowWidth, _backgroundSprite });
     }
 
     /// <summary>
     ///     Create all Layers that are set behind the player.
     /// </summary>
-    private void InitializeLevelBackgroundLayers()
+    private void CreateBackgroundLayers()
     {
         foreach (String layerName in _backgroundLayerNames)
         {
@@ -210,7 +204,7 @@ public class ANXYGame : Game
     /// <summary>
     ///     Create all Layers that are set in front of the player (overlapping/hiding the player).
     /// </summary>
-    private void InitializeLevelForegroundLayers()
+    private void CreateForegroundLayers()
     {
         foreach (String layerName in _foregroundLayerNames)
         {
@@ -221,7 +215,7 @@ public class ANXYGame : Game
     /// <summary>
     ///     Create all Layers that are set behind the player.
     /// </summary>
-    private void InitializeSpawn()
+    private void SetSpawn()
     {
         foreach (String layerName in _spawnLayerNames)
         {
@@ -245,7 +239,7 @@ public class ANXYGame : Game
     /// <summary>
     ///     Create all Layers that are set behind the player.
     /// </summary>
-    private void InitializeEnd()
+    private void SetEnd()
     {
         foreach (String layerName in _endLayerNames)
         {
@@ -270,47 +264,7 @@ public class ANXYGame : Game
         // Iterate over all tiles in the layer.
         foreach (var singleTile in tiles)
         {
-            if (singleTile.GlobalIdentifier == 0)
-            {
-                continue;
-            }
-
-            // Create new Entity for each Tile.
-            var newTileEntity = new Entity
-            {
-                Position = new Vector2(singleTile.X * _levelTileMap.TileWidth, singleTile.Y * _levelTileMap.TileHeight)
-            };
-
-            // Add Sprite to Tile Entity.
-            var tileSprite = new SingleSpriteRenderer(_levelTileMap.Tilesets[0].Texture, _levelTileMap.Tilesets[0].GetTileRegion(singleTile.GlobalIdentifier - 1));
-            newTileEntity.AddComponent(tileSprite);
-
-            // Check for BoxColliders in XML.
-            TiledMapTilesetTile foundTilesetTile = null;
-            foreach (var tile in _levelTileMap.Tilesets[0].Tiles)
-            {
-                if (tile.LocalTileIdentifier == singleTile.GlobalIdentifier - 1)
-                {
-                    foundTilesetTile = tile;
-                    break;
-                }
-            }
-
-            // Add BoxCollider to Tile Entity.
-            if (foundTilesetTile != null)
-            {
-                foreach (var collider in foundTilesetTile.Objects)
-                {
-                    var rectangle = new Rectangle(
-                        (int)Math.Round(collider.Position.X)
-                        , (int)Math.Round(collider.Position.Y)
-                        , (int)Math.Round(collider.Size.Width)
-                        , (int)Math.Round(collider.Size.Height)
-                        );
-                    var tileBoxCollider = new BoxCollider(rectangle, layerName);
-                    newTileEntity.AddComponent(tileBoxCollider);
-                }
-            }
+            EntityFactory.Instance.CreateEntity(EntityType.Tile, new Object[] { singleTile, layerName, _levelTileMap });
         }
     }
 
@@ -336,7 +290,7 @@ public class ANXYGame : Game
     /// <summary>
     ///     Initialize Player Input.
     /// </summary>
-    private void InitializePlayerInput()
+    private void CreatePlayerInput()
     {
         PlayerInput.Instance.FpsCapKeyPressed += ToggleFpsLimit;
         PlayerInput.Instance.FullscreenKeyPressed += ToggleFullscreen;
@@ -345,19 +299,19 @@ public class ANXYGame : Game
     }
 
     /// <summary>
-    ///     Initialize Player and Camera.
+    ///     Creates and initializes Player.
     /// </summary>
-    private void InitializePlayer()
+    private void CreatePlayer()
     {
-        // Create player entity with necessary components.
-        var playerEntity = PlayerFactory.Instance.CreatePlayer(SpawnPosition, _playerSprite);
-        var player = playerEntity.GetComponent<Player>();
+        EntityFactory.Instance.CreateEntity(EntityType.Player, new Object[] { _playerSprite });
+    }
 
-        // Add camera entity, components and reference to player.
-        var cameraEntity = new Entity();
-
-        var camera = new Camera(player, new Vector2(WindowWidth, WindowHeight), new Vector2(0.25f * WindowWidth, 0.5f * WindowHeight), new Vector2(float.PositiveInfinity, 0.85f * WindowHeight));
-        cameraEntity.AddComponent(camera);
+    /// <summary>
+    ///    Creates and initializes Camera.
+    /// </summary>
+    private void CreateCamera()
+    {
+        EntityFactory.Instance.CreateEntity(EntityType.Camera, new Object[] { WindowHeight, WindowWidth});
     }
 
     /// <summary>
@@ -413,9 +367,8 @@ public class ANXYGame : Game
     private void OnClientSizeChanged(object sender, EventArgs eventArgs)
     {
         WindowWidth = Window.ClientBounds.Width;
-        WindowHeight = Window.ClientBounds.Height;
-        var camera = (Camera)SystemManager.Instance.FindSystemByType<Camera>().GetComponent();
-        camera._windowDimensions = new Vector2(WindowWidth, WindowHeight);
+        WindowHeight= Window.ClientBounds.Height;
+        SystemManager.Instance.UpdateResolution(new Vector2(WindowWidth, WindowHeight));
     }
 
     /// <summary>
