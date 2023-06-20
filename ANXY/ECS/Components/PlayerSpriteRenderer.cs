@@ -94,4 +94,10 @@ public class PlayerSpriteRenderer : Component
     {
         _gamePaused = gamePaused;
     }
+
+    public override void Destroy()
+    {
+        PlayerSpriteSystem.Instance.Unregister(this);
+        ANXYGame.Instance.GamePausedChanged -= OnGamePausedChanged;
+    }
 }

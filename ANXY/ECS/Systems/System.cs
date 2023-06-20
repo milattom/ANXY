@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ANXY.ECS.Systems;
 
@@ -27,6 +28,11 @@ public class System<T> : ISystem where T : Component
     public void Register(T component)
     {
         components.Add(component);
+    }
+
+    public void Unregister(T component)
+    {
+          components.Remove(component);
     }
 
     /// <summary>
@@ -82,6 +88,35 @@ class PlayerSystem : System<Player>
     private PlayerSystem()
     {
         SystemManager.Instance.Register(this);
+    }
+
+    /// <summary>
+    /// Reset the player and destroy all other players
+    /// </summary>
+    internal void Reset()
+    {
+        var player = (Player)GetFirstComponent();
+        player.Reset();
+
+        var otherPlayerList = components
+            .Where(c => c != player)
+            .ToList();
+        var otherPlayerEntityList = otherPlayerList
+            .Select(c => c.Entity)
+            .ToList();
+
+        var otherComponentsPlayer = otherPlayerEntityList
+            .SelectMany(e => e.GetComponents<Player>())
+            .ToList();
+        otherComponentsPlayer.ForEach(p => p.Destroy());
+        var otherComponentPlayerSpriteRenderer = otherPlayerEntityList
+            .SelectMany(e => e.GetComponents<PlayerSpriteRenderer>())
+            .ToList();
+        otherComponentPlayerSpriteRenderer.ForEach(s => s.Destroy());
+        var otherComponentBoxCollider = otherPlayerEntityList
+            .SelectMany(e => e.GetComponents<BoxCollider>())
+            .ToList();
+        otherComponentBoxCollider.ForEach(b => b.Destroy());
     }
 }
 class PlayerSpriteSystem : System<PlayerSpriteRenderer>

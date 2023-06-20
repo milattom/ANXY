@@ -1,8 +1,11 @@
 ﻿using ANXY.ECS.Components;
+using ANXY.ECS.Systems;
 using ANXY.Start;
 using Microsoft.Xna.Framework;
 using Myra.Graphics2D.UI;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ANXY.UI;
 
@@ -106,8 +109,9 @@ public class UIManager
     /// </summary>
     private void OnResetGameBtnPressed()
     {
-        var player = (Player)SystemManager.Instance.FindSystemByType<Player>().GetFirstComponent();
-        player.Reset();
+        var playerSystem = (PlayerSystem)SystemManager.Instance.FindSystemByType<Player>();
+        playerSystem.Reset();
+
         var camera = (Camera)SystemManager.Instance.FindSystemByType<Camera>().GetFirstComponent();
         camera.Reset();
 

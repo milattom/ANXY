@@ -51,6 +51,11 @@ public class Player : Component
         ANXYGame.Instance.GamePausedChanged += OnGamePausedChanged;
     }
 
+    public override void Destroy()
+    {
+        PlayerSystem.Instance.Unregister(this);
+    }
+
     /// <summary>
     /// Update, called multiple times per Frame. (Update Cycle)
     /// - checks input, moves the player accordingly.

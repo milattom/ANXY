@@ -16,6 +16,8 @@ namespace ANXY.Start
         private static readonly Lazy<PlayerFactory> _lazy = new(() => new PlayerFactory());
         public static PlayerFactory Instance => _lazy.Value;
 
+        private static readonly List<Entity> _players = new();
+
         /// <summary>
         /// Creates an amount of player instances, specified in the parameter.
         /// Those Players are getting a random position within 1200x540 pixels.
@@ -35,6 +37,7 @@ namespace ANXY.Start
                 Vector2 pos = GetRandomVector2(xMin, xMax, yMin, yMax);
                 players.Add(CreatePlayer(pos, playerAtlas));
             }
+            _players.AddRange(players);
         }
 
         /// <summary>
@@ -56,6 +59,11 @@ namespace ANXY.Start
             playerEntity.AddComponent(playerCollider);
 
             return playerEntity;
+        }
+
+        public List<Entity> GetPlayers()
+        {
+            return _players;
         }
 
         /// <summary>

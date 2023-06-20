@@ -124,4 +124,9 @@ public class BoxCollider : Component
     {
         _highlightColor = _inactiveColor;
     }
+
+    public override void Destroy()
+    {
+        BoxColliderSystem.Instance.Unregister(this);
+    }
 }

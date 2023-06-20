@@ -1,6 +1,4 @@
-﻿using ANXY.ECS;
-using ANXY.UI;
-using ANXY.ECS.Components;
+﻿using ANXY.UI;
 using ANXY.ECS.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
