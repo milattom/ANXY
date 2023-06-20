@@ -12,8 +12,9 @@ using System.Reflection;
 namespace ANXY.Start;
 
 /// <summary>
-/// TODO Player Input Controller
-/// Checking for Keyboard input and setting everything accordingly. Every Class needing to check the Keyboard input must check it through this Class.
+/// Player Input
+/// Checking for Keyboard input and setting everything accordingly.
+/// Every Class that needs to check the Keyboard input must check it through this Class.
 /// </summary>
 public class PlayerInput
 {
@@ -37,7 +38,7 @@ public class PlayerInput
     private String defaultValuePath;
     private bool IsMenuKeyDisabled = false;
 
-    public void Update(GameTime gameTime)
+    public void Update()
     {
         SetCurrentState();
 
@@ -219,30 +220,51 @@ public class PlayerInput
     /// </summary>
     public class InputKeyStrings
     {
-        public DebugKeys Debug { get; set; } = new DebugKeys();
-        public FpsKeys Fps { get; set; } = new FpsKeys();
-        public GeneralKeys General { get; set; } = new GeneralKeys();
-        public MovementKeys Movement { get; set; } = new MovementKeys();
+        public DebugKeys Debug { get; set; }
+        public FpsKeys Fps { get; set; } 
+        public GeneralKeys General { get; set; } 
+        public MovementKeys Movement { get; set; }
     }
     public class DebugKeys
     {
-        public string Toggle;
-        public string SpawnNewPlayer;
+        public DebugKeys(string toggle, string spawnNewPlayer)
+        {
+            Toggle = toggle;
+            SpawnNewPlayer = spawnNewPlayer;
+        }
+        public string Toggle { get; private set; }
+        public string SpawnNewPlayer { get; private set; }
     }
     public class FpsKeys
     {
-        public string Cap;
-        public string ToggleShow;
+        public FpsKeys(string cap, string toggleShow)
+        {
+            Cap = cap;
+            ToggleShow = toggleShow;
+        }
+        public string Cap { get; private set; }
+        public string ToggleShow { get; private set; }
     }
     public class GeneralKeys
     {
-        public string Fullscreen;
-        public string Menu;
+        public GeneralKeys(string fullscreen, string menu)
+        {
+            Fullscreen = fullscreen;
+            Menu = menu;
+        }
+        public string Fullscreen { get; private set; }
+        public string Menu { get; private set; }
     }
     public class MovementKeys
     {
-        public string Jump;
-        public string Left;
-        public string Right;
+        public MovementKeys(string jump, string left, string right)
+        {
+            Jump = jump;
+            Left = left;
+            Right = right;
+        }
+        public string Jump { get; private set; }
+        public string Left { get; private set; }
+        public string Right { get; private set; }
     }
 }

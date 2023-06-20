@@ -6,7 +6,7 @@ using Color = Microsoft.Xna.Framework.Color;
 
 namespace ANXY.ECS.Components;
 /// <summary>
-/// TODO
+/// TextRenderer renders text on the screen.
 /// </summary>
 internal class TextRenderer : Component
 {
@@ -15,7 +15,7 @@ internal class TextRenderer : Component
     private readonly Vector2 _position;
     private readonly Color _color;
     /// <summary>
-    /// TODO
+    /// Taking in the font, text, position and color to render the text on the screen.
     /// </summary>
     /// <param name="font"></param>
     /// <param name="text"></param>
@@ -30,7 +30,7 @@ internal class TextRenderer : Component
         TextRendererSystem.Instance.Register(this);
     }
     /// <summary>
-    /// TODO
+    /// Draw loop for the text.
     /// </summary>
     /// <param name="gameTime"></param>
     /// <param name="spriteBatch"></param>

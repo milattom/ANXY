@@ -32,15 +32,15 @@ namespace ANXY.UI
         private VerticalStackPanel uiDebug;
         private float _lastDebugTextUpdate = 0.0f;
         private readonly float _debugTextUpdateTime = 1 / 3.0f;
-        private VerticalStackPanel uiWelcomeAndTutorial;
-        private Label lblMoveTutorial;
-        private Label lblJumpTutorial;
-        private Label lblMenuTutorial;
-        private Label lblFastestTime;
-        private VerticalStackPanel uiFastestTime;
+        private VerticalStackPanel _uiWelcomeAndTutorial;
+        private Label _lblMoveTutorial;
+        private Label _lblJumpTutorial;
+        private Label _lblMenuTutorial;
+        private Label _lblFastestTime;
+        private VerticalStackPanel _uiFastestTime;
 
         //StopWatch elements
-        private double StopWatchTime;
+        private double _stopWatchTime;
         private Label _lblStopWatch;
         private readonly double _currentFpsRefreshTime = 1 / 3.0;
         private readonly double _minMaxFpsRefreshTime = 2;
@@ -105,7 +105,7 @@ namespace ANXY.UI
             };
             _lblDebugPlayerLocation = new Label
             {
-                Text = "XY: 12.34 / 56.78",
+                Text = "X/Y: 12.34 / 56.78",
                 HorizontalAlignment = HorizontalAlignment.Center
             };
             lblDebugPlayerMidair = new Label
@@ -144,19 +144,19 @@ namespace ANXY.UI
                 Text = "Fastest time:",
                 HorizontalAlignment = HorizontalAlignment.Right
             };
-            lblFastestTime = new Label
+            _lblFastestTime = new Label
             {
                 Text = "12:34:56.78",
                 HorizontalAlignment = HorizontalAlignment.Right
             };
-            uiFastestTime = new VerticalStackPanel
+            _uiFastestTime = new VerticalStackPanel
             {
                 Spacing = 2,
                 Padding = new Thickness(5)
             };
-            uiFastestTime.Widgets.Add(lblFastestTimeDescription);
-            uiFastestTime.Widgets.Add(lblFastestTime);
-            uiFastestTime.Visible = false;
+            _uiFastestTime.Widgets.Add(lblFastestTimeDescription);
+            _uiFastestTime.Widgets.Add(_lblFastestTime);
+            _uiFastestTime.Visible = false;
             var uiStopWatch = new VerticalStackPanel
             {
                 Spacing = 4,
@@ -167,7 +167,7 @@ namespace ANXY.UI
                 Background = new SolidBrush("#000000AA")
             };
             uiStopWatch.Widgets.Add(_lblStopWatch);
-            uiStopWatch.Widgets.Add(uiFastestTime);
+            uiStopWatch.Widgets.Add(_uiFastestTime);
 
             //Welcome and Tutorial Overlay
             var lblAnxy = new Label
@@ -185,22 +185,22 @@ namespace ANXY.UI
                 VerticalAlignment = VerticalAlignment.Center
             };
             var lblFiller = new Label();
-            lblMoveTutorial = new Label
+            _lblMoveTutorial = new Label
             {
                 Text = "Move with " + PlayerInput.Instance.InputSettings.Movement.Left + " & " + PlayerInput.Instance.InputSettings.Movement.Right,
                 HorizontalAlignment = HorizontalAlignment.Center
             };
-            lblJumpTutorial = new Label
+            _lblJumpTutorial = new Label
             {
                 Text = "Jump with " + PlayerInput.Instance.InputSettings.Movement.Jump,
                 HorizontalAlignment = HorizontalAlignment.Center
             };
-            lblMenuTutorial = new Label
+            _lblMenuTutorial = new Label
             {
                 Text = "Open the Menu with " + PlayerInput.Instance.InputSettings.General.Menu,
                 HorizontalAlignment = HorizontalAlignment.Center
             };
-            uiWelcomeAndTutorial = new VerticalStackPanel
+            _uiWelcomeAndTutorial = new VerticalStackPanel
             {
                 Spacing = 2,
                 HorizontalAlignment = HorizontalAlignment.Center,
@@ -210,12 +210,12 @@ namespace ANXY.UI
                 GridRow = 1,
                 Background = new SolidBrush("#0000FFAA")
             };
-            uiWelcomeAndTutorial.Widgets.Add(lblWelcome);
-            uiWelcomeAndTutorial.Widgets.Add(lblAnxy);
-            uiWelcomeAndTutorial.Widgets.Add(lblFiller);
-            uiWelcomeAndTutorial.Widgets.Add(lblMoveTutorial);
-            uiWelcomeAndTutorial.Widgets.Add(lblJumpTutorial);
-            uiWelcomeAndTutorial.Widgets.Add(lblMenuTutorial);
+            _uiWelcomeAndTutorial.Widgets.Add(lblWelcome);
+            _uiWelcomeAndTutorial.Widgets.Add(lblAnxy);
+            _uiWelcomeAndTutorial.Widgets.Add(lblFiller);
+            _uiWelcomeAndTutorial.Widgets.Add(_lblMoveTutorial);
+            _uiWelcomeAndTutorial.Widgets.Add(_lblJumpTutorial);
+            _uiWelcomeAndTutorial.Widgets.Add(_lblMenuTutorial);
 
             //Anxiety Meter Overlay
             var lblAnxietyMeterDescription = new Label
@@ -245,7 +245,7 @@ namespace ANXY.UI
             Widgets.Add(_uiFPS);
             Widgets.Add(uiDebug);
             Widgets.Add(uiStopWatch);
-            Widgets.Add(uiWelcomeAndTutorial);
+            Widgets.Add(_uiWelcomeAndTutorial);
             Widgets.Add(uiAnxietyMeter);
         }
 
@@ -296,15 +296,15 @@ namespace ANXY.UI
 
         public void UpdateStopWatch(GameTime gameTime)
         {
-            if (ANXYGame.Instance.GamePaused || uiWelcomeAndTutorial.Visible)
+            if (ANXYGame.Instance.GamePaused || _uiWelcomeAndTutorial.Visible)
             {
                 return;
             }
 
             var gameTimeElapsedSeconds = gameTime.ElapsedGameTime.TotalSeconds;
-            StopWatchTime += gameTimeElapsedSeconds;
+            _stopWatchTime += gameTimeElapsedSeconds;
 
-            TimeSpan timeSpan = TimeSpan.FromSeconds(StopWatchTime);
+            TimeSpan timeSpan = TimeSpan.FromSeconds(_stopWatchTime);
 
             if (timeSpan.Hours > 0)
             {
@@ -336,7 +336,7 @@ namespace ANXY.UI
             if (ANXYGame.Instance.GamePaused || !uiDebug.Visible || _lastDebugTextUpdate < _debugTextUpdateTime)
                 return;
             _lastDebugTextUpdate = 0.0f;
-            _lblDebugPlayerLocation.Text = "XY: " + _player.Entity.Position.X.ToString("n", _nfi) + " / " + _player.Entity.Position.Y.ToString("n", _nfi);
+            _lblDebugPlayerLocation.Text = "X/Y: " + _player.Entity.Position.X.ToString("n", _nfi) + " / " + _player.Entity.Position.Y.ToString("n", _nfi);
             lblDebugPlayerMidair.Text = "Midair: " + _player.MidAir.ToString();
         }
 
@@ -349,19 +349,19 @@ namespace ANXY.UI
 
         private void ResetStopWatch()
         {
-            StopWatchTime = 0;
-            _lblStopWatch.Text = string.Format("{0:0.00}", StopWatchTime);
+            _stopWatchTime = 0;
+            _lblStopWatch.Text = string.Format("{0:0.00}", _stopWatchTime);
         }
         private void ResetTutorial()
         {
             RewriteTutorialText();
-            uiWelcomeAndTutorial.Visible = true;
+            _uiWelcomeAndTutorial.Visible = true;
         }
         public void RewriteTutorialText()
         {
-            lblMoveTutorial.Text = "Move with " + PlayerInput.Instance.InputSettings.Movement.Left + " & " + PlayerInput.Instance.InputSettings.Movement.Right;
-            lblJumpTutorial.Text = "Jump with " + PlayerInput.Instance.InputSettings.Movement.Jump;
-            lblMenuTutorial.Text = "Open the Menu with " + PlayerInput.Instance.InputSettings.General.Menu;
+            _lblMoveTutorial.Text = "Move with " + PlayerInput.Instance.InputSettings.Movement.Left + " & " + PlayerInput.Instance.InputSettings.Movement.Right;
+            _lblJumpTutorial.Text = "Jump with " + PlayerInput.Instance.InputSettings.Movement.Jump;
+            _lblMenuTutorial.Text = "Open the Menu with " + PlayerInput.Instance.InputSettings.General.Menu;
         }
         public void ResetFpsUI()
         {
@@ -387,7 +387,7 @@ namespace ANXY.UI
 
         public void ShowWelcomeAndTutorial(bool show)
         {
-            uiWelcomeAndTutorial.Visible = show;
+            _uiWelcomeAndTutorial.Visible = show;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ANXY.ECS.Systems;
+using ANXY.Start;
 
 namespace ANXY.ECS.Components;
 
@@ -17,6 +18,7 @@ public class PlayerSpriteRenderer : Component
     private Rectangle CurrentPlayerRectangle;
     private SpriteEffects _spriteEffect;
     private Texture2D PlayerAtlas { get; }
+    private bool _gamePaused = false;
 
     /// <summary>
     /// set the playerAtlas with all Player Movement Frames
@@ -26,6 +28,7 @@ public class PlayerSpriteRenderer : Component
         PlayerAtlas = playerAtlas;
         CurrentPlayerRectangle = StartPlayerRectangle;
         PlayerSpriteSystem.Instance.Register(this);
+        ANXYGame.Instance.GamePausedChanged += OnGamePausedChanged;
     }
 
     /// <summary>
@@ -34,6 +37,10 @@ public class PlayerSpriteRenderer : Component
     /// <param name="gameTime">gameTime</param>
     public override void Update(GameTime gameTime)
     {
+        if (_gamePaused)
+        {
+            return;
+        }
         if (_player.InputDirection.X > 0)
         {
             _spriteEffect = SpriteEffects.None;
@@ -78,8 +85,13 @@ public class PlayerSpriteRenderer : Component
         CurrentPlayerRectangle.X = XOffsetRectangle * currentFrame;
     }
 
-    internal void SetPlayerEntity(Entity playerEntity)
+    internal void SetPlayerComponent()
     {
         _player = Entity.GetComponent<Player>();
+    }
+
+    private void OnGamePausedChanged(bool gamePaused)
+    {
+        _gamePaused = gamePaused;
     }
 }

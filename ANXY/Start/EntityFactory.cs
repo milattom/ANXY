@@ -28,18 +28,14 @@ internal class EntityFactory
     public Entity CreateEntity(EntityType type, Object[] optional = null)
     {
         _optional = optional;
-        switch (type)
+        return type switch
         {
-            case EntityType.Background:
-                return CreateBackgroundEntity();
-            case EntityType.Camera:
-                return CreateCameraEntity();
-            case EntityType.Player:
-                return CreatePlayerEntity();
-            case EntityType.Tile:
-                return CreateTileEntity();
-            default: return null;
-        }
+            EntityType.Background => CreateBackgroundEntity(),
+            EntityType.Camera => CreateCameraEntity(),
+            EntityType.Player => CreatePlayerEntity(),
+            EntityType.Tile => CreateTileEntity(),
+            _ => null,
+        };
     }
 
     private Entity CreateBackgroundEntity()
@@ -62,7 +58,7 @@ internal class EntityFactory
         var (windowHeight, windowWidth) = ((int)_optional[0], (int)_optional[1]);
         var player = (Player)SystemManager.Instance.FindSystemByType<Player>().GetFirstComponent();
         var cameraEntity = new Entity();
-        var camera = new Camera(player, new Vector2(windowWidth, windowHeight), new Vector2(0.25f * windowWidth, 0.5f * windowHeight), new Vector2(float.PositiveInfinity, 0.85f * windowHeight));
+        var camera = new Camera(player, new Vector2(windowWidth, windowHeight));
         cameraEntity.AddComponent(camera);
         return cameraEntity;
     }
@@ -70,7 +66,7 @@ internal class EntityFactory
     private Entity CreatePlayerEntity()
     {
         var playerSprite = (Texture2D)_optional[0];
-        return PlayerFactory.Instance.CreatePlayer(ANXYGame.Instance.SpawnPosition, playerSprite);
+        return PlayerFactory.CreatePlayer(ANXYGame.Instance.SpawnPosition, playerSprite);
     }
 
     private Entity CreateTileEntity()

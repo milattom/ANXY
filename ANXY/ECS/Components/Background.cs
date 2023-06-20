@@ -12,8 +12,6 @@ public class Background : Component
 {
     public int WindowHeight { get; }
     public int WindowWidth { get; }
-    private Player _player;
-    private float _minDistance;
 
     /// <summary>
     /// Class Constructor
@@ -25,29 +23,5 @@ public class Background : Component
         this.WindowWidth = windowWidth;
         this.WindowHeight = windowHeight;
         BackgroundSystem.Instance.Register(this);
-    }
-
-    /// <summary>
-    /// Update called multiple times every Frame (Update Cycle).
-    ///
-    /// Implementation of "Parallax Background Shifting"
-    /// Move the Background when the Player Character is about to leave the Screen. Player Speed is set to zero, Background speed is reversed Player Speed.
-    /// </summary>
-    /// <param name="gameTime">gameTime</param>
-    public override void Update(GameTime gameTime)
-    {
-        var currentPosition = WindowWidth - _player.Entity.Position.X;
-        if(currentPosition < _minDistance)
-        {
-            //shift background
-        }
-    }
-
-    /// <summary>
-    /// Initialize Player so we later know how far from the Edges the Player is positioned.
-    /// </summary>
-    public override void Initialize()
-    {
-        _player = (Player)SystemManager.Instance.FindSystemByType<Player>().GetFirstComponent();
     }
 }

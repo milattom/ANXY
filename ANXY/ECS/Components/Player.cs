@@ -29,7 +29,6 @@ public class Player : Component
         Falling
     }
 
-    //TODO remove GroundLevel or reduce it to Window Bottom Edge when Level is fully implemented in Tiled.
     private const float Gravity = 350;
     private const float JumpVelocity = 300;
     public bool MidAir { get; private set; } = true;
@@ -54,7 +53,6 @@ public class Player : Component
 
     /// <summary>
     /// Update, called multiple times per Frame. (Update Cycle)
-    /// TODO remove input from here and move it to PlayerInputController
     /// - checks input, moves the player accordingly.
     /// - creates gravity and checks for collisions.
     /// - updates position of Player Entity
@@ -96,31 +94,31 @@ public class Player : Component
     }
 
     /// <summary>
-    /// TODO
+    /// Handles Collisions with other Entities
     /// </summary>
     private void HandleCollisions()
     {
         var playerBoxCollider = Entity.GetComponent<BoxCollider>();
-        var colliders = BoxColliderSystem.Instance.GetCollisions(playerBoxCollider);
+        var colliders = BoxColliderSystem.GetCollisions(playerBoxCollider);
 
         var leftRightColliders = colliders.Where(col =>
         {
             var detectedEdge = BoxColliderSystem.DetectEdge(playerBoxCollider, col);
             return detectedEdge == Edge.Left || detectedEdge == Edge.Right;
         });
-        foreach (var collider in leftRightColliders.Where(collider => BoxColliderSystem.Instance.IsColliding(playerBoxCollider, collider)))
+        foreach (var collider in leftRightColliders.Where(collider => BoxColliderSystem.IsColliding(playerBoxCollider, collider)))
         {
             ActOnCollider(collider);
         }
 
-        var restColliders = BoxColliderSystem.Instance.GetCollisions(playerBoxCollider);
+        var restColliders = BoxColliderSystem.GetCollisions(playerBoxCollider);
 
         if (restColliders.Count == 0)
         {
             MidAir = true;
         }
 
-        foreach (var collider in restColliders.Where(collider => BoxColliderSystem.Instance.IsColliding(playerBoxCollider, collider)))
+        foreach (var collider in restColliders.Where(collider => BoxColliderSystem.IsColliding(playerBoxCollider, collider)))
         {
             ActOnCollider(collider);
         }

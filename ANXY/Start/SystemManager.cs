@@ -69,12 +69,11 @@ public sealed class SystemManager
     /// <param name="resolution"></param>
     public void UpdateResolution(Vector2 resolution)
     {
-        foreach (var system in _systems)
+        foreach (var _ in from system in _systems
+                          where system is CameraSystem
+                          select new { })
         {
-            if (system is CameraSystem)
-            {
-                CameraSystem.SetResolution(resolution);
-            }
+            CameraSystem.SetResolution(resolution);
         }
     }
 

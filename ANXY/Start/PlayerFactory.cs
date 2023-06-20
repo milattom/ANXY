@@ -21,7 +21,7 @@ namespace ANXY.Start
         /// Those Players are getting a random position within 1200x540 pixels.
         /// </summary>
         /// <param name="amount">amount of player instances that should be created</param>
-        public void CreatePlayers(int amount, Texture2D playerAtlas)
+        public static void CreatePlayers(int amount, Texture2D playerAtlas)
         {
             List<Entity> players = new(amount);
             for (int i = 0; i < amount; i++)
@@ -32,7 +32,7 @@ namespace ANXY.Start
                 int xMax = (int)mainPlayerPosition.X + ANXYGame.Instance.WindowWidth / 2;
                 int yMin = (int)mainPlayerPosition.Y - ANXYGame.Instance.WindowHeight / 2;
                 int yMax = (int)mainPlayerPosition.Y + ANXYGame.Instance.WindowHeight / 2;
-                Vector2 pos = getRandomVector2(xMin, xMax, yMin, yMax);
+                Vector2 pos = GetRandomVector2(xMin, xMax, yMin, yMax);
                 players.Add(CreatePlayer(pos, playerAtlas));
             }
         }
@@ -41,7 +41,7 @@ namespace ANXY.Start
         /// Creates a single Player Instance at the position provided as parameter and returns its Entity.
         /// </summary>
         /// <returns>new Player Entity</returns>
-        public Entity CreatePlayer(Vector2 position, Texture2D playerAtlas)
+        public static Entity CreatePlayer(Vector2 position, Texture2D playerAtlas)
         {
             var playerEntity = new Entity { Position = position };
             var player = new Player();
@@ -49,7 +49,7 @@ namespace ANXY.Start
 
             var playerSpriteRenderer = new PlayerSpriteRenderer(playerAtlas);
             playerEntity.AddComponent(playerSpriteRenderer);
-            playerSpriteRenderer.SetPlayerEntity(playerEntity);
+            playerSpriteRenderer.SetPlayerComponent();
 
             var playerBox = new Rectangle(1, 6, 32, 64);
             var playerCollider = new BoxCollider(playerBox, "Player");
@@ -64,9 +64,9 @@ namespace ANXY.Start
         /// <param name="maxX"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-        private Vector2 getRandomVector2(int xMin, int xMax, int yMin, int yMax)
+        private static Vector2 GetRandomVector2(int xMin, int xMax, int yMin, int yMax)
         {
-            Random r = new Random();
+            Random r = new();
             float rx = r.Next(xMin, xMax);
             float ry = r.Next(yMin, yMax);
             return new Vector2(rx, ry);

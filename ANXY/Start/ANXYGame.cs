@@ -143,7 +143,7 @@ public class ANXYGame : Game
     protected override void Update(GameTime gameTime)
     {
         SystemManager.Instance.UpdateAll(gameTime);
-        PlayerInput.Instance.Update(gameTime);
+        PlayerInput.Instance.Update();
     }
 
     /// <summary>
@@ -350,12 +350,12 @@ public class ANXYGame : Game
 
     private void SetDebugMode()
     {
-        BoxColliderSystem.Instance.EnableDebugMode(GraphicsDevice);
+        BoxColliderSystem.EnableDebugMode(GraphicsDevice);
     }
 
     private void OnDebugSpawnNewPlayerPressed()
     {
-        PlayerFactory.Instance.CreatePlayers(10, _playerSprite);
+        PlayerFactory.CreatePlayers(10, _playerSprite);
     }
 
     // Event handlers.

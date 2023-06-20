@@ -5,7 +5,6 @@ using Myra.Graphics2D;
 using Myra.Graphics2D.Brushes;
 using Myra.Graphics2D.UI;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace ANXY.UI
@@ -394,16 +393,16 @@ namespace ANXY.UI
         {
             if (!HasMultiple())
             {
-                var inputSettings = new PlayerInput.InputKeyStrings();
-                inputSettings.Debug.Toggle = btnDebugToggle.Text;
-                inputSettings.Debug.SpawnNewPlayer = PlayerInput.Instance.InputSettings.Debug.SpawnNewPlayer;
-                inputSettings.Fps.Cap = btnCapFps.Text;
-                inputSettings.Fps.ToggleShow = btnShowFps.Text;
-                inputSettings.General.Fullscreen = btnFullscreen.Text;
-                inputSettings.General.Menu = btnMenu.Text;
-                inputSettings.Movement.Jump = btnMovementJump.Text;
-                inputSettings.Movement.Left = btnMovementLeft.Text;
-                inputSettings.Movement.Right = btnMovementRight.Text;
+                var inputSettings = new PlayerInput.InputKeyStrings()
+                {
+                    Debug = new PlayerInput.DebugKeys(btnDebugToggle.Text, PlayerInput.Instance.InputSettings.Debug.SpawnNewPlayer)
+                    ,
+                    Fps = new PlayerInput.FpsKeys(btnCapFps.Text, btnShowFps.Text)
+                    ,
+                    General = new PlayerInput.GeneralKeys(btnFullscreen.Text, btnMenu.Text)
+                    ,
+                    Movement = new PlayerInput.MovementKeys(btnMovementJump.Text, btnMovementLeft.Text, btnMovementRight.Text)
+                };
 
                 lblDontForgetToSaveChanges.Visible = false;
 
@@ -457,24 +456,17 @@ namespace ANXY.UI
             lblMultipleIdenticalKeys.Visible = false;
             btnSaveChanges.TextColor = Color.White;
 
-            Dictionary<string, int> dict = new();
-            foreach(TextButton txtBtn in Widgets.OfType<TextButton>())
-            {
-                if(!dict.ContainsKey(txtBtn.Text))
-                {
-                    dict.Add(txtBtn.Text, 1);
-                }
-                else
-                {
-                    dict[txtBtn.Text]++;
-                    hasMultiple = true;
-                }
-            }
+            var dict = Widgets.OfType<TextButton>()
+                .Select(txtBtn => txtBtn.Text)
+                .GroupBy(text => text)
+                .ToDictionary(group => group.Key, group => group.Count());
 
-            foreach(TextButton txtBtn in Widgets.OfType<TextButton>())
+            hasMultiple = dict.Any(pair => pair.Value > 1);
+
+            foreach (TextButton txtBtn in Widgets.OfType<TextButton>())
             {
                 dict.TryGetValue(txtBtn.Text, out var i);
-                if(i > 1)
+                if (i > 1)
                 {
                     txtBtn.TextColor = Color.Red;
                 }
@@ -568,11 +560,11 @@ namespace ANXY.UI
         {
             var inputSettings = PlayerInput.Instance.InputSettings;
 
-            foreach(TextButton txtBtn in Widgets.OfType<TextButton>())
+            foreach (TextButton txtBtn in Widgets.OfType<TextButton>())
             {
-                if(txtBtn.Id == null)
+                if (txtBtn.Id == null)
                     continue;
-                switch(txtBtn.Id)
+                switch (txtBtn.Id)
                 {
                     case "btnDebugToggle":
                         txtBtn.Text = inputSettings.Debug.Toggle.ToString();

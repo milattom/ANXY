@@ -33,7 +33,7 @@ internal class BoxColliderSystem : System<BoxCollider>
     /// </summary>
     /// <param name="box"></param>
     /// <returns></returns>
-    public List<BoxCollider> GetCollisions(BoxCollider box)
+    public static List<BoxCollider> GetCollisions(BoxCollider box)
     {
         //TODO optimize performance of collider detection, e.g. 30 to left right etc ("e.g. Quadtree")
         return components.Where(otherBox => IsColliding(box, otherBox)).ToList();
@@ -44,7 +44,7 @@ internal class BoxColliderSystem : System<BoxCollider>
     /// gets highlighted when collision is detected
     /// </summary>
     /// <param name="graphics"></param>
-    public void EnableDebugMode(GraphicsDevice graphics)
+    public static void EnableDebugMode(GraphicsDevice graphics)
     {
         foreach (var box in components)
         {
@@ -61,7 +61,7 @@ internal class BoxColliderSystem : System<BoxCollider>
     /// <param name="player"></param>
     /// <param name="other"></param>
     /// <returns>True if two boxes are colliding, False if not or the colliders are the same</returns>
-    public bool IsColliding(BoxCollider aCollider, BoxCollider bCollider)
+    public static bool IsColliding(BoxCollider aCollider, BoxCollider bCollider)
     {
         if (aCollider == bCollider)
         {
@@ -153,7 +153,7 @@ internal class BoxColliderSystem : System<BoxCollider>
     /// <returns>Texture2D</returns>
     private static Texture2D CreateRectangleTexture(GraphicsDevice graphics, Vector2 dim)
     {
-        Texture2D rect = null;
+        Texture2D rect;
         var colors = new List<Color>();
         for (var y = 0; y < dim.Y; y++)
         {
