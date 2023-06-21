@@ -8,6 +8,7 @@ using System;
 using static ANXY.Start.EntityFactory;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
+using ANXY.ECS.Components;
 
 namespace ANXY.Start;
 
@@ -114,6 +115,7 @@ public class ANXYGame : Game
         // Register event handlers.
         GamePausedChanged += OnGamePausedChanged;
         Window.ClientSizeChanged += OnClientSizeChanged;
+        PlayerSystem.Instance.GetFirstComponent().Entity.GetComponent<Player>().EndReached += OnEndReached;
 
         ToggleFullscreen();
     }
@@ -377,5 +379,10 @@ public class ANXYGame : Game
     {
         IsMouseVisible = gamePaused;
         _graphics.ApplyChanges();
+    }
+
+    private void OnEndReached()
+    {
+        IsMouseVisible = true;
     }
 }

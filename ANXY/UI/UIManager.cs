@@ -4,8 +4,6 @@ using ANXY.Start;
 using Microsoft.Xna.Framework;
 using Myra.Graphics2D.UI;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ANXY.UI;
 
@@ -50,6 +48,8 @@ public class UIManager
 
         //InGameOverlay
         _inGameOverlay = new InGameOverlay();
+        _inGameOverlay.BtnResetGame.Click += OnResetGameBtnPressed;
+        _inGameOverlay.BtnEndGame.Click += OnExitGamePressed;
 
         // Credits
         _credits = new Credits();
@@ -68,6 +68,7 @@ public class UIManager
         PlayerInput.Instance.FpsToggleShowKeyPressed += OnFpsToggleShowKeyPressed;
         PlayerInput.Instance.DebugToggleKeyPressed += OnDebugToggleKeyPressed;
         PlayerInput.Instance.AnyMovementKeyPressed += OnStartMoving;
+        PlayerSystem.Instance.GetFirstComponent().Entity.GetComponent<Player>().EndReached += OnEndReached;
     }
 
     public void Update(GameTime gameTime)
@@ -104,9 +105,23 @@ public class UIManager
         ANXYGame.Instance.SetGamePaused(false);
     }
 
+#nullable enable
     /// <summary>
-    ///     Restarts the game from the beginning.
+    /// 
     /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    public void OnResetGameBtnPressed(object? sender, EventArgs? e)
+    {
+        OnResetGameBtnPressed();
+    }
+#nullable disable
+
+    /// <summary>
+    /// Restarts the game from the beginning.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void OnResetGameBtnPressed()
     {
         var playerSystem = (PlayerSystem)SystemManager.Instance.FindSystemByType<Player>();
@@ -119,7 +134,6 @@ public class UIManager
         ShowWelcomeAndTutorial = true;
         PlayerInput.Instance.AnyMovementKeyPressed += OnStartMoving;
         ANXYGame.Instance.SetGamePaused(false);
-
     }
 
     /// <summary>
@@ -180,18 +194,25 @@ public class UIManager
         PlayerInput.Instance.Save();
     }
 
-/// <summary>
-///     Stops the game and exits the application.
-/// </summary>
-private void OnExitGamePressed()
-{
-    Environment.Exit(0);
-}
+#nullable enable
+    public void OnExitGamePressed(object? sender, EventArgs? e)
+    {
+        OnExitGamePressed();
+    }
+#nullable disable
 
-/// <summary>
-///     Toggles the FPS overlay.
-/// </summary>
-private void OnFpsToggleShowKeyPressed()
+    /// <summary>
+    ///     Stops the game and exits the application.
+    /// </summary>
+    public static void OnExitGamePressed()
+    {
+        Environment.Exit(0);
+    }
+
+    /// <summary>
+    ///     Toggles the FPS overlay.
+    /// </summary>
+    private void OnFpsToggleShowKeyPressed()
     {
         if (ANXYGame.Instance.GamePaused)
         {
@@ -220,6 +241,11 @@ private void OnFpsToggleShowKeyPressed()
         _inGameOverlay.ShowWelcomeAndTutorial(ShowWelcomeAndTutorial);
 
         PlayerInput.Instance.AnyMovementKeyPressed -= OnStartMoving;
+    }
+
+    private void OnEndReached()
+    {
+        _inGameOverlay.ShowEndReached(true);
     }
 
     public bool WaitingForKeyPress()

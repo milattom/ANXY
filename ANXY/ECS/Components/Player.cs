@@ -2,6 +2,7 @@
 using ANXY.Start;
 using Microsoft.Xna.Framework;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using static ANXY.ECS.Components.BoxCollider;
 
@@ -15,6 +16,7 @@ public class Player : Component
     public Vector2 Velocity => _velocity;
     private Vector2 _velocity = Vector2.Zero;
     public Vector2 InputDirection { get; private set; } = Vector2.Zero;
+    public event Action EndReached;
 
     /// <summary>
     /// PlayerState describes in what movement state the Player currently is
@@ -105,6 +107,11 @@ public class Player : Component
     {
         var playerBoxCollider = Entity.GetComponent<BoxCollider>();
         var colliders = BoxColliderSystem.GetCollisions(playerBoxCollider);
+
+        if (colliders.Any(c => c.LayerMask.Equals("End") ))
+        {
+            EndReached?.Invoke();
+        }
 
         var leftRightColliders = colliders.Where(col =>
         {

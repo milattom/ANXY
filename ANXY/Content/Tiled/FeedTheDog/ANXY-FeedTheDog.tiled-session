@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "C:/Users/Gamer/Documents/Git/ANXY/ANXY/Content/Tiled/BA/JumpNRun-1.tmx",
+    "activeFile": "",
     "expandedProjectPaths": [
         "."
     ],
@@ -20,8 +20,8 @@
             "scale": 0.75,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 449.99999999999994,
-                "y": 1158.6666666666665
+                "x": 2938,
+                "y": 784
             }
         },
         "C:/Users/Gamer/Documents/Git/ANXY/ANXY/Content/Tiled/BA/TileSetTest2.tsx": {
@@ -35,8 +35,8 @@
             "scale": 3,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 255.99999999999997,
-                "y": 511.8333333333333
+                "x": 255.83333333333331,
+                "y": 511.66666666666663
             }
         },
         "FeedTheDog.tmx#Market": {
@@ -47,8 +47,6 @@
     "map.fixedSize": false,
     "map.lastUsedFormat": "tmx",
     "openFiles": [
-        "FeedTheDog.tmx",
-        "C:/Users/Gamer/Documents/Git/ANXY/ANXY/Content/Tiled/BA/JumpNRun-1.tmx"
     ],
     "project": "ANXY-FeedTheDog.tiled-project",
     "recentFiles": [

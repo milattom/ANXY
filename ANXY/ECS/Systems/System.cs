@@ -118,6 +118,11 @@ class PlayerSystem : System<Player>
             .ToList();
         otherComponentBoxCollider.ForEach(b => b.Destroy());
     }
+
+    public int GetPlayerCount()
+    {
+        return components.Count;
+    }
 }
 class PlayerSpriteSystem : System<PlayerSpriteRenderer>
 {

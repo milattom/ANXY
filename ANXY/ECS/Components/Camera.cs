@@ -36,11 +36,11 @@ public class Camera : Component
     {
         var ClampedEntityPosition = Vector2.Clamp(
             Entity.Position,
-            _player.Entity.Position - new Vector2(0.25f, 0.15f) * _resolution,
-            _player.Entity.Position + new Vector2(0.25f, 0.15f) * _resolution);
+            _player.Entity.Position - new Vector2(0.5f, 0f) * _resolution,
+            _player.Entity.Position + new Vector2(0f, 0.7f) * _resolution);
 
         Entity.Position = ClampedEntityPosition;
-        DrawOffset = Entity.Position - 0.5f * _resolution;
+        DrawOffset = Entity.Position - new Vector2(0.15f,0.8f) * _resolution;
     }
 
     /// <summary>

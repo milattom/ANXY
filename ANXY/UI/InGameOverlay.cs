@@ -1,4 +1,5 @@
 ﻿using ANXY.ECS.Components;
+using ANXY.ECS.Systems;
 using ANXY.Start;
 using Microsoft.Xna.Framework;
 using Myra.Graphics2D;
@@ -7,7 +8,6 @@ using Myra.Graphics2D.UI;
 using System;
 using System.Globalization;
 using System.Text;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace ANXY.UI
 {
@@ -18,7 +18,8 @@ namespace ANXY.UI
         private float _minFpsValue = float.MaxValue;
         private float _lastFpsTextUpdate = 0.0f;
         private float _lastMinMaxFpsTextUpdate = 0.0f;
-        private readonly NumberFormatInfo _nfi;
+        private readonly NumberFormatInfo _nfiThousandsFloat;
+        private readonly NumberFormatInfo _nfiThousandsInt;
         private readonly Player _player;
 
         //UI Elements
@@ -27,17 +28,22 @@ namespace ANXY.UI
         private Label _lblMinFps;
         private VerticalStackPanel _uiFPS;
         private Label _lblDebugPlayerLocation;
-        private Label lblDebugPlayerMidair;
-        private Label lblDebugToggleHitboxesControls;
-        private VerticalStackPanel uiDebug;
+        private Label _lblDebugPlayerMidair;
+        private Label _lblDebugToggleHitboxesControls;
+        private Label _lblNrOfPlayers;
+        private VerticalStackPanel _uiDebug;
         private float _lastDebugTextUpdate = 0.0f;
         private readonly float _debugTextUpdateTime = 1 / 3.0f;
         private VerticalStackPanel _uiWelcomeAndTutorial;
         private Label _lblMoveTutorial;
         private Label _lblJumpTutorial;
         private Label _lblMenuTutorial;
-        private Label _lblFastestTime;
+        private VerticalStackPanel _uiEndReached;
+        private Label _lblTimeForRun;
+        public TextButton BtnResetGame { get; private set; }
+        public TextButton BtnEndGame { get; private set; }
         private VerticalStackPanel _uiFastestTime;
+        private Label _lblFastestTime;
 
         //StopWatch elements
         private double _stopWatchTime;
@@ -51,9 +57,14 @@ namespace ANXY.UI
         {
             BuildUI();
             _stopWatchStringBuilder = new StringBuilder();
-            _nfi = (NumberFormatInfo)
-            CultureInfo.InvariantCulture.NumberFormat.Clone();
-            _nfi.NumberGroupSeparator = "'";
+            _nfiThousandsFloat = (NumberFormatInfo)
+                CultureInfo.InvariantCulture.NumberFormat.Clone();
+            _nfiThousandsFloat.NumberGroupSeparator = "'";
+
+            _nfiThousandsInt = (NumberFormatInfo)
+                CultureInfo.InvariantCulture.NumberFormat.Clone();
+            _nfiThousandsInt.NumberGroupSeparator = "'";
+            _nfiThousandsInt.NumberDecimalDigits = 0;
             _player = (Player)SystemManager.Instance.FindSystemByType<Player>().GetFirstComponent();
         }
 
@@ -108,18 +119,24 @@ namespace ANXY.UI
                 Text = "X/Y: 12.34 / 56.78",
                 HorizontalAlignment = HorizontalAlignment.Center
             };
-            lblDebugPlayerMidair = new Label
+            _lblDebugPlayerMidair = new Label
             {
                 Text = "Midair: false",
                 HorizontalAlignment = HorizontalAlignment.Center
             };
-            lblDebugToggleHitboxesControls = new Label
+            _lblDebugToggleHitboxesControls = new Label
             {
                 Text = "Spawn new Players with " + PlayerInput.Instance.InputSettings.Debug.SpawnNewPlayer,
-                Padding = new Thickness(0, 7, 0, 0),
+                Padding = new Thickness(0, 15, 0, 0),
                 HorizontalAlignment = HorizontalAlignment.Center
             };
-            uiDebug = new VerticalStackPanel
+            _lblNrOfPlayers = new Label
+            {
+                Text = "Nr of Players: ",
+                Padding = new Thickness(0, 0, 0, 0),
+                HorizontalAlignment = HorizontalAlignment.Center
+            };
+            _uiDebug = new VerticalStackPanel
             {
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Top,
@@ -127,11 +144,55 @@ namespace ANXY.UI
                 GridColumn = 1,
                 Background = new SolidBrush("#FF0000DD")
             };
-            uiDebug.Widgets.Add(lblDebugTitle);
-            uiDebug.Widgets.Add(_lblDebugPlayerLocation);
-            uiDebug.Widgets.Add(lblDebugPlayerMidair);
-            uiDebug.Widgets.Add(lblDebugToggleHitboxesControls);
-            uiDebug.Visible = false;
+            _uiDebug.Widgets.Add(lblDebugTitle);
+            _uiDebug.Widgets.Add(_lblDebugPlayerLocation);
+            _uiDebug.Widgets.Add(_lblDebugPlayerMidair);
+            _uiDebug.Widgets.Add(_lblDebugToggleHitboxesControls);
+            _uiDebug.Widgets.Add(_lblNrOfPlayers);
+            _uiDebug.Visible = false;
+
+            //EndReached Overlay
+            var _lblCongratulations = new Label()
+            {
+                Text = "Congratulations!",
+                Padding = new Thickness(10),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Scale = new Vector2(2, 2)
+            };
+            _lblTimeForRun = new Label()
+            {
+                Text = "Time for run: ",
+                Padding = new Thickness(5),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            BtnResetGame = new TextButton
+            {
+                Text = "Restart Game",
+                Padding = new Thickness(10),
+                HorizontalAlignment = HorizontalAlignment.Stretch
+            };
+            BtnEndGame = new TextButton
+            {
+                Text = "End Game",
+                Padding = new Thickness(10),
+                HorizontalAlignment = HorizontalAlignment.Stretch
+            };
+            _uiEndReached = new VerticalStackPanel
+            {
+                Spacing = 15,
+                Padding = new Thickness(75, 25, 75, 25),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                GridRow = 1,
+                GridColumn = 1,
+                Background = new SolidBrush("#000000DD")
+            };
+            _uiEndReached.Widgets.Add(_lblCongratulations);
+            _uiEndReached.Widgets.Add(_lblTimeForRun);
+            _uiEndReached.Widgets.Add(BtnResetGame);
+            _uiEndReached.Widgets.Add(BtnEndGame);
+            _uiEndReached.Visible = false;
 
             //StopWatch Overlay
             _lblStopWatch = new Label
@@ -204,7 +265,7 @@ namespace ANXY.UI
             {
                 Spacing = 2,
                 HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Top,
                 Padding = new Thickness(10, 10, 10, 10),
                 GridColumn = 1,
                 GridRow = 1,
@@ -239,13 +300,15 @@ namespace ANXY.UI
             };
             uiAnxietyMeter.Widgets.Add(lblAnxietyMeterDescription);
             uiAnxietyMeter.Widgets.Add(lblAnxietyMeter);
+            uiAnxietyMeter.Visible = false;
 
             //Assemble the In Game Overlay and set Properties
             Padding = new Thickness(15, 15, 15, 5);
             Widgets.Add(_uiFPS);
-            Widgets.Add(uiDebug);
+            Widgets.Add(_uiDebug);
             Widgets.Add(uiStopWatch);
             Widgets.Add(_uiWelcomeAndTutorial);
+            Widgets.Add(_uiEndReached);
             Widgets.Add(uiAnxietyMeter);
         }
 
@@ -258,7 +321,7 @@ namespace ANXY.UI
 
         private void UpdateFPS(GameTime gameTime)
         {
-            if (ANXYGame.Instance.GamePaused ||!_uiFPS.Visible)
+            if (ANXYGame.Instance.GamePaused || !_uiFPS.Visible)
             {
                 return;
             }
@@ -280,14 +343,14 @@ namespace ANXY.UI
 
             if (_lastFpsTextUpdate >= _currentFpsRefreshTime)
             {
-                _lblCurrentFps.Text = "Current FPS: " + _fpsValue.ToString("n", _nfi);
+                _lblCurrentFps.Text = "Current FPS: " + _fpsValue.ToString("n", _nfiThousandsFloat);
                 _lastFpsTextUpdate = 0;
             }
 
             if (_lastMinMaxFpsTextUpdate >= _minMaxFpsRefreshTime)
             {
-                _lblMinFps.Text = "Min: " + _minFpsValue.ToString("n", _nfi);
-                _lblMaxFps.Text = "Max: " + _maxFpsValue.ToString("n", _nfi);
+                _lblMinFps.Text = "Min: " + _minFpsValue.ToString("n", _nfiThousandsFloat);
+                _lblMaxFps.Text = "Max: " + _maxFpsValue.ToString("n", _nfiThousandsFloat);
                 _maxFpsValue = float.MinValue;
                 _minFpsValue = float.MaxValue;
                 _lastMinMaxFpsTextUpdate = 0;
@@ -296,7 +359,7 @@ namespace ANXY.UI
 
         public void UpdateStopWatch(GameTime gameTime)
         {
-            if (ANXYGame.Instance.GamePaused || _uiWelcomeAndTutorial.Visible)
+            if (ANXYGame.Instance.GamePaused || _uiEndReached.Visible || _uiWelcomeAndTutorial.Visible)
             {
                 return;
             }
@@ -331,13 +394,14 @@ namespace ANXY.UI
             var gameTimeElapsedSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
             _lastDebugTextUpdate += gameTimeElapsedSeconds;
 
-            lblDebugToggleHitboxesControls.Text = "Spawn new Players with " + PlayerInput.Instance.InputSettings.Debug.SpawnNewPlayer;
+            _lblDebugToggleHitboxesControls.Text = "Spawn new Players with " + PlayerInput.Instance.InputSettings.Debug.SpawnNewPlayer;
 
-            if (ANXYGame.Instance.GamePaused || !uiDebug.Visible || _lastDebugTextUpdate < _debugTextUpdateTime)
+            if (ANXYGame.Instance.GamePaused || !_uiDebug.Visible || _lastDebugTextUpdate < _debugTextUpdateTime)
                 return;
             _lastDebugTextUpdate = 0.0f;
-            _lblDebugPlayerLocation.Text = "X/Y: " + _player.Entity.Position.X.ToString("n", _nfi) + " / " + _player.Entity.Position.Y.ToString("n", _nfi);
-            lblDebugPlayerMidair.Text = "Midair: " + _player.MidAir.ToString();
+            _lblDebugPlayerLocation.Text = "X/Y: " + _player.Entity.Position.X.ToString("n", _nfiThousandsFloat) + " / " + _player.Entity.Position.Y.ToString("n", _nfiThousandsFloat);
+            _lblDebugPlayerMidair.Text = "Midair: " + _player.MidAir.ToString();
+            _lblNrOfPlayers.Text = "Nr of Players: " + PlayerSystem.Instance.GetPlayerCount().ToString("n", _nfiThousandsInt);
         }
 
         public void Reset()
@@ -345,6 +409,9 @@ namespace ANXY.UI
             ResetStopWatch();
             ResetTutorial();
             ResetFpsUI();
+            _uiEndReached.Visible = false;
+            _uiWelcomeAndTutorial.Visible = true;
+            ShowEndReached(false);
         }
 
         private void ResetStopWatch()
@@ -382,12 +449,23 @@ namespace ANXY.UI
 
         public void ShowDebug(bool show)
         {
-            uiDebug.Visible = show;
+            _uiDebug.Visible = show;
         }
 
         public void ShowWelcomeAndTutorial(bool show)
         {
             _uiWelcomeAndTutorial.Visible = show;
+        }
+
+        public void ShowEndReached(bool show)
+        {
+            _uiEndReached.Visible = show;
+            _uiWelcomeAndTutorial.Visible = !show;
+            RewriteEndReachedText();
+        }
+        private void RewriteEndReachedText()
+        {
+            _lblTimeForRun.Text = "Time for run: " + _lblStopWatch.Text;
         }
     }
 }
