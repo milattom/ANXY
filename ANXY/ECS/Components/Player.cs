@@ -1,8 +1,8 @@
 ﻿using ANXY.ECS.Systems;
 using ANXY.Start;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using static ANXY.ECS.Components.BoxCollider;
 
@@ -15,8 +15,8 @@ public class Player : Component
 {
     public Vector2 Velocity => _velocity;
     private Vector2 _velocity = Vector2.Zero;
-    public PlayerState State { get; private set; } = PlayerState.Idle;
     public Vector2 InputDirection { get; private set; } = Vector2.Zero;
+    public event Action EndReached;
 
     /// <summary>
     /// PlayerState describes in what movement state the Player currently is
@@ -31,7 +31,6 @@ public class Player : Component
         Falling
     }
 
-    //TODO remove GroundLevel or reduce it to Window Bottom Edge when Level is fully implemented in Tiled.
     private const float Gravity = 350;
     private const float JumpVelocity = 300;
     public bool MidAir { get; private set; } = true;
@@ -54,9 +53,13 @@ public class Player : Component
         ANXYGame.Instance.GamePausedChanged += OnGamePausedChanged;
     }
 
+    public override void Destroy()
+    {
+        PlayerSystem.Instance.Unregister(this);
+    }
+
     /// <summary>
     /// Update, called multiple times per Frame. (Update Cycle)
-    /// TODO remove input from here and move it to PlayerInputController
     /// - checks input, moves the player accordingly.
     /// - creates gravity and checks for collisions.
     /// - updates position of Player Entity
@@ -67,17 +70,17 @@ public class Player : Component
         //keyboard input
         InputDirection = Vector2.Zero;
 
-        if (PlayerInput.Instance.IsWalkingRight())
+        if (PlayerInput.Instance.IsWalkingRight)
             InputDirection += new Vector2(1, 0);
 
-        if (PlayerInput.Instance.IsWalkingLeft())
+        if (PlayerInput.Instance.IsWalkingLeft)
             InputDirection += new Vector2(-1, 0);
 
         //velocity update
         var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
         var acceleration = new Vector2(WalkAcceleration * InputDirection.X, Gravity);
         _velocity += acceleration * dt;
-        if (PlayerInput.Instance.IsJumping() && !MidAir)
+        if (PlayerInput.Instance.IsJumping && !MidAir)
         {
             _velocity.Y = -JumpVelocity;
             MidAir = true;
@@ -92,51 +95,44 @@ public class Player : Component
         HandleCollisions();
     }
 
-    public void Reset()
-    {
-        _velocity = Vector2.Zero;
-        Entity.Position = new Vector2(1200, 540);
-    }
-
     private void OnGamePausedChanged(bool gamePaused)
     {
         IsActive = !gamePaused;
     }
 
     /// <summary>
-    /// TODO
+    /// Handles Collisions with other Entities
     /// </summary>
     private void HandleCollisions()
     {
         var playerBoxCollider = Entity.GetComponent<BoxCollider>();
-        var colliders = BoxColliderSystem.Instance.GetCollisions(playerBoxCollider);
+        var colliders = BoxColliderSystem.GetCollisions(playerBoxCollider);
+
+        if (colliders.Any(c => c.LayerMask.Equals("End") ))
+        {
+            EndReached?.Invoke();
+        }
 
         var leftRightColliders = colliders.Where(col =>
         {
             var detectedEdge = BoxColliderSystem.DetectEdge(playerBoxCollider, col);
             return detectedEdge == Edge.Left || detectedEdge == Edge.Right;
         });
-        foreach (var collider in leftRightColliders)
+        foreach (var collider in leftRightColliders.Where(collider => BoxColliderSystem.IsColliding(playerBoxCollider, collider)))
         {
-            if (BoxColliderSystem.Instance.IsColliding(playerBoxCollider, collider))
-            {
-                ActOnCollider(collider);
-            }
+            ActOnCollider(collider);
         }
 
-        var restColliders = BoxColliderSystem.Instance.GetCollisions(playerBoxCollider);
+        var restColliders = BoxColliderSystem.GetCollisions(playerBoxCollider);
 
         if (restColliders.Count == 0)
         {
             MidAir = true;
         }
 
-        foreach (var collider in restColliders)
+        foreach (var collider in restColliders.Where(collider => BoxColliderSystem.IsColliding(playerBoxCollider, collider)))
         {
-            if (BoxColliderSystem.Instance.IsColliding(playerBoxCollider, collider))
-            {
-                ActOnCollider(collider);
-            }
+            ActOnCollider(collider);
         }
     }
 
@@ -170,7 +166,13 @@ public class Player : Component
                 Entity.Position = new Vector2(edgePosition - playerBoxCollider.Offset.X, Entity.Position.Y);
                 break;
             default:
-                throw new ArgumentOutOfRangeException("Collision happened but no edge case");
+                throw new ArgumentException("Collision happened but no edge case");
         }
+    }
+
+    public void Reset()
+    {
+        _velocity = Vector2.Zero;
+        Entity.Position = ANXYGame.Instance.SpawnPosition;
     }
 }

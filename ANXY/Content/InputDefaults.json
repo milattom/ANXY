@@ -1,19 +1,19 @@
 {
-    "Movement": {
-        "Left": "A",
-        "Right": "D",
-        "Jump": "Space"
-    },
-    "Menu": {
-        "Key": "Escape"
-    },
-    "ShowFps": {
-        "Key": "F1"
-    },
-    "CapFps": {
-        "Key": "F4"
-    },
-    "Fullscreen": {
-        "Key": "F11"
-    }
+  "Debug": {
+    "Toggle": "F5",
+    "SpawnNewPlayer": "F7"
+  },
+  "Fps": {
+    "Cap": "F3",
+    "ToggleShow": "F1"
+  },
+  "General": {
+    "Fullscreen": "F11",
+    "Menu": "Escape"
+  },
+  "Movement": {
+    "Jump": "Space",
+    "Left": "A",
+    "Right": "D"
+  }
 }

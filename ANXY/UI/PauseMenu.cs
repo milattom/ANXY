@@ -16,62 +16,74 @@ namespace ANXY.UI
         public event Action ExitGamePressed;
         public PauseMenu()
         {
-            var textBox1 = new TextBox();
-            textBox1.Text = "PAUSE";
-            textBox1.TextColor = ColorStorage.CreateColor(255, 255, 255, 255);
-            textBox1.Readonly = true;
-            textBox1.TextVerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
-            textBox1.HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment.Center;
-            textBox1.Height = 50;
-            textBox1.Padding = new Thickness(10);
-            textBox1.VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
-            textBox1.Scale = new Vector2(2, 2);
-            textBox1.Background = new SolidBrush("#00000000");
+            var lblTitle = new TextBox
+            {
+                Text = "PAUSE",
+                TextColor = ColorStorage.CreateColor(255, 255, 255, 255),
+                Readonly = true,
+                TextVerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Height = 50,
+                Padding = new Thickness(10),
+                VerticalAlignment = VerticalAlignment.Center,
+                Scale = new Vector2(2, 2),
+                Background = new SolidBrush("#00000000")
+            };
 
-            var textButton1 = new TextButton();
-            textButton1.Text = "Resume Game";
-            textButton1.Padding = new Thickness(10);
-            textButton1.HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment.Stretch;
-            textButton1.Click += OnResumeClicked;
+            var btnResumeGame = new TextButton
+            {
+                Text = "Resume Game",
+                Padding = new Thickness(10),
+                HorizontalAlignment = HorizontalAlignment.Stretch
+            };
+            btnResumeGame.Click += OnResumeClicked;
 
 
-            var textButton2 = new TextButton();
-            textButton2.Text = "Restart Game";
-            textButton2.Padding = new Thickness(10);
-            textButton2.HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment.Stretch;
-            textButton2.Click += OnResetGameClicked;
+            var btnRestartGame = new TextButton
+            {
+                Text = "Restart Game",
+                Padding = new Thickness(10),
+                HorizontalAlignment = HorizontalAlignment.Stretch
+            };
+            btnRestartGame.Click += OnResetGameClicked;
 
-            var textButton3 = new TextButton();
-            textButton3.Text = "Controls";
-            textButton3.Padding = new Thickness(10);
-            textButton3.HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment.Stretch;
-            textButton3.Click += OnControlsClicked;
+            var btnControls = new TextButton
+            {
+                Text = "Controls",
+                Padding = new Thickness(10),
+                HorizontalAlignment = HorizontalAlignment.Stretch
+            };
+            btnControls.Click += OnControlsClicked;
 
-            var textButton4 = new TextButton();
-            textButton4.Text = "Credits";
-            textButton4.Padding = new Thickness(10);
-            textButton4.HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment.Stretch;
-            textButton4.Click += OnCreditsClicked;
+            var btnCredits = new TextButton
+            {
+                Text = "Credits",
+                Padding = new Thickness(10),
+                HorizontalAlignment = HorizontalAlignment.Stretch
+            };
+            btnCredits.Click += OnCreditsClicked;
 
-            var textButton5 = new TextButton();
-            textButton5.Text = "Exit Game";
-            textButton5.Padding = new Thickness(10);
-            textButton5.HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment.Stretch;
-            textButton5.Click += OnExitGameClicked;
+            var btnExitGame = new TextButton
+            {
+                Text = "Exit Game",
+                Padding = new Thickness(10),
+                HorizontalAlignment = HorizontalAlignment.Stretch
+            };
+            btnExitGame.Click += OnExitGameClicked;
 
 
             Spacing = 20;
-            HorizontalAlignment = Myra.Graphics2D.UI.HorizontalAlignment.Center;
-            VerticalAlignment = Myra.Graphics2D.UI.VerticalAlignment.Center;
+            HorizontalAlignment = HorizontalAlignment.Center;
+            VerticalAlignment = VerticalAlignment.Center;
             MinWidth = 500;
             Padding = new Thickness(50);
             Background = new SolidBrush("#0000FFAA");
-            Widgets.Add(textBox1);
-            Widgets.Add(textButton1);
-            Widgets.Add(textButton2);
-            Widgets.Add(textButton3);
-            Widgets.Add(textButton4);
-            Widgets.Add(textButton5);
+            Widgets.Add(lblTitle);
+            Widgets.Add(btnResumeGame);
+            Widgets.Add(btnRestartGame);
+            Widgets.Add(btnControls);
+            Widgets.Add(btnCredits);
+            Widgets.Add(btnExitGame);
         }
 
         private void OnExitGameClicked(object sender, EventArgs e)

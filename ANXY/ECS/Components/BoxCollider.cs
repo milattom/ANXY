@@ -1,4 +1,5 @@
 ﻿using ANXY.ECS.Systems;
+using ANXY.Start;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -122,5 +123,10 @@ public class BoxCollider : Component
     public void Dehighlight()
     {
         _highlightColor = _inactiveColor;
+    }
+
+    public override void Destroy()
+    {
+        BoxColliderSystem.Instance.Unregister(this);
     }
 }

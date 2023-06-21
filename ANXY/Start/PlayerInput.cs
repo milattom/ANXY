@@ -2,11 +2,9 @@
 using ANXY.ECS.Systems;
 using ANXY.UI;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -14,50 +12,85 @@ using System.Reflection;
 namespace ANXY.Start;
 
 /// <summary>
-/// TODO Player Input Controller
-/// Checking for Keyboard input and setting everything accordingly. Every Class needing to check the Keyboard input must check it through this Class.
+/// Player Input
+/// Checking for Keyboard input and setting everything accordingly.
+/// Every Class that needs to check the Keyboard input must check it through this Class.
 /// </summary>
 public class PlayerInput
 {
     ///Singleton Pattern
     private static readonly Lazy<PlayerInput> lazy = new(() => new PlayerInput());
     public static PlayerInput Instance => lazy.Value;
-
-    public event Action ShowFpsKeyPressed;
-    public event Action LimitFpsKeyPressed;
+    public event Action DebugToggleKeyPressed;
+    public event Action DebugSpawnNewPlayerPressed;
+    public event Action FpsCapKeyPressed;
+    public event Action FpsToggleShowKeyPressed;
     public event Action FullscreenKeyPressed;
+    public event Action AnyMovementKeyPressed;
     public event Action<Keys> AnyKeyPressed;
-    public event Action MovementKeyPressed;
 
-    public InputSettings inputSettings { get; private set; }
-
-    public class InputSettings
-    {
-        public MovementSettings Movement { get; set; }
-        public KeySetting Menu { get; set; }
-        public KeySetting ShowFps { get; set; }
-        public KeySetting CapFps { get; set; }
-        public KeySetting Fullscreen { get; set; }
-    }
-
-    public class MovementSettings
-    {
-        public string Left { get; set; }
-        public string Right { get; set; }
-        public string Jump { get; set; }
-    }
-
-    public class KeySetting
-    {
-        public string Key { get; set; }
-    }
 
     private KeyboardState currentKeyboardState;
     private KeyboardState lastKeyboardState;
-    private Keys leftKey, rightKey, jumpKey, menuKey, showFpsKey, limitFpsKey, fullscreenKey;
-    private List<Keys> keys = new List<Keys>();
-    private string userValuePath;
-    private string defaultValuePath;
+    private Keys fpsCapKey, fpsToggleShowKey, debugKey, debugSpawnNewPlayer, fullscreenKey, menuKey, movementJumpKey, movementLeftKey, movementRightKey;
+    public InputKeyStrings InputSettings { get; private set; }
+    private String userValuePath;
+    private String defaultValuePath;
+    private bool IsMenuKeyDisabled = false;
+
+    public void Update()
+    {
+        SetCurrentState();
+
+        if (currentKeyboardState.GetPressedKeys().Length > 0 && !lastKeyboardState.IsKeyDown(currentKeyboardState.GetPressedKeys()[0]))
+        {
+            KeyPressed(currentKeyboardState.GetPressedKeys()[0]);
+        }
+        if (WasDebugToggleKeyJustPressed)
+            DebugToggleKeyPressed?.Invoke();
+        if (WasDebugSpawnNewPlayerKeyJustPressed)
+            DebugSpawnNewPlayerPressed?.Invoke();
+        if (WasFpsCapKeyJustPressed)
+            FpsCapKeyPressed?.Invoke();
+        if (WasFpsToggleShowKeyJustPressed)
+            FpsToggleShowKeyPressed?.Invoke();
+        if (WasFullscreenKeyJustPressed)
+            FullscreenKeyPressed?.Invoke();
+        if (WasMenuKeyJustPressed())
+            ANXYGame.Instance.SetGamePaused(!ANXYGame.Instance.GamePaused);
+
+        if (IsMenuKeyDisabled && !UIManager.Instance.WaitingForKeyPress())
+        {
+            EnableMenuKey();
+        }
+
+        if (UIManager.Instance.ShowWelcomeAndTutorial && IsMovementKeyPressed())
+        {
+            AnyMovementKeyPressed?.Invoke();
+        }
+
+        SetLastState();
+    }
+
+    public void SetCurrentState()
+    {
+        currentKeyboardState = Keyboard.GetState();
+    }
+
+    public void SetLastState()
+    {
+        lastKeyboardState = currentKeyboardState;
+    }
+
+    private void KeyPressed(Keys key)
+    {
+        AnyKeyPressed?.Invoke(key);
+    }
+
+    private bool IsMovementKeyPressed()
+    {
+        return IsWalkingRight || IsWalkingLeft || IsJumping;
+    }
 
     public void Initialize()
     // Access the content files
@@ -66,8 +99,6 @@ public class PlayerInput
 
         string contentRootPath = Path.GetDirectoryName(assemblyLocation);
         string tempLocation = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-
-        Debug.WriteLine("\nThis is temp: " + tempLocation + "\n");
 
         string tempFolderANXY = Path.Combine(tempLocation, "ANXY");
         Directory.CreateDirectory(tempFolderANXY);
@@ -96,65 +127,28 @@ public class PlayerInput
         }
     }
 
-    public void Update(GameTime gameTime)
+    private void Load(string fileName)
     {
-        SetCurrentState();
-
-        if (currentKeyboardState.GetPressedKeys().Length > 0 && !lastKeyboardState.IsKeyDown(currentKeyboardState.GetPressedKeys()[0]))
+        string json = File.ReadAllText(fileName);
+        InputSettings = JsonConvert.DeserializeObject<InputKeyStrings>(json);
+        try
         {
-            // Raise the key press event
-            KeyPressed(currentKeyboardState.GetPressedKeys()[0]);
+            UpdateKeys();
         }
-
-        if (IsLimitFpsKeyPressed())
+        catch (Exception)
         {
-            LimitFpsKeyPressed?.Invoke();
+            ResetToDefaults();
         }
-
-        if (IsMenuKeyPressed)
-        {
-            ANXYGame.Instance.SetGamePaused(!ANXYGame.Instance.GamePaused);
-        }
-
-        if (IsShowFpsKeyPressed())
-        {
-            ShowFpsKeyPressed?.Invoke();
-        }
-
-        if (IsFullscreenPressed())
-        {
-            FullscreenKeyPressed?.Invoke();
-        }
-
-        if (UIManager.Instance.ShowWelcomeAndTutorial)
-        {
-            if (IsMovementKeyPressed())
-            {
-                MovementKeyPressed?.Invoke();
-            }
-        }
-
-        SetLastState();
     }
 
-    public void SetCurrentState()
+    public void SetInputSettings(InputKeyStrings inputSettings)
     {
-        currentKeyboardState = Keyboard.GetState();
-    }
-
-    public void SetLastState()
-    {
-        lastKeyboardState = currentKeyboardState;
-    }
-
-    public void SetInputSettings(InputSettings inputSettings)
-    {
-        this.inputSettings = inputSettings;
+        InputSettings = inputSettings;
     }
 
     public void Save()
     {
-        string json = JsonConvert.SerializeObject(inputSettings, Formatting.Indented);
+        string json = JsonConvert.SerializeObject(InputSettings, Formatting.Indented);
         File.WriteAllText(userValuePath, json);
         UpdateKeys();
     }
@@ -166,88 +160,111 @@ public class PlayerInput
         Load(userValuePath);
     }
 
-    public bool IsWalkingRight()
+    private void UpdateKeys()
     {
-        return currentKeyboardState.IsKeyDown(rightKey);
+        // Convert the MovementSettings keys
+        try
+        {
+            fpsCapKey = Enum.Parse<Keys>(InputSettings.Fps.Cap);
+            fpsToggleShowKey = Enum.Parse<Keys>(InputSettings.Fps.ToggleShow);
+            debugKey = Enum.Parse<Keys>(InputSettings.Debug.Toggle);
+            debugSpawnNewPlayer = Enum.Parse<Keys>(InputSettings.Debug.SpawnNewPlayer);
+            fullscreenKey = Enum.Parse<Keys>(InputSettings.General.Fullscreen);
+            menuKey = Enum.Parse<Keys>(InputSettings.General.Menu);
+            movementJumpKey = Enum.Parse<Keys>(InputSettings.Movement.Jump);
+            movementLeftKey = Enum.Parse<Keys>(InputSettings.Movement.Left);
+            movementRightKey = Enum.Parse<Keys>(InputSettings.Movement.Right);
+        }
+        catch (Exception e)
+        {
+            Debug.WriteLine(e.Message);
+            throw new FormatException("Failed to update keys.", e);
+        }
     }
 
-    public bool IsWalkingLeft()
+// check input keys
+    public bool WasDebugToggleKeyJustPressed => WasKeyJustPressed(debugKey);
+    public bool WasDebugSpawnNewPlayerKeyJustPressed => WasKeyJustPressed(debugSpawnNewPlayer);
+    public bool WasFpsCapKeyJustPressed => WasKeyJustPressed(fpsCapKey);
+    public bool WasFpsToggleShowKeyJustPressed => WasKeyJustPressed(fpsToggleShowKey);
+    public bool WasFullscreenKeyJustPressed => WasKeyJustPressed(fullscreenKey);
+    public bool WasMenuKeyJustPressed()
     {
-        return currentKeyboardState.IsKeyDown(leftKey);
+        if (IsMenuKeyDisabled)
+        {
+            return false;
+        }
+        return WasKeyJustPressed(menuKey);
     }
-
-    public bool IsJumping()
-    {
-        return currentKeyboardState.IsKeyDown(jumpKey);
-    }
-
-    public bool IsMenuKeyPressed => IsKeyPressed(menuKey);
-
-    public bool IsShowFpsKeyPressed()
-    {
-        return IsKeyPressed(showFpsKey);
-    }
-
-    public bool IsLimitFpsKeyPressed()
-    {
-        return IsKeyPressed(limitFpsKey);
-    }
-
-    public bool IsFullscreenPressed()
-    {
-        return IsKeyPressed(fullscreenKey);
-    }
-
-    private bool IsKeyPressed(Keys key)
+    public bool IsWalkingRight => currentKeyboardState.IsKeyDown(movementRightKey);
+    public bool IsWalkingLeft => currentKeyboardState.IsKeyDown(movementLeftKey);
+    public bool IsJumping => currentKeyboardState.IsKeyDown(movementJumpKey);
+    private bool WasKeyJustPressed(Keys key)
     {
         return currentKeyboardState.IsKeyDown(key) && !lastKeyboardState.IsKeyDown(key);
     }
 
-    private void KeyPressed(Keys key)
+    public void EnableMenuKey()
     {
-        AnyKeyPressed?.Invoke(key);
+        IsMenuKeyDisabled = false;
     }
 
-    private bool IsMovementKeyPressed()
+    public void DisableMenuKey()
     {
-        return IsWalkingLeft() || IsWalkingRight() || IsJumping();
+        IsMenuKeyDisabled = true;
     }
 
-    private void Load(string fileName)
+    // Nested Classes
+    /// <summary>
+    /// InputKeyString json file parsing
+    /// </summary>
+    public class InputKeyStrings
     {
-        string json = File.ReadAllText(fileName);
-        inputSettings = JsonConvert.DeserializeObject<InputSettings>(json);
-        try
-        {
-            UpdateKeys();
-        }
-        catch
-        {
-            ResetToDefaults();
-        }
+        public DebugKeys Debug { get; set; }
+        public FpsKeys Fps { get; set; } 
+        public GeneralKeys General { get; set; } 
+        public MovementKeys Movement { get; set; }
     }
-
-    private void UpdateKeys()
+    public class DebugKeys
     {
-        // Convert the MovementSettings keys
-        keys.Clear();
-        Enum.TryParse(inputSettings.Movement.Left, out leftKey);
-        keys.Add(leftKey);
-        Enum.TryParse(inputSettings.Movement.Right, out rightKey);
-        keys.Add(rightKey);
-        Enum.TryParse(inputSettings.Movement.Jump, out jumpKey);
-        keys.Add(jumpKey);
-        Enum.TryParse(inputSettings.Menu.Key, out menuKey);
-        keys.Add(menuKey);
-        Enum.TryParse(inputSettings.ShowFps.Key, out showFpsKey);
-        keys.Add(showFpsKey);
-        Enum.TryParse(inputSettings.CapFps.Key, out limitFpsKey);
-        keys.Add(limitFpsKey);
-        Enum.TryParse(inputSettings.Fullscreen.Key, out fullscreenKey);
-        keys.Add(fullscreenKey);
-        if (keys.Contains(Keys.None))
+        public DebugKeys(string toggle, string spawnNewPlayer)
         {
-            throw new Exception("One or more keys are not set in the InputUserValues.json file");
+            Toggle = toggle;
+            SpawnNewPlayer = spawnNewPlayer;
         }
+        public string Toggle { get; private set; }
+        public string SpawnNewPlayer { get; private set; }
+    }
+    public class FpsKeys
+    {
+        public FpsKeys(string cap, string toggleShow)
+        {
+            Cap = cap;
+            ToggleShow = toggleShow;
+        }
+        public string Cap { get; private set; }
+        public string ToggleShow { get; private set; }
+    }
+    public class GeneralKeys
+    {
+        public GeneralKeys(string fullscreen, string menu)
+        {
+            Fullscreen = fullscreen;
+            Menu = menu;
+        }
+        public string Fullscreen { get; private set; }
+        public string Menu { get; private set; }
+    }
+    public class MovementKeys
+    {
+        public MovementKeys(string jump, string left, string right)
+        {
+            Jump = jump;
+            Left = left;
+            Right = right;
+        }
+        public string Jump { get; private set; }
+        public string Left { get; private set; }
+        public string Right { get; private set; }
     }
 }

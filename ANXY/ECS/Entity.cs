@@ -10,10 +10,7 @@ namespace ANXY.ECS;
 /// </summary>
 public sealed class Entity
 {
-    public bool isActive = true;
-    public static int previousID;
     private readonly List<Component> _components = new();
-    public int ID { get; set; } = previousID++;
 
     public Vector2 Position { get; set; } = Vector2.Zero;
 
@@ -37,12 +34,6 @@ public sealed class Entity
     public T GetComponent<T>() where T : Component
     {
         return (T)_components.FirstOrDefault(c => c.GetType() == typeof(T));
-
-        /* see why this is the same
-        foreach (var component in _components)
-            if (component.GetType() == typeof(T))
-                return (T)component;
-        return null;*/
     }
 
     public List<T> GetComponents<T>() where T : Component

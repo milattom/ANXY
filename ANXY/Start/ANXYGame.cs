@@ -1,5 +1,5 @@
-﻿using ANXY.ECS;
-using ANXY.UI;
+﻿using ANXY.UI;
+using ANXY.ECS.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Tiled;
@@ -8,6 +8,7 @@ using System;
 using static ANXY.Start.EntityFactory;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
+using ANXY.ECS.Components;
 
 namespace ANXY.Start;
 
@@ -30,8 +31,8 @@ public class ANXYGame : Game
     private readonly GraphicsDeviceManager _graphics;
     private readonly Rectangle _screenBounds;
     private Rectangle _1080pSize = new(0, 0, 1920, 1080);
-    private int _windowHeight;
-    private int _windowWidth;
+    public int WindowHeight { get; private set;}
+    public int WindowWidth { get; private set;}
 
     // Game Map: TileSet, TileMap, Background, Layers.
     private SpriteBatch _spriteBatch;
@@ -39,6 +40,9 @@ public class ANXYGame : Game
     private Texture2D _backgroundSprite;
     private readonly string[] _backgroundLayerNames = { "Ground" };
     private readonly string[] _foregroundLayerNames = { "" };
+    private readonly string[] _spawnLayerNames = { "Spawn" };
+    private readonly string[] _endLayerNames = { "End" };
+    public Vector2 SpawnPosition { get; private set; } = Vector2.Zero;
 
     // Player: Sprite.
     private Texture2D _playerSprite;
@@ -72,8 +76,8 @@ public class ANXYGame : Game
         }
         Content.RootDirectory = contentRootDirectory;
 
-        _windowWidth = _graphics.PreferredBackBufferWidth;
-        _windowHeight = _graphics.PreferredBackBufferHeight;
+        WindowWidth = _graphics.PreferredBackBufferWidth;
+        WindowHeight = _graphics.PreferredBackBufferHeight;
 
         _graphics.GraphicsProfile = GraphicsProfile.HiDef;
 
@@ -104,13 +108,16 @@ public class ANXYGame : Game
         PlayerInput.Instance.Initialize();
 
         // Center window on screen and set size.
-        var xOffset = (_screenBounds.Width - _windowWidth) / 2;
-        var yOffset = (_screenBounds.Height - _windowHeight) / 2;
+        var xOffset = (_screenBounds.Width - WindowWidth) / 2;
+        var yOffset = (_screenBounds.Height - WindowHeight) / 2;
         Window.Position = new Point(xOffset, yOffset);
 
         // Register event handlers.
         GamePausedChanged += OnGamePausedChanged;
         Window.ClientSizeChanged += OnClientSizeChanged;
+        PlayerSystem.Instance.GetFirstComponent().Entity.GetComponent<Player>().EndReached += OnEndReached;
+
+        ToggleFullscreen();
     }
 
     /// <summary>
@@ -121,7 +128,7 @@ public class ANXYGame : Game
         // Create a new SpriteBatch. Load background picture, level tile map and player sprite.
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         _backgroundSprite = Content.Load<Texture2D>("Background-2");
-        _levelTileMap = Content.Load<TiledMap>("JumpNRun-1");
+        _levelTileMap = Content.Load<TiledMap>("./Tiled/BA/JumpNRun-1");
         _playerSprite = Content.Load<Texture2D>("playerAtlas");
 
         // Load Myra.
@@ -136,7 +143,7 @@ public class ANXYGame : Game
     protected override void Update(GameTime gameTime)
     {
         SystemManager.Instance.UpdateAll(gameTime);
-        PlayerInput.Instance.Update(gameTime);
+        PlayerInput.Instance.Update();
     }
 
     /// <summary>
@@ -153,9 +160,9 @@ public class ANXYGame : Game
         SystemManager.Instance.DrawAll(gameTime, _spriteBatch);
         _spriteBatch.End();
 
-        // Update UI and draw TODO: move Instance.Update to update
         UIManager.Instance.Update(gameTime);
         UIManager.Instance.Draw();
+        // Update UI and draw
     }
 
     // Other methods.
@@ -164,6 +171,9 @@ public class ANXYGame : Game
     /// </summary>
     private void CreateDefaultScene()
     {
+        SetSpawn();
+        SetEnd();
+
         CreateBackground();
         CreateBackgroundLayers();
         CreatePlayerInput();
@@ -177,7 +187,7 @@ public class ANXYGame : Game
     /// </summary>
     private void CreateBackground()
     {
-        EntityFactory.Instance.CreateEntity(EntityType.Background, new Object[] { _windowHeight, _windowWidth, _backgroundSprite });
+        EntityFactory.Instance.CreateEntity(EntityType.Background, new Object[] { WindowHeight, WindowWidth, _backgroundSprite });
     }
 
     /// <summary>
@@ -197,6 +207,41 @@ public class ANXYGame : Game
     private void CreateForegroundLayers()
     {
         foreach (String layerName in _foregroundLayerNames)
+        {
+            InitializeLevelLayer(layerName);
+        }
+    }
+
+    /// <summary>
+    ///     Create all Layers that are set behind the player.
+    /// </summary>
+    private void SetSpawn()
+    {
+        foreach (String layerName in _spawnLayerNames)
+        {
+            var tilesIndex = GetLayerIndexByLayerName(layerName);
+            if (tilesIndex == -1)
+                return;
+            var tiles = _levelTileMap.TileLayers[tilesIndex].Tiles;
+
+            foreach (var singleTile in tiles)
+            {
+                if (singleTile.GlobalIdentifier == 0)
+                    continue;
+
+                SpawnPosition = new Vector2(singleTile.X * _levelTileMap.TileWidth, singleTile.Y * _levelTileMap.TileHeight);
+                return;
+            }
+        }
+        SpawnPosition = new Vector2(1200, 540);
+    }
+
+    /// <summary>
+    ///     Create all Layers that are set behind the player.
+    /// </summary>
+    private void SetEnd()
+    {
+        foreach (String layerName in _endLayerNames)
         {
             InitializeLevelLayer(layerName);
         }
@@ -247,8 +292,10 @@ public class ANXYGame : Game
     /// </summary>
     private void CreatePlayerInput()
     {
-        PlayerInput.Instance.LimitFpsKeyPressed += ToggleFpsLimit;
+        PlayerInput.Instance.FpsCapKeyPressed += ToggleFpsLimit;
         PlayerInput.Instance.FullscreenKeyPressed += ToggleFullscreen;
+        PlayerInput.Instance.DebugToggleKeyPressed += SetDebugMode;
+        PlayerInput.Instance.DebugSpawnNewPlayerPressed += OnDebugSpawnNewPlayerPressed;
     }
 
     /// <summary>
@@ -264,7 +311,7 @@ public class ANXYGame : Game
     /// </summary>
     private void CreateCamera()
     {
-        EntityFactory.Instance.CreateEntity(EntityType.Camera, new Object[] { _windowHeight, _windowWidth });
+        EntityFactory.Instance.CreateEntity(EntityType.Camera, new Object[] { WindowHeight, WindowWidth});
     }
 
     /// <summary>
@@ -301,6 +348,16 @@ public class ANXYGame : Game
         GamePausedChanged?.Invoke(gamePaused);
     }
 
+    private void SetDebugMode()
+    {
+        BoxColliderSystem.EnableDebugMode(GraphicsDevice);
+    }
+
+    private void OnDebugSpawnNewPlayerPressed()
+    {
+        PlayerFactory.CreatePlayers(10, _playerSprite);
+    }
+
     // Event handlers.
     /// <summary>
     ///     Handle window resize by user, reset the window size and center the camera.
@@ -309,9 +366,9 @@ public class ANXYGame : Game
     /// <param name="eventArgs"></param>
     private void OnClientSizeChanged(object sender, EventArgs eventArgs)
     {
-        _windowWidth = Window.ClientBounds.Width;
-        _windowHeight = Window.ClientBounds.Height;
-        SystemManager.Instance.UpdateResolution(new Vector2(_windowWidth, _windowHeight));
+        WindowWidth = Window.ClientBounds.Width;
+        WindowHeight= Window.ClientBounds.Height;
+        SystemManager.Instance.UpdateResolution(new Vector2(WindowWidth, WindowHeight));
     }
 
     /// <summary>
@@ -322,5 +379,10 @@ public class ANXYGame : Game
     {
         IsMouseVisible = gamePaused;
         _graphics.ApplyChanges();
+    }
+
+    private void OnEndReached()
+    {
+        IsMouseVisible = true;
     }
 }
