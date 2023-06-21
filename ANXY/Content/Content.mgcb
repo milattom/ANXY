@@ -108,3 +108,25 @@
 /processor:TiledMapTilesetProcessor
 /build:Tiled/BA/TileSetTest2.tsx
 
+#begin Tiled/FeedTheDog/ANXY-FeedTheDog.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Tiled/FeedTheDog/ANXY-FeedTheDog.png
+
+#begin Tiled/FeedTheDog/ANXY.tsx
+/importer:TiledMapTilesetImporter
+/processor:TiledMapTilesetProcessor
+/build:Tiled/FeedTheDog/ANXY.tsx
+
+#begin Tiled/FeedTheDog/FeedTheDog.tmx
+/importer:TiledMapImporter
+/processor:TiledMapProcessor
+/build:Tiled/FeedTheDog/FeedTheDog.tmx
+

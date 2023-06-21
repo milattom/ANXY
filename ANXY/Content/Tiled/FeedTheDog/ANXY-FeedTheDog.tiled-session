@@ -3,10 +3,11 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "FeedTheDog.tmx",
     "expandedProjectPaths": [
         "."
     ],
+    "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "#Market": {
             "dynamicWrapping": false
@@ -30,30 +31,51 @@
         },
         "FeedTheDog.tmx": {
             "expandedGroupLayers": [
-                12
+                14,
+                12,
+                11
             ],
-            "scale": 3,
-            "selectedLayer": 2,
+            "scale": 0.75,
+            "selectedLayer": 15,
             "viewCenter": {
-                "x": 255.83333333333331,
-                "y": 511.66666666666663
+                "x": 500.6666666666667,
+                "y": 286.66666666666663
             }
         },
         "FeedTheDog.tmx#Market": {
-            "scaleInDock": 1.5
+            "dynamicWrapping": false,
+            "scaleInDock": 1.5,
+            "scaleInEditor": 1
+        },
+        "FeedTheDog2.tmx": {
+            "scale": 0.21868024553571427,
+            "selectedLayer": 15,
+            "viewCenter": {
+                "x": 258.36810207336543,
+                "y": 512.1633173843702
+            }
+        },
+        "FeedTheDog2.tmx#Market": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1
         }
     },
+    "last.exportedFilePath": "C:/Users/Gamer/Documents/Git/ANXY/ANXY/Content/Tiled/FeedTheDog",
     "last.imagePath": "C:/Users/Gamer/Documents/Git/ANXY/ANXY/Content/Tiled/FeedTheDog",
     "map.fixedSize": false,
+    "map.lastUsedExportFilter": "All Files (*)",
     "map.lastUsedFormat": "tmx",
     "openFiles": [
+        "ANXY.tsx",
+        "FeedTheDog.tmx"
     ],
     "project": "ANXY-FeedTheDog.tiled-project",
     "recentFiles": [
+        "ANXY.tsx",
         "FeedTheDog.tmx",
         "C:/Users/Gamer/Documents/Git/ANXY/ANXY/Content/Tiled/BA/JumpNRun-1.tmx",
-        "C:/Users/Gamer/Documents/Git/ANXY/ANXY/Content/Tiled/BA/TileSetTest2.tsx",
-        "ANXY.tsx"
+        "FeedTheDog2.tmx",
+        "C:/Users/Gamer/Documents/Git/ANXY/ANXY/Content/Tiled/BA/TileSetTest2.tsx"
     ],
     "tileset.embedInMap": true,
     "tileset.lastUsedFormat": "tsx",

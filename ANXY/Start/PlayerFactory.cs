@@ -61,11 +61,6 @@ namespace ANXY.Start
             return playerEntity;
         }
 
-        public List<Entity> GetPlayers()
-        {
-            return _players;
-        }
-
         /// <summary>
         /// Returns a random Vector2 within the bounderies [xMin, xMax] and [yMin, yMax].
         /// /// </summary>

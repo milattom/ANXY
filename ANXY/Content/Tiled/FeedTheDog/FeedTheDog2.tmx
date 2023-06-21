@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="92" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="25" nextobjectid="1">
- <editorsettings>
-  <export target="FeedTheDog2.tmx" format="tmx"/>
- </editorsettings>
- <tileset firstgid="1" name="Market" tilewidth="32" tileheight="32" tilecount="4420" columns="68" objectalignment="topleft">
+ <tileset firstgid="1" name="Market" tilewidth="32" tileheight="32" tilecount="4420" columns="68">
   <image source="ANXY-FeedTheDog.png" width="2184" height="2086"/>
   <tile id="2332">
    <objectgroup draworder="index" id="2">
