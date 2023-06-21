@@ -1,5 +1,6 @@
-﻿using ANXY.UI;
+﻿using ANXY.ECS.Components;
 using ANXY.ECS.Systems;
+using ANXY.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Tiled;
@@ -8,7 +9,6 @@ using System;
 using static ANXY.Start.EntityFactory;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
-using ANXY.ECS.Components;
 
 namespace ANXY.Start;
 
@@ -31,8 +31,8 @@ public class ANXYGame : Game
     private readonly GraphicsDeviceManager _graphics;
     private readonly Rectangle _screenBounds;
     private Rectangle _1080pSize = new(0, 0, 1920, 1080);
-    public int WindowHeight { get; private set;}
-    public int WindowWidth { get; private set;}
+    public int WindowHeight { get; private set; }
+    public int WindowWidth { get; private set; }
 
     // Game Map: TileSet, TileMap, Background, Layers.
     private SpriteBatch _spriteBatch;
@@ -42,6 +42,7 @@ public class ANXYGame : Game
     private readonly string[] _foregroundLayerNames = { "" };
     private readonly string[] _spawnLayerNames = { "Spawn" };
     private readonly string[] _endLayerNames = { "End" };
+    public Vector2 GameLoadSpawnPosition { get; private set; } = Vector2.Zero;
     public Vector2 SpawnPosition { get; private set; } = Vector2.Zero;
 
     // Player: Sprite.
@@ -117,7 +118,7 @@ public class ANXYGame : Game
         Window.ClientSizeChanged += OnClientSizeChanged;
         PlayerSystem.Instance.GetFirstComponent().Entity.GetComponent<Player>().EndReached += OnEndReached;
 
-        ToggleFullscreen();
+        ToggleFpsLimit();
     }
 
     /// <summary>
@@ -229,11 +230,12 @@ public class ANXYGame : Game
                 if (singleTile.GlobalIdentifier == 0)
                     continue;
 
-                SpawnPosition = new Vector2(singleTile.X * _levelTileMap.TileWidth, singleTile.Y * _levelTileMap.TileHeight);
+                GameLoadSpawnPosition = new Vector2(singleTile.X * _levelTileMap.TileWidth, singleTile.Y * _levelTileMap.TileHeight);
+                SpawnPosition = new Vector2(GameLoadSpawnPosition.X, (singleTile.Y + 2) * _levelTileMap.TileHeight);
                 return;
             }
         }
-        SpawnPosition = new Vector2(1200, 540);
+        GameLoadSpawnPosition = new Vector2(1200, 540);
     }
 
     /// <summary>
@@ -311,7 +313,7 @@ public class ANXYGame : Game
     /// </summary>
     private void CreateCamera()
     {
-        EntityFactory.Instance.CreateEntity(EntityType.Camera, new Object[] { WindowHeight, WindowWidth});
+        EntityFactory.Instance.CreateEntity(EntityType.Camera, new Object[] { WindowHeight, WindowWidth });
     }
 
     /// <summary>
@@ -350,7 +352,7 @@ public class ANXYGame : Game
 
     private void SetDebugMode()
     {
-        BoxColliderSystem.EnableDebugMode(GraphicsDevice);
+        BoxColliderSystem.ToggleDebugMode(GraphicsDevice);
     }
 
     private void OnDebugSpawnNewPlayerPressed()
@@ -367,7 +369,7 @@ public class ANXYGame : Game
     private void OnClientSizeChanged(object sender, EventArgs eventArgs)
     {
         WindowWidth = Window.ClientBounds.Width;
-        WindowHeight= Window.ClientBounds.Height;
+        WindowHeight = Window.ClientBounds.Height;
         SystemManager.Instance.UpdateResolution(new Vector2(WindowWidth, WindowHeight));
     }
 

@@ -42,8 +42,6 @@ namespace ANXY.UI
         private Label _lblTimeForRun;
         public TextButton BtnResetGame { get; private set; }
         public TextButton BtnEndGame { get; private set; }
-        private VerticalStackPanel _uiFastestTime;
-        private Label _lblFastestTime;
 
         //StopWatch elements
         private double _stopWatchTime;
@@ -183,7 +181,7 @@ namespace ANXY.UI
                 Spacing = 15,
                 Padding = new Thickness(75, 25, 75, 25),
                 HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Top,
                 GridRow = 1,
                 GridColumn = 1,
                 Background = new SolidBrush("#000000DD")
@@ -205,12 +203,12 @@ namespace ANXY.UI
                 Text = "Fastest time:",
                 HorizontalAlignment = HorizontalAlignment.Right
             };
-            _lblFastestTime = new Label
+            var _lblFastestTime = new Label
             {
                 Text = "12:34:56.78",
                 HorizontalAlignment = HorizontalAlignment.Right
             };
-            _uiFastestTime = new VerticalStackPanel
+            var _uiFastestTime = new VerticalStackPanel
             {
                 Spacing = 2,
                 Padding = new Thickness(5)
@@ -401,7 +399,7 @@ namespace ANXY.UI
             _lastDebugTextUpdate = 0.0f;
             _lblDebugPlayerLocation.Text = "X/Y: " + _player.Entity.Position.X.ToString("n", _nfiThousandsFloat) + " / " + _player.Entity.Position.Y.ToString("n", _nfiThousandsFloat);
             _lblDebugPlayerMidair.Text = "Midair: " + _player.MidAir.ToString();
-            _lblNrOfPlayers.Text = "Nr of Players: " + PlayerSystem.Instance.GetPlayerCount().ToString("n", _nfiThousandsInt);
+            _lblNrOfPlayers.Text = "Nr of Players: " + PlayerSystem.GetPlayerCount().ToString("n", _nfiThousandsInt);
         }
 
         public void Reset()

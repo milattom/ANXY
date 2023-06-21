@@ -66,7 +66,7 @@ internal class EntityFactory
     private Entity CreatePlayerEntity()
     {
         var playerSprite = (Texture2D)_optional[0];
-        return PlayerFactory.CreatePlayer(ANXYGame.Instance.SpawnPosition, playerSprite);
+        return PlayerFactory.CreatePlayer(ANXYGame.Instance.GameLoadSpawnPosition, playerSprite);
     }
 
     private Entity CreateTileEntity()

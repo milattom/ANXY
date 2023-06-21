@@ -19,7 +19,7 @@ namespace ANXY.ECS.Systems;
 /// <typeparam name="T">Type of component</typeparam>
 public class System<T> : ISystem where T : Component
 {
-    protected static List<T> components = new();
+    protected static readonly List<T> components = new();
 
     /// <summary>
     /// Adds a component to the system.
@@ -32,7 +32,7 @@ public class System<T> : ISystem where T : Component
 
     public void Unregister(T component)
     {
-          components.Remove(component);
+        components.Remove(component);
     }
 
     /// <summary>
@@ -119,7 +119,7 @@ class PlayerSystem : System<Player>
         otherComponentBoxCollider.ForEach(b => b.Destroy());
     }
 
-    public int GetPlayerCount()
+    public static int GetPlayerCount()
     {
         return components.Count;
     }
