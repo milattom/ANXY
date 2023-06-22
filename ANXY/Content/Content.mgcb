@@ -10,8 +10,7 @@
 
 #-------------------------------- References --------------------------------#
 
-/reference:..\..\..\..\.nuget\packages\monogame.extended.content.pipeline\3.9.0-alpha0084\tools\MonoGame.Extended.Content.Pipeline.dll
-/reference:..\..\..\..\..\..\.nuget\packages\monogame.extended.content.pipeline\3.9.0-alpha0084\tools\MonoGame.Extended.Content.Pipeline.dll
+/reference:..\..\DLL\3.9.0-alpha0084\tools\MonoGame.Extended.Content.Pipeline.dll
 
 #---------------------------------- Content ---------------------------------#
 
@@ -51,11 +50,6 @@
 /processorParam:TextureFormat=Color
 /build:Background.jpg
 
-#begin JumpNRun-1.tmx
-/importer:TiledMapImporter
-/processor:TiledMapProcessor
-/build:JumpNRun-1.tmx
-
 #begin PlayerAtlas.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -80,12 +74,12 @@
 /processorParam:TextureFormat=Color
 /build:PlayerCharacter.png
 
-#begin TileMapSet2.tmx
+#begin Tiled/BA/JumpNRun-1.tmx
 /importer:TiledMapImporter
 /processor:TiledMapProcessor
-/build:TileMapSet2.tmx
+/build:Tiled/BA/JumpNRun-1.tmx
 
-#begin TileSet2.png
+#begin Tiled/BA/TileSet-Edited.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -95,10 +89,22 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:TileSet2.png
+/build:Tiled/BA/TileSet-Edited.png
 
-#begin TileSetTest2.tsx
+#begin Tiled/BA/TileSet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Tiled/BA/TileSet.png
+
+#begin Tiled/BA/TileSetTest2.tsx
 /importer:TiledMapTilesetImporter
 /processor:TiledMapTilesetProcessor
-/build:TileSetTest2.tsx
+/build:Tiled/BA/TileSetTest2.tsx
 

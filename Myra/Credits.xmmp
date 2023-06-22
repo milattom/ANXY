@@ -1,0 +1,32 @@
+<Project>
+  <Project.ExportOptions Namespace="ANXY" Class="Credits" OutputPath="C:\Users\Gamer\Desktop" />
+  <Grid ColumnSpacing="10" RowSpacing="5" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="500" Margin="10" Padding="10, 30, 10, 10" Background="#0000FF16">
+    <Label Text="ANXY" TextAlign="Center" HorizontalAlignment="Center" GridColumnSpan="2" Scale="2, 2" />
+    <Label Text="Game Developers" GridRow="3" />
+    <Label Text="Dominic Akeret" GridColumn="1" GridRow="3" />
+    <Label Text="Tomas Stefan Milata" GridColumn="1" GridRow="4" />
+    <Label Text="Game Publisher" GridRow="6" />
+    <Label Text="mayfly studios" GridColumn="1" GridRow="6" />
+    <Label Text="Contributors" GridRow="8" />
+    <Label Text="Andreas Meier (Professor)" GridColumn="1" GridRow="8" />
+    <Label Text="pixlhero (Game Testing)" GridColumn="1" GridRow="9" />
+    <Label Text="Art and Graphics" GridRow="11" />
+    <Label Text="Dominic Akeret" GridColumn="1" GridRow="11" />
+    <Label Text="Pixel Frog (Tileset)" GridColumn="1" GridRow="12" />
+    <Label Text="Daniel Ap (Background)" GridColumn="1" GridRow="13" />
+    <Label Text="GameEngine" GridRow="15" />
+    <Label Text="ANXY Game Engine" GridColumn="1" GridRow="15" />
+    <Label Text="Framework" GridRow="16" />
+    <Label Text="MonoGame" GridColumn="1" GridRow="16" />
+    <Label Text=".NET" GridColumn="1" GridRow="17" />
+    <Label Text="Tools" GridRow="19" />
+    <Label Text="Myra" GridColumn="1" GridRow="19" />
+    <Label Text="Tiled" GridColumn="1" GridRow="20" />
+    <Label Text="Visual Studio" GridColumn="1" GridRow="21" />
+    <Label Text="Legal Notice" GridRow="23" />
+    <Label Text="CC BY-NC-ND" GridColumn="1" GridRow="23" />
+    <Label Text="Contact Information" GridRow="24" />
+    <Label Text="GitHub.com/milattom/ANXY" GridColumn="1" GridRow="24" />
+    <TextButton Text="Return" GridRow="26" Id="btnReturn" />
+  </Grid>
+</Project>

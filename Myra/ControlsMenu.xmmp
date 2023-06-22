@@ -1,0 +1,33 @@
+<Project>
+  <Project.ExportOptions Namespace="ANXY" Class="Controls" OutputPath="C:\Users\Gamer\Desktop" />
+  <Grid ColumnSpacing="10" RowSpacing="5" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="500" Margin="10" Padding="10" Background="#0000FF22" >
+    <Grid.ColumnsProportions>
+      <Proportion Type="Auto" />
+    </Grid.ColumnsProportions>
+    <Grid.RowsProportions>
+      <Proportion Type="Auto" />
+    </Grid.RowsProportions>
+    <Label Text="Key" VerticalAlignment="Center" GridColumn="2" />
+        
+<Label Text="Movement" VerticalAlignment="Center" GridRow="1" />
+    <Label Text="Move Left" VerticalAlignment="Center" GridColumn="1" GridRow="2" />
+    <TextButton Text="A" MinWidth="100" Padding="10" VerticalAlignment="Center" GridColumn="2" GridRow="2" Id="btnMoveLeft" />
+    <Label Text="Move Right" VerticalAlignment="Center" GridColumn="1" GridRow="3" />
+    <TextButton Text="D" MinWidth="100" Padding="10" VerticalAlignment="Center" GridColumn="2" GridRow="3" Id="btnMoveRight" />
+    <Label Text="Jump" VerticalAlignment="Center" GridColumn="1" GridRow="4" />
+    <TextButton Text="Space" MinWidth="100" Padding="10" VerticalAlignment="Center" GridColumn="2" GridRow="4" Id="btnJump" />
+        
+<Label Text="General" VerticalAlignment="Center" GridRow="5" />    
+    <Label Text="Waiting for Key Press" TextColor="#FE3930FF" Left="-40" VerticalAlignment="Center" GridColumn="2" GridRow="5" />
+    <Label Text="Menu" VerticalAlignment="Center" GridColumn="1" GridRow="6" />
+    <TextButton Text="ESC" MinWidth="100" Padding="10" VerticalAlignment="Center" GridColumn="2" GridRow="6" Id="btnMenu" />
+    <Label Text="Show FPS" VerticalAlignment="Center" GridColumn="1" GridRow="7" />
+    <TextButton Text="F1" MinWidth="100" Padding="10" VerticalAlignment="Center" GridColumn="2" GridRow="7" Id="btnShowFps" />
+    <Label Text="V Sync (FPS cap)" VerticalAlignment="Center" GridColumn="1" GridRow="8" />
+    <TextButton Text="F4" MinWidth="100" Padding="10" VerticalAlignment="Center" GridColumn="2" GridRow="8" Id="btnCapFPS" />
+        
+<TextButton Text="Return" MinWidth="100" Padding="10" VerticalAlignment="Center" GridRow="10" Id="btnReturnFromControls" />
+    <TextButton Text="Load Defaults" MinWidth="100" Padding="10" HorizontalAlignment="Right" VerticalAlignment="Center" GridColumn="1" GridRow="10" Id="btnLoadDefaults" />
+    <TextButton Text="Save Changes" MinWidth="100" Padding="10" VerticalAlignment="Center" GridColumn="2" GridRow="10" Id="btnSaveChanges" />    
+  </Grid>  
+</Project>

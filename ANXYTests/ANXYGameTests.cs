@@ -1,8 +1,5 @@
-﻿using ANXY.EntityComponent;
+﻿using ANXY.Start;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.Xna.Framework;
-using ANXY.EntityComponent.Components;
-using ANXY.Start;
 
 namespace ANXY.Tests
 {

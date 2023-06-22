@@ -18,7 +18,8 @@ anxY is a nerve wrecking Nightmare Jump & Run Game developed by mayfly studios w
     - [Map](#DIY-Game-Map)
 - [About](#About)
     - [Idea](#About-Idea)
-    - [Class Diagram](#About-ClassDiagram)
+    - [Class Diagram 2023](#About-ClassDiagram2023)
+    - [Old Class Diagram 2022](#About-ClassDiagram)
     - [Pattern](#About-Pattern)
     - [Tests](#About-Tests)
     - [Tools Used](#About-Tools-Used)
@@ -233,9 +234,13 @@ From [Tiled](https://www.mapeditor.org/) install the newest Version.
 <a id="About-Idea"></a>
 ## Idea
 
+<a id="About-ClassDiagram2023"></a>
+## Class Diagram 2023
+[<img src="./Content/Images/ClassDiagram2023_new.svg" alt="Drawing of the Class Diagram for anxY" width="100%">](./Content/Images/ClassDiagram2023_new.svg?raw=true "anxY Class Diagram 2023")
+
 <a id="About-ClassDiagram"></a>
-## Class Diagram
-[<img src="./Content/Images/ClassDiagram.svg" alt="Drawing of the Class Diagram for anxY" width="100%">](./Content/Images/ClassDiagram.svg?raw=true "anxY Class Diagram")
+## Old Class Diagram 2022
+[<img src="./Content/Images/ClassDiagram.svg" alt="Drawing of the Class Diagram for anxY" width="100%">](./Content/Images/ClassDiagram.svg?raw=true "anxY Class Diagram 2022 (old)")
 
 <a id="About-Pattern"></a>
 ## Pattern used

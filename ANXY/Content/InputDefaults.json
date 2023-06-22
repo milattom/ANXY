@@ -1,0 +1,19 @@
+{
+  "Debug": {
+    "Toggle": "F5",
+    "SpawnNewPlayer": "F7"
+  },
+  "Fps": {
+    "Cap": "F3",
+    "ToggleShow": "F1"
+  },
+  "General": {
+    "Fullscreen": "F11",
+    "Menu": "Escape"
+  },
+  "Movement": {
+    "Jump": "Space",
+    "Left": "A",
+    "Right": "D"
+  }
+}
