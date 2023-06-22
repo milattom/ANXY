@@ -139,6 +139,7 @@ namespace ANXY.UI
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Top,
                 Padding = new Thickness(5),
+                Margin = new Thickness(0, 50, 0, 0),
                 GridColumn = 1,
                 Background = new SolidBrush("#FF0000DD")
             };
