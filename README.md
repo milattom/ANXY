@@ -236,7 +236,7 @@ From [Tiled](https://www.mapeditor.org/) install the newest Version.
 
 <a id="About-ClassDiagram2023"></a>
 ## Class Diagram 2023
-[<img src="./Content/Images/ClassDiagram2023.svg" alt="Drawing of the Class Diagram for anxY" width="100%">](./Content/Images/ClassDiagram2023.svg?raw=true "anxY Class Diagram 2023")
+[<img src="./Content/Images/ClassDiagram2023_new.svg" alt="Drawing of the Class Diagram for anxY" width="100%">](./Content/Images/ClassDiagram2023_new.svg?raw=true "anxY Class Diagram 2023")
 
 <a id="About-ClassDiagram"></a>
 ## Old Class Diagram 2022
