@@ -249,7 +249,15 @@ public class ANXYGame : Game
                     if (singleTile.GlobalIdentifier == 0)
                         continue;
 
-                    GameLoadSpawnPosition = new Vector2(singleTile.X * _levelTileMap.TileWidth, singleTile.Y * _levelTileMap.TileHeight);
+                    if (OperatingSystem.IsMacCatalyst() || OperatingSystem.IsMacOS())
+                    {
+                        GameLoadSpawnPosition = new Vector2(singleTile.X * _levelTileMap.TileWidth, (singleTile.Y - 3) * _levelTileMap.TileHeight);
+                    }
+                    else
+                    {
+                        GameLoadSpawnPosition = new Vector2(singleTile.X * _levelTileMap.TileWidth, (singleTile.Y) * _levelTileMap.TileHeight);
+                    }
+                    
                     SpawnPosition = new Vector2(GameLoadSpawnPosition.X, (singleTile.Y + 2) * _levelTileMap.TileHeight);
                     return;
                 }
