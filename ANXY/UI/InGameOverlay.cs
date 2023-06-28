@@ -38,14 +38,18 @@ namespace ANXY.UI
         private Label _lblMoveTutorial;
         private Label _lblJumpTutorial;
         private Label _lblMenuTutorial;
-        private VerticalStackPanel _uiEndReached;
+        public VerticalStackPanel UiEndReached { get; private set; }
         private Label _lblTimeForRun;
+        private Label _lblNewHighscore;
         public TextButton BtnResetGame { get; private set; }
         public TextButton BtnEndGame { get; private set; }
 
         //StopWatch elements
         private double _stopWatchTime;
+        private double _fastestTime = Double.PositiveInfinity;
         private Label _lblStopWatch;
+        private Label _lblFastestTime;
+        private VerticalStackPanel _uiFastestTime;
         private readonly double _currentFpsRefreshTime = 1 / 3.0;
         private readonly double _minMaxFpsRefreshTime = 2;
 
@@ -154,16 +158,31 @@ namespace ANXY.UI
             var _lblCongratulations = new Label()
             {
                 Text = "Congratulations!",
-                Padding = new Thickness(10),
+                Padding = new Thickness(10,10,10,5),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Scale = new Vector2(2, 2)
+            };
+            var _lblFedTheDog = new Label()
+            {
+                Text = "You've fed the dog.",
+                Padding = new Thickness(10,0,10,10),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Scale = new Vector2(2, 2)
             };
             _lblTimeForRun = new Label()
             {
                 Text = "Time for run: ",
-                Padding = new Thickness(5),
+                Padding = new Thickness(5,5,5,0),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center
+            };
+            _lblNewHighscore = new Label()
+            {
+                Text = "New Highscore!",
+                Padding = new Thickness(5,-10,5,20),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Visible = false
             };
             BtnResetGame = new TextButton
             {
@@ -177,7 +196,7 @@ namespace ANXY.UI
                 Padding = new Thickness(10),
                 HorizontalAlignment = HorizontalAlignment.Stretch
             };
-            _uiEndReached = new VerticalStackPanel
+            UiEndReached = new VerticalStackPanel
             {
                 Spacing = 15,
                 Padding = new Thickness(75, 25, 75, 25),
@@ -187,11 +206,13 @@ namespace ANXY.UI
                 GridColumn = 1,
                 Background = new SolidBrush("#000000DD")
             };
-            _uiEndReached.Widgets.Add(_lblCongratulations);
-            _uiEndReached.Widgets.Add(_lblTimeForRun);
-            _uiEndReached.Widgets.Add(BtnResetGame);
-            _uiEndReached.Widgets.Add(BtnEndGame);
-            _uiEndReached.Visible = false;
+            UiEndReached.Widgets.Add(_lblCongratulations);
+            UiEndReached.Widgets.Add(_lblFedTheDog);
+            UiEndReached.Widgets.Add(_lblTimeForRun);
+            UiEndReached.Widgets.Add(_lblNewHighscore);
+            UiEndReached.Widgets.Add(BtnResetGame);
+            UiEndReached.Widgets.Add(BtnEndGame);
+            UiEndReached.Visible = false;
 
             //StopWatch Overlay
             _lblStopWatch = new Label
@@ -204,18 +225,19 @@ namespace ANXY.UI
                 Text = "Fastest time:",
                 HorizontalAlignment = HorizontalAlignment.Right
             };
-            var _lblFastestTime = new Label
+            _lblFastestTime = new Label
             {
-                Text = "12:34:56.78",
+                Text = FormatTime(_fastestTime),
                 HorizontalAlignment = HorizontalAlignment.Right
             };
-            var _uiFastestTime = new VerticalStackPanel
+            _uiFastestTime = new VerticalStackPanel
             {
                 Spacing = 2,
-                Padding = new Thickness(5)
+                Padding = new Thickness(5,20,0,5)
             };
             _uiFastestTime.Widgets.Add(lblFastestTimeDescription);
             _uiFastestTime.Widgets.Add(_lblFastestTime);
+            _uiFastestTime.ShowGridLines = true;
             _uiFastestTime.Visible = false;
             var uiStopWatch = new VerticalStackPanel
             {
@@ -236,6 +258,12 @@ namespace ANXY.UI
                 Padding = new Thickness(0, 0, 0, 4),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Scale = new Vector2(2, 2)
+            };
+            var lblAnxyFeedTheDog = new Label
+            {
+                Text = "You forgot to feed the dog!",
+                Padding = new Thickness(0, 0, 0, 4),
+                HorizontalAlignment = HorizontalAlignment.Center,
             };
             var lblWelcome = new Label
             {
@@ -272,6 +300,7 @@ namespace ANXY.UI
             };
             _uiWelcomeAndTutorial.Widgets.Add(lblWelcome);
             _uiWelcomeAndTutorial.Widgets.Add(lblAnxy);
+            _uiWelcomeAndTutorial.Widgets.Add(lblAnxyFeedTheDog);
             _uiWelcomeAndTutorial.Widgets.Add(lblFiller);
             _uiWelcomeAndTutorial.Widgets.Add(_lblMoveTutorial);
             _uiWelcomeAndTutorial.Widgets.Add(_lblJumpTutorial);
@@ -307,7 +336,7 @@ namespace ANXY.UI
             Widgets.Add(_uiDebug);
             Widgets.Add(uiStopWatch);
             Widgets.Add(_uiWelcomeAndTutorial);
-            Widgets.Add(_uiEndReached);
+            Widgets.Add(UiEndReached);
             Widgets.Add(uiAnxietyMeter);
         }
 
@@ -358,7 +387,7 @@ namespace ANXY.UI
 
         public void UpdateStopWatch(GameTime gameTime)
         {
-            if (ANXYGame.Instance.GamePaused || _uiEndReached.Visible || _uiWelcomeAndTutorial.Visible)
+            if (ANXYGame.Instance.GamePaused || UiEndReached.Visible || _uiWelcomeAndTutorial.Visible)
             {
                 return;
             }
@@ -366,26 +395,7 @@ namespace ANXY.UI
             var gameTimeElapsedSeconds = gameTime.ElapsedGameTime.TotalSeconds;
             _stopWatchTime += gameTimeElapsedSeconds;
 
-            TimeSpan timeSpan = TimeSpan.FromSeconds(_stopWatchTime);
-
-            if (timeSpan.Hours > 0)
-            {
-                _stopWatchStringBuilder.Append(string.Format("{0:00}:", timeSpan.Hours));
-            }
-
-            if (timeSpan.Minutes > 0 || timeSpan.Hours > 0)
-            {
-                _stopWatchStringBuilder.Append(string.Format("{0:00}:", timeSpan.Minutes));
-                _stopWatchStringBuilder.Append(string.Format("{0:00}.{1:00}", timeSpan.Seconds, timeSpan.Milliseconds / 10));
-            }
-            else
-            {
-                _stopWatchStringBuilder.Append(string.Format("{0:0}.{1:00}", timeSpan.Seconds, timeSpan.Milliseconds / 10));
-            }
-
-
-            _lblStopWatch.Text = _stopWatchStringBuilder.ToString();
-            _stopWatchStringBuilder.Clear();
+            _lblStopWatch.Text = FormatTime(_stopWatchTime);
         }
 
         private void UpdateDebug(GameTime gameTime)
@@ -408,9 +418,13 @@ namespace ANXY.UI
             ResetStopWatch();
             ResetTutorial();
             ResetFpsUI();
-            _uiEndReached.Visible = false;
+            UiEndReached.Visible = false;
             _uiWelcomeAndTutorial.Visible = true;
             ShowEndReached(false);
+            if (_fastestTime == Double.PositiveInfinity)
+            {
+                _uiFastestTime.Visible = false;
+            }
         }
 
         private void ResetStopWatch()
@@ -458,13 +472,56 @@ namespace ANXY.UI
 
         public void ShowEndReached(bool show)
         {
-            _uiEndReached.Visible = show;
+            UiEndReached.Visible = show;
             _uiWelcomeAndTutorial.Visible = !show;
+            _uiFastestTime.Visible = true;
+
             RewriteEndReachedText();
+
+            if (_fastestTime > _stopWatchTime && show)
+            {
+                _fastestTime = _stopWatchTime;
+
+                _lblFastestTime.Text = FormatTime(_fastestTime);
+
+                _lblNewHighscore.Visible = true;
+            }
+            else
+            {
+                _lblNewHighscore.Visible = false;
+            }
         }
         private void RewriteEndReachedText()
         {
             _lblTimeForRun.Text = "Time for run: " + _lblStopWatch.Text;
+        }
+
+        private String FormatTime(double time)
+        {
+            if(time == Double.PositiveInfinity)
+            {
+                return "∞";
+            }
+
+            TimeSpan timeSpan = TimeSpan.FromSeconds(time);
+
+            if (timeSpan.Hours > 0)
+            {
+                _stopWatchStringBuilder.Append(string.Format("{0:00}:", timeSpan.Hours));
+            }
+
+            if (timeSpan.Minutes > 0 || timeSpan.Hours > 0)
+            {
+                _stopWatchStringBuilder.Append(string.Format("{0:00}:", timeSpan.Minutes));
+                _stopWatchStringBuilder.Append(string.Format("{0:00}.{1:00}", timeSpan.Seconds, timeSpan.Milliseconds / 10));
+            }
+            else
+            {
+                _stopWatchStringBuilder.Append(string.Format("{0:0}.{1:00}", timeSpan.Seconds, timeSpan.Milliseconds / 10));
+            }
+            var result = _stopWatchStringBuilder.ToString();
+            _stopWatchStringBuilder.Clear();
+            return result;
         }
     }
 }

@@ -28,6 +28,7 @@ public class ANXYGame : Game
     ///     Shows if the game is paused or not.
     /// </summary>
     public bool GamePaused { get; private set; } = false;
+    private bool _debugActive = false;
 
     // Window size, style.
     private readonly GraphicsDeviceManager _graphics;
@@ -43,12 +44,19 @@ public class ANXYGame : Game
     private readonly string[] _backgroundLayerNames = { "Ground", "BehindPlayer" };
     public readonly string[] _foregroundLayerNames = { "InFrontOfPlayer" };
     private readonly string[] _spawnLayerNames = { "Spawn" };
+    private readonly string[] _dogSpawnLayerNames = { "Dog" };
     private readonly string[] _endLayerNames = { "End" };
     public Vector2 GameLoadSpawnPosition { get; private set; } = Vector2.Zero;
+    public Vector2 GameLoadDogSpawnPosition { get; private set; } = Vector2.Zero;
     public Vector2 SpawnPosition { get; private set; } = Vector2.Zero;
+    public Vector2 DogSpawnPosition { get; private set; } = Vector2.Zero;
+
 
     // Player: Sprite.
     private Texture2D _playerSprite;
+
+    // Dog: Sprite.
+    private Texture2D _dogSprite;
 
     // Content: Root Directory.
     private readonly string contentRootDirectory = "Content";
@@ -131,9 +139,9 @@ public class ANXYGame : Game
         // Create a new SpriteBatch. Load background picture, level tile map and player sprite.
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         _backgroundSprite = Content.Load<Texture2D>("Background-2");
-        //_levelTileMap = Content.Load<TiledMap>("./Tiled/BA/JumpNRun-1");
         _levelTileMap = Content.Load<TiledMap>("./Tiled/FeedTheDog/FeedTheDog-TileMap");
         _playerSprite = Content.Load<Texture2D>("playerAtlas");
+        _dogSprite = Content.Load<Texture2D>("dogAtlas");
 
         // Load Myra.
         MyraEnvironment.Game = this;
@@ -178,14 +186,17 @@ public class ANXYGame : Game
         CreateBackground();
         CreateBackgroundLayers();
 
+        SetDogSpawn();
         SetSpawn();
         SetEnd();
 
         CreatePlayerInput();
         CreatePlayer();
         CreateCamera();
+        CreateDog();
 
         CreateForegroundLayers();
+        ToggleFpsLimit();
     }
 
     /// <summary>
@@ -245,6 +256,34 @@ public class ANXYGame : Game
             }
         }
         GameLoadSpawnPosition = new Vector2(1200, 540);
+    }
+
+    /// <summary>
+    ///     Create all Layers that are set behind the player.
+    /// </summary>
+    private void SetDogSpawn()
+    {
+        foreach (String layerName in _dogSpawnLayerNames)
+        {
+            var tileIndexes = GetLayerIndexByLayerName(layerName);
+            if (tileIndexes.Count == 0)
+                return;
+
+            foreach (var currentTileIndex in tileIndexes)
+            {
+                var tiles = _levelTileMap.TileLayers[currentTileIndex].Tiles;
+
+                foreach (var singleTile in tiles)
+                {
+                    if (singleTile.GlobalIdentifier == 0)
+                        continue;
+
+                    GameLoadDogSpawnPosition = new Vector2(singleTile.X * _levelTileMap.TileWidth, singleTile.Y* _levelTileMap.TileHeight-6);
+                    return;
+                }
+            }
+        }
+        GameLoadDogSpawnPosition = new Vector2(1200, 540);
     }
 
     /// <summary>
@@ -323,6 +362,14 @@ public class ANXYGame : Game
     }
 
     /// <summary>
+    ///     Creates and initializes Player.
+    /// </summary>
+    private void CreateDog()
+    {
+        EntityFactory.Instance.CreateEntity(EntityType.Dog, new Object[] { _dogSprite });
+    }
+
+    /// <summary>
     ///    Creates and initializes Camera.
     /// </summary>
     private void CreateCamera()
@@ -366,12 +413,14 @@ public class ANXYGame : Game
 
     private void SetDebugMode()
     {
-        BoxColliderSystem.ToggleDebugMode(GraphicsDevice);
+        _debugActive = !_debugActive;
+        BoxColliderSystem.ToggleDebugMode(GraphicsDevice, _debugActive);
     }
 
     private void OnDebugSpawnNewPlayerPressed()
     {
         PlayerFactory.CreatePlayers(10, _playerSprite);
+        BoxColliderSystem.ToggleDebugMode(GraphicsDevice, _debugActive);
     }
 
     // Event handlers.

@@ -125,6 +125,22 @@ class PlayerSystem : System<Player>
         return components.Count;
     }
 }
+class DogSpriteSystem : System<DogSpriteRenderer>
+{
+    private static readonly Lazy<DogSpriteSystem> _lazy = new(() => new DogSpriteSystem());
+    public static DogSpriteSystem Instance => _lazy.Value;
+    private DogSpriteSystem()
+    {
+        SystemManager.Instance.Register(this);
+    }
+
+    internal void Reset()
+    {
+        var dogSpriteRenderer = (DogSpriteRenderer)GetFirstComponent();
+        dogSpriteRenderer.Reset();
+    }
+}
+
 class PlayerSpriteSystem : System<PlayerSpriteRenderer>
 {
     private static readonly Lazy<PlayerSpriteSystem> _lazy = new(() => new PlayerSpriteSystem());

@@ -32,7 +32,7 @@ public class Player : Component
     }
 
     private const float Gravity = 350;
-    private const float JumpVelocity = 300;
+    private const float JumpVelocity = 310;
     public bool MidAir { get; private set; } = true;
 
     private const float WalkAcceleration = 150;

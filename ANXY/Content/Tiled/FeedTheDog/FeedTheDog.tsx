@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.9" tiledversion="1.9.2" name="FeedTheDog" tilewidth="32" tileheight="32" tilecount="4420" columns="69">
+<tileset version="1.9" tiledversion="1.9.2" name="FeedTheDog" tilewidth="32" tileheight="32" tilecount="4416" columns="69">
  <image source="ANXY-FeedTheDog.png" width="2216" height="2077"/>
  <tile id="138">
   <objectgroup draworder="index" id="2">

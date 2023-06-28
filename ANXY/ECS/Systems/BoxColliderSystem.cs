@@ -44,13 +44,13 @@ internal class BoxColliderSystem : System<BoxCollider>
     /// gets highlighted when collision is detected
     /// </summary>
     /// <param name="graphics"></param>
-    public static void ToggleDebugMode(GraphicsDevice graphics)
+    public static void ToggleDebugMode(GraphicsDevice graphics, bool debugActive)
     {
         foreach (var box in components)
         {
             var recTexture = CreateRectangleTexture(graphics, box.Dimensions);
             box.SetRectangleTexture(recTexture);
-            box.DebugEnabled = !box.DebugEnabled;
+            box.DebugEnabled = debugActive;
         }
     }
 

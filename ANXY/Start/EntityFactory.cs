@@ -22,6 +22,7 @@ internal class EntityFactory
         Background,
         Camera,
         Player,
+        Dog,
         BackgroundTile,
         ForegroundTile
     }
@@ -36,6 +37,7 @@ internal class EntityFactory
             EntityType.Background => CreateBackgroundEntity(),
             EntityType.Camera => CreateCameraEntity(),
             EntityType.Player => CreatePlayerEntity(),
+            EntityType.Dog => CreateDogEntity(),
             EntityType.BackgroundTile => CreateTileEntity(true),
             EntityType.ForegroundTile => CreateTileEntity(false),
             _ => null,
@@ -72,6 +74,16 @@ internal class EntityFactory
     {
         var playerSprite = (Texture2D)_optional[0];
         return PlayerFactory.CreatePlayer(ANXYGame.Instance.GameLoadSpawnPosition, playerSprite);
+    }
+
+    private Entity CreateDogEntity()
+    {
+        var dogEntity = new Entity { Position = ANXYGame.Instance.GameLoadDogSpawnPosition };
+
+        var dogSpriteRenderer = new DogSpriteRenderer((Texture2D)_optional[0]);
+        dogEntity.AddComponent(dogSpriteRenderer);
+
+        return dogEntity;
     }
 
     private Entity CreateTileEntity(bool background)

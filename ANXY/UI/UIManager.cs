@@ -127,6 +127,9 @@ public class UIManager
         var playerSystem = (PlayerSystem)SystemManager.Instance.FindSystemByType<Player>();
         playerSystem.Reset();
 
+        var dogSpriteSystem = (DogSpriteSystem)SystemManager.Instance.FindSystemByType<DogSpriteRenderer>();
+        dogSpriteSystem.Reset();
+
         var camera = (Camera)SystemManager.Instance.FindSystemByType<Camera>().GetFirstComponent();
         camera.Reset();
 
@@ -245,6 +248,10 @@ public class UIManager
 
     private void OnEndReached()
     {
+        if (_inGameOverlay.UiEndReached.Visible)
+        {
+            return;
+        }
         _inGameOverlay.ShowEndReached(true);
     }
 

@@ -94,6 +94,7 @@ public sealed class SystemManager
         
         PlayerSystem.Instance.Draw(gameTime, spriteBatch);
         PlayerSpriteSystem.Instance.Draw(gameTime, spriteBatch);
+        DogSpriteSystem.Instance.Draw(gameTime, spriteBatch);
 
         ForegroundSpriteSystem.Instance.Draw(gameTime, spriteBatch);
         BoxColliderSystem.Instance.Draw(gameTime, spriteBatch);

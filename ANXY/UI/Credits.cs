@@ -182,7 +182,7 @@ namespace ANXY.UI
 
             var lblVersionNr = new Label
             {
-                Text = "v1.0.0",
+                Text = "v1.1.0",
                 GridColumn = 1,
                 GridRow = 23
             };
