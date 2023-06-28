@@ -74,13 +74,17 @@ internal class EntityFactory
         var singleTile = (TiledMapTile)_optional[0];
         var layerName = (string)_optional[1];
         var levelTileMap = (TiledMap)_optional[2];
+        var renderSprite = (bool)_optional[3];
         var newTileEntity = new Entity
         {
             Position = new Vector2(singleTile.X * levelTileMap.TileWidth, singleTile.Y * levelTileMap.TileHeight)
         };
         // Add Sprite to Tile Entity.
-        var tileSprite = new SingleSpriteRenderer(levelTileMap.Tilesets[0].Texture, levelTileMap.Tilesets[0].GetTileRegion(singleTile.GlobalIdentifier - 1));
-        newTileEntity.AddComponent(tileSprite);
+        if (renderSprite)
+        {
+            var tileSprite = new SingleSpriteRenderer(levelTileMap.Tilesets[0].Texture, levelTileMap.Tilesets[0].GetTileRegion(singleTile.GlobalIdentifier - 1));
+            newTileEntity.AddComponent(tileSprite);
+        }
         // Check for BoxColliders in XML.
         TiledMapTilesetTile foundTilesetTile = null;
         foreach (var tile in levelTileMap.Tilesets[0].Tiles)

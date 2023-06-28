@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Tiled;
 using Myra;
 using System;
+using System.Collections.Generic;
 using static ANXY.Start.EntityFactory;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
@@ -129,7 +130,8 @@ public class ANXYGame : Game
         // Create a new SpriteBatch. Load background picture, level tile map and player sprite.
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         _backgroundSprite = Content.Load<Texture2D>("Background-2");
-        _levelTileMap = Content.Load<TiledMap>("./Tiled/BA/JumpNRun-1");
+        //_levelTileMap = Content.Load<TiledMap>("./Tiled/BA/JumpNRun-1");
+        _levelTileMap = Content.Load<TiledMap>("./Tiled/FeedTheDog/FeedTheDog-TileMap");
         _playerSprite = Content.Load<Texture2D>("playerAtlas");
 
         // Load Myra.
@@ -220,19 +222,23 @@ public class ANXYGame : Game
     {
         foreach (String layerName in _spawnLayerNames)
         {
-            var tilesIndex = GetLayerIndexByLayerName(layerName);
-            if (tilesIndex == -1)
+            var tileIndexes = GetLayerIndexByLayerName(layerName);
+            if (tileIndexes.Count == 0)
                 return;
-            var tiles = _levelTileMap.TileLayers[tilesIndex].Tiles;
 
-            foreach (var singleTile in tiles)
+            foreach(var currentTileIndex in tileIndexes)
             {
-                if (singleTile.GlobalIdentifier == 0)
-                    continue;
+                var tiles = _levelTileMap.TileLayers[currentTileIndex].Tiles;
 
-                GameLoadSpawnPosition = new Vector2(singleTile.X * _levelTileMap.TileWidth, singleTile.Y * _levelTileMap.TileHeight);
-                SpawnPosition = new Vector2(GameLoadSpawnPosition.X, (singleTile.Y + 2) * _levelTileMap.TileHeight);
-                return;
+                foreach (var singleTile in tiles)
+                {
+                    if (singleTile.GlobalIdentifier == 0)
+                        continue;
+
+                    GameLoadSpawnPosition = new Vector2(singleTile.X * _levelTileMap.TileWidth, singleTile.Y * _levelTileMap.TileHeight);
+                    SpawnPosition = new Vector2(GameLoadSpawnPosition.X, (singleTile.Y + 2) * _levelTileMap.TileHeight);
+                    return;
+                }
             }
         }
         GameLoadSpawnPosition = new Vector2(1200, 540);
@@ -255,18 +261,20 @@ public class ANXYGame : Game
     /// <param name="layerName">Layers with this name will be added.</param>
     private void InitializeLevelLayer(String layerName)
     {
-        var tilesIndex = GetLayerIndexByLayerName(layerName);
-        if (tilesIndex == -1)
-        {
+        var tileIndexes = GetLayerIndexByLayerName(layerName);
+        if (tileIndexes.Count == 0)
             return;
-        }
 
-        var tiles = _levelTileMap.TileLayers[tilesIndex].Tiles;
-
-        // Iterate over all tiles in the layer.
-        foreach (var singleTile in tiles)
+        foreach (var currentTileIndex in tileIndexes)
         {
-            EntityFactory.Instance.CreateEntity(EntityType.Tile, new Object[] { singleTile, layerName, _levelTileMap });
+            var tiles = _levelTileMap.TileLayers[currentTileIndex].Tiles;
+            var renderSprite = _levelTileMap.TileLayers[currentTileIndex].IsVisible;
+
+            // Iterate over all tiles in the layer.
+            foreach (var singleTile in tiles)
+            {
+                EntityFactory.Instance.CreateEntity(EntityType.Tile, new Object[] { singleTile, layerName, _levelTileMap, renderSprite });
+            }
         }
     }
 
@@ -275,18 +283,20 @@ public class ANXYGame : Game
     /// </summary>
     /// <param name="layerName">Name of the layer.</param>
     /// <returns>Index of layer. -1 if nothing found.</returns>
-    private int GetLayerIndexByLayerName(String layerName)
+    private List<int> GetLayerIndexByLayerName(String layerName)
     {
+        List<int> layerIndices = new();
+
         var index = 0;
         foreach (var layer in _levelTileMap.Layers)
         {
-            if (layerName != null && layer.Name == layerName)
+            if (layerName != null && layer.Name.Contains(layerName))
             {
-                return index;
+                layerIndices.Add(index);
             }
             index++;
         }
-        return -1;
+        return layerIndices;
     }
 
     /// <summary>
