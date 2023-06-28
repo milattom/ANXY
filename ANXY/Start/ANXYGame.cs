@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Tiled;
 using Myra;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using static ANXY.Start.EntityFactory;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
@@ -26,6 +28,7 @@ public class ANXYGame : Game
     ///     Shows if the game is paused or not.
     /// </summary>
     public bool GamePaused { get; private set; } = false;
+    private bool _debugActive = false;
 
     // Window size, style.
     private readonly GraphicsDeviceManager _graphics;
@@ -38,15 +41,22 @@ public class ANXYGame : Game
     private SpriteBatch _spriteBatch;
     private TiledMap _levelTileMap;
     private Texture2D _backgroundSprite;
-    private readonly string[] _backgroundLayerNames = { "Ground" };
-    private readonly string[] _foregroundLayerNames = { "" };
+    private readonly string[] _backgroundLayerNames = { "Ground", "BehindPlayer" };
+    public readonly string[] _foregroundLayerNames = { "InFrontOfPlayer" };
     private readonly string[] _spawnLayerNames = { "Spawn" };
+    private readonly string[] _dogSpawnLayerNames = { "Dog" };
     private readonly string[] _endLayerNames = { "End" };
     public Vector2 GameLoadSpawnPosition { get; private set; } = Vector2.Zero;
+    public Vector2 GameLoadDogSpawnPosition { get; private set; } = Vector2.Zero;
     public Vector2 SpawnPosition { get; private set; } = Vector2.Zero;
+    public Vector2 DogSpawnPosition { get; private set; } = Vector2.Zero;
+
 
     // Player: Sprite.
     private Texture2D _playerSprite;
+
+    // Dog: Sprite.
+    private Texture2D _dogSprite;
 
     // Content: Root Directory.
     private readonly string contentRootDirectory = "Content";
@@ -129,8 +139,9 @@ public class ANXYGame : Game
         // Create a new SpriteBatch. Load background picture, level tile map and player sprite.
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         _backgroundSprite = Content.Load<Texture2D>("Background-2");
-        _levelTileMap = Content.Load<TiledMap>("./Tiled/BA/JumpNRun-1");
+        _levelTileMap = Content.Load<TiledMap>("./Tiled/FeedTheDog/FeedTheDog-TileMap");
         _playerSprite = Content.Load<Texture2D>("playerAtlas");
+        _dogSprite = Content.Load<Texture2D>("dogAtlas");
 
         // Load Myra.
         MyraEnvironment.Game = this;
@@ -172,15 +183,20 @@ public class ANXYGame : Game
     /// </summary>
     private void CreateDefaultScene()
     {
+        CreateBackground();
+        CreateBackgroundLayers();
+
+        SetDogSpawn();
         SetSpawn();
         SetEnd();
 
-        CreateBackground();
-        CreateBackgroundLayers();
         CreatePlayerInput();
         CreatePlayer();
         CreateCamera();
+        CreateDog();
+
         CreateForegroundLayers();
+        ToggleFpsLimit();
     }
 
     /// <summary>
@@ -220,22 +236,54 @@ public class ANXYGame : Game
     {
         foreach (String layerName in _spawnLayerNames)
         {
-            var tilesIndex = GetLayerIndexByLayerName(layerName);
-            if (tilesIndex == -1)
+            var tileIndexes = GetLayerIndexByLayerName(layerName);
+            if (tileIndexes.Count == 0)
                 return;
-            var tiles = _levelTileMap.TileLayers[tilesIndex].Tiles;
 
-            foreach (var singleTile in tiles)
+            foreach(var currentTileIndex in tileIndexes)
             {
-                if (singleTile.GlobalIdentifier == 0)
-                    continue;
+                var tiles = _levelTileMap.TileLayers[currentTileIndex].Tiles;
 
-                GameLoadSpawnPosition = new Vector2(singleTile.X * _levelTileMap.TileWidth, singleTile.Y * _levelTileMap.TileHeight);
-                SpawnPosition = new Vector2(GameLoadSpawnPosition.X, (singleTile.Y + 2) * _levelTileMap.TileHeight);
-                return;
+                foreach (var singleTile in tiles)
+                {
+                    if (singleTile.GlobalIdentifier == 0)
+                        continue;
+
+                    GameLoadSpawnPosition = new Vector2(singleTile.X * _levelTileMap.TileWidth, singleTile.Y * _levelTileMap.TileHeight);
+                    SpawnPosition = new Vector2(GameLoadSpawnPosition.X, (singleTile.Y + 2) * _levelTileMap.TileHeight);
+                    return;
+                }
             }
         }
         GameLoadSpawnPosition = new Vector2(1200, 540);
+    }
+
+    /// <summary>
+    ///     Create all Layers that are set behind the player.
+    /// </summary>
+    private void SetDogSpawn()
+    {
+        foreach (String layerName in _dogSpawnLayerNames)
+        {
+            var tileIndexes = GetLayerIndexByLayerName(layerName);
+            if (tileIndexes.Count == 0)
+                return;
+
+            foreach (var currentTileIndex in tileIndexes)
+            {
+                var tiles = _levelTileMap.TileLayers[currentTileIndex].Tiles;
+
+                foreach (var singleTile in tiles)
+                {
+                    if (singleTile.GlobalIdentifier == 0)
+                        continue;
+
+                    GameLoadDogSpawnPosition = new Vector2(singleTile.X * _levelTileMap.TileWidth, singleTile.Y* _levelTileMap.TileHeight-6);
+                    return;
+                }
+            }
+        }
+        GameLoadDogSpawnPosition = new Vector2(1200, 540);
     }
 
     /// <summary>
@@ -255,18 +303,21 @@ public class ANXYGame : Game
     /// <param name="layerName">Layers with this name will be added.</param>
     private void InitializeLevelLayer(String layerName)
     {
-        var tilesIndex = GetLayerIndexByLayerName(layerName);
-        if (tilesIndex == -1)
-        {
+        var tileIndexes = GetLayerIndexByLayerName(layerName);
+        if (tileIndexes.Count == 0)
             return;
-        }
 
-        var tiles = _levelTileMap.TileLayers[tilesIndex].Tiles;
+        EntityType entityType = _foregroundLayerNames.Contains(layerName) ? EntityType.ForegroundTile : EntityType.BackgroundTile;
 
-        // Iterate over all tiles in the layer.
-        foreach (var singleTile in tiles)
+        foreach (var currentTileIndex in tileIndexes)
         {
-            EntityFactory.Instance.CreateEntity(EntityType.Tile, new Object[] { singleTile, layerName, _levelTileMap });
+            var tiles = _levelTileMap.TileLayers[currentTileIndex].Tiles;
+            var renderSprite = _levelTileMap.TileLayers[currentTileIndex].IsVisible;
+
+            // Iterate over all tiles in the layer.
+            var nonemptyTiles = tiles.Where(tile => tile.GlobalIdentifier > 0).ToList();
+
+            nonemptyTiles.ForEach(tile => EntityFactory.Instance.CreateEntity(entityType, new Object[] { tile, layerName, _levelTileMap, renderSprite }));
         }
     }
 
@@ -275,18 +326,20 @@ public class ANXYGame : Game
     /// </summary>
     /// <param name="layerName">Name of the layer.</param>
     /// <returns>Index of layer. -1 if nothing found.</returns>
-    private int GetLayerIndexByLayerName(String layerName)
+    private List<int> GetLayerIndexByLayerName(String layerName)
     {
+        List<int> layerIndices = new();
+
         var index = 0;
         foreach (var layer in _levelTileMap.Layers)
         {
-            if (layerName != null && layer.Name == layerName)
+            if (layerName != null && layer.Name.Contains(layerName))
             {
-                return index;
+                layerIndices.Add(index);
             }
             index++;
         }
-        return -1;
+        return layerIndices;
     }
 
     /// <summary>
@@ -306,6 +359,14 @@ public class ANXYGame : Game
     private void CreatePlayer()
     {
         EntityFactory.Instance.CreateEntity(EntityType.Player, new Object[] { _playerSprite });
+    }
+
+    /// <summary>
+    ///     Creates and initializes Player.
+    /// </summary>
+    private void CreateDog()
+    {
+        EntityFactory.Instance.CreateEntity(EntityType.Dog, new Object[] { _dogSprite });
     }
 
     /// <summary>
@@ -352,12 +413,14 @@ public class ANXYGame : Game
 
     private void SetDebugMode()
     {
-        BoxColliderSystem.ToggleDebugMode(GraphicsDevice);
+        _debugActive = !_debugActive;
+        BoxColliderSystem.ToggleDebugMode(GraphicsDevice, _debugActive);
     }
 
     private void OnDebugSpawnNewPlayerPressed()
     {
         PlayerFactory.CreatePlayers(10, _playerSprite);
+        BoxColliderSystem.ToggleDebugMode(GraphicsDevice, _debugActive);
     }
 
     // Event handlers.

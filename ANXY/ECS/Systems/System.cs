@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static ANXY.ECS.Components.SingleSpriteRenderer;
 
 namespace ANXY.ECS.Systems;
 
@@ -124,6 +125,22 @@ class PlayerSystem : System<Player>
         return components.Count;
     }
 }
+class DogSpriteSystem : System<DogSpriteRenderer>
+{
+    private static readonly Lazy<DogSpriteSystem> _lazy = new(() => new DogSpriteSystem());
+    public static DogSpriteSystem Instance => _lazy.Value;
+    private DogSpriteSystem()
+    {
+        SystemManager.Instance.Register(this);
+    }
+
+    internal void Reset()
+    {
+        var dogSpriteRenderer = (DogSpriteRenderer)GetFirstComponent();
+        dogSpriteRenderer.Reset();
+    }
+}
+
 class PlayerSpriteSystem : System<PlayerSpriteRenderer>
 {
     private static readonly Lazy<PlayerSpriteSystem> _lazy = new(() => new PlayerSpriteSystem());
@@ -135,13 +152,36 @@ class PlayerSpriteSystem : System<PlayerSpriteRenderer>
 }
 class SpriteSystem : System<SingleSpriteRenderer>
 {
-    private static readonly Lazy<SpriteSystem> _lazy = new(() => new SpriteSystem());
-    public static SpriteSystem Instance => _lazy.Value;
+    private static readonly Lazy<SpriteSystem> _instance = new(() => new SpriteSystem());
+    public static SpriteSystem Instance => _instance.Value;
+
     private SpriteSystem()
     {
         SystemManager.Instance.Register(this);
     }
 }
+class BackgroundSpriteSystem : System<BackgroundSpriteRenderer>
+{
+    private static readonly Lazy<BackgroundSpriteSystem> _instance = new(() => new BackgroundSpriteSystem());
+    public static BackgroundSpriteSystem Instance => _instance.Value;
+
+    private BackgroundSpriteSystem()
+    {
+        SystemManager.Instance.Register(this);
+    }
+}
+
+class ForegroundSpriteSystem : System<ForegroundSpriteRenderer>
+{
+    private static readonly Lazy<ForegroundSpriteSystem> _instance = new(() => new ForegroundSpriteSystem());
+    public static ForegroundSpriteSystem Instance => _instance.Value;
+
+    private ForegroundSpriteSystem()
+    {
+        SystemManager.Instance.Register(this);
+    }
+}
+
 class TextRendererSystem : System<TextRenderer>
 {
     private static readonly Lazy<TextRendererSystem> _lazy = new(() => new TextRendererSystem());

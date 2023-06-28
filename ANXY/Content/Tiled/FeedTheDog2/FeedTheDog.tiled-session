@@ -3,25 +3,40 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "ANXY-FeedTheDog.tsx",
+    "activeFile": "C:/Users/Gamer/Documents/Git/ANXY/ANXY/Content/Tiled/FeedTheDog/FeedTheDog.tsx",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
+        "": {
+            "scaleInDock": 1
+        },
         "ANXY-FeedTheDog.tsx": {
             "dynamicWrapping": false
         },
-        "C:/Users/Gamer/Documents/Git/ANXY/ANXY/Content/Tiled/FeedTheDog/FeedTheDog.tmx": {
-            "scale": 0.255126953125,
-            "selectedLayer": 11,
+        "C:/Users/Gamer/Documents/Git/ANXY/ANXY/Content/Tiled/FeedTheDog/FeedTheDog-TileMap.tmx": {
+            "scale": 2,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 1381.6650717703349,
-                "y": 513.4698564593302
+                "x": 2966.5,
+                "y": 559
+            }
+        },
+        "C:/Users/Gamer/Documents/Git/ANXY/ANXY/Content/Tiled/FeedTheDog/FeedTheDog.tmx": {
+            "scale": 0.33,
+            "selectedLayer": 7,
+            "viewCenter": {
+                "x": 2681.818181818182,
+                "y": 403.0303030303029
             }
         },
         "C:/Users/Gamer/Documents/Git/ANXY/ANXY/Content/Tiled/FeedTheDog/FeedTheDog.tmx#Market": {
             "scaleInDock": 1,
             "scaleInEditor": 0.75
+        },
+        "C:/Users/Gamer/Documents/Git/ANXY/ANXY/Content/Tiled/FeedTheDog/FeedTheDog.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1.5
         },
         "C:/Users/Gamer/Documents/Git/ANXY/ANXY/Content/Tiled/FeedTheDog/FeedTheDog2.tmx": {
             "scale": 1.5,
@@ -37,10 +52,13 @@
     },
     "last.imagePath": "C:/Users/Gamer/Documents/Git/ANXY/ANXY/Content/Tiled/FeedTheDog2",
     "openFiles": [
-        "C:/Users/Gamer/Documents/Git/ANXY/ANXY/Content/Tiled/FeedTheDog/FeedTheDog.tmx"
+        "C:/Users/Gamer/Documents/Git/ANXY/ANXY/Content/Tiled/FeedTheDog/FeedTheDog-TileMap.tmx",
+        "C:/Users/Gamer/Documents/Git/ANXY/ANXY/Content/Tiled/FeedTheDog/FeedTheDog.tsx"
     ],
     "project": "FeedTheDog.tiled-project",
     "recentFiles": [
+        "C:/Users/Gamer/Documents/Git/ANXY/ANXY/Content/Tiled/FeedTheDog/FeedTheDog-TileMap.tmx",
+        "C:/Users/Gamer/Documents/Git/ANXY/ANXY/Content/Tiled/FeedTheDog/FeedTheDog.tsx",
         "C:/Users/Gamer/Documents/Git/ANXY/ANXY/Content/Tiled/FeedTheDog/FeedTheDog.tmx",
         "C:/Users/Gamer/Documents/Git/ANXY/ANXY/Content/Tiled/FeedTheDog/FeedTheDog2.tmx"
     ],

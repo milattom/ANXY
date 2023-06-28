@@ -50,6 +50,18 @@
 /processorParam:TextureFormat=Color
 /build:Background.jpg
 
+#begin DogAtlas.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:DogAtlas.png
+
 #begin PlayerAtlas.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -107,4 +119,31 @@
 /importer:TiledMapTilesetImporter
 /processor:TiledMapTilesetProcessor
 /build:Tiled/BA/TileSetTest2.tsx
+
+#begin Tiled/FeedTheDog/ANXY-FeedTheDog.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Tiled/FeedTheDog/ANXY-FeedTheDog.png
+
+#begin Tiled/FeedTheDog/FeedTheDog-TileMap.tmx
+/importer:TiledMapImporter
+/processor:TiledMapProcessor
+/build:Tiled/FeedTheDog/FeedTheDog-TileMap.tmx
+
+#begin Tiled/FeedTheDog/FeedTheDog.tmx
+/importer:TiledMapImporter
+/processor:TiledMapProcessor
+/build:Tiled/FeedTheDog/FeedTheDog.tmx
+
+#begin Tiled/FeedTheDog/FeedTheDog.tsx
+/importer:TiledMapTilesetImporter
+/processor:TiledMapTilesetProcessor
+/build:Tiled/FeedTheDog/FeedTheDog.tsx
 

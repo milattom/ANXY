@@ -19,7 +19,6 @@ public class SingleSpriteRenderer : Component
     /// <param name="atlas"></param>
     public SingleSpriteRenderer(Texture2D atlas) : this(atlas, atlas.Bounds)
     {
-        SpriteSystem.Instance.Register(this);
     }
 
     /// <summary>
@@ -43,5 +42,49 @@ public class SingleSpriteRenderer : Component
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
         spriteBatch.Draw(_atlas, Entity.Position - Camera.ActiveCamera.DrawOffset, _region, Color.White);
+    }
+
+    public class ForegroundSpriteRenderer : Component
+    {
+        private readonly Texture2D _atlas;
+        private readonly Rectangle _region;
+        public ForegroundSpriteRenderer(Texture2D atlas, Rectangle region)
+        {
+            _atlas = atlas;
+            _region = region;
+            ForegroundSpriteSystem.Instance.Register(this);
+        }
+
+        /// <summary>
+        /// prints the desired part of the sprite to the screen at position of the parent Entity.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <param name="spriteBatch"></param>
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(_atlas, Entity.Position - Camera.ActiveCamera.DrawOffset, _region, Color.White);
+        }
+    }
+
+    public class BackgroundSpriteRenderer : Component
+    {
+        private readonly Texture2D _atlas;
+        private readonly Rectangle _region;
+        public BackgroundSpriteRenderer(Texture2D atlas, Rectangle region)
+        {
+            _atlas = atlas;
+            _region = region;
+            BackgroundSpriteSystem.Instance.Register(this);
+        }
+
+        /// <summary>
+        /// prints the desired part of the sprite to the screen at position of the parent Entity.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <param name="spriteBatch"></param>
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(_atlas, Entity.Position - Camera.ActiveCamera.DrawOffset, _region, Color.White);
+        }
     }
 }
