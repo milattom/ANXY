@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Tiled;
 using System;
+using System.Linq;
+using static ANXY.ECS.Components.SingleSpriteRenderer;
 
 namespace ANXY.Start;
 
@@ -20,7 +22,8 @@ internal class EntityFactory
         Background,
         Camera,
         Player,
-        Tile
+        BackgroundTile,
+        ForegroundTile
     }
 
     private Object[] _optional;
@@ -33,7 +36,8 @@ internal class EntityFactory
             EntityType.Background => CreateBackgroundEntity(),
             EntityType.Camera => CreateCameraEntity(),
             EntityType.Player => CreatePlayerEntity(),
-            EntityType.Tile => CreateTileEntity(),
+            EntityType.BackgroundTile => CreateTileEntity(true),
+            EntityType.ForegroundTile => CreateTileEntity(false),
             _ => null,
         };
     }
@@ -47,9 +51,10 @@ internal class EntityFactory
         Background background = new(windowWidth, windowHeigtht);
         backgroundEntity.AddComponent(background);
         backgroundEntity.AddComponent(new Background(windowWidth, windowHeigtht));
-
+        
         SingleSpriteRenderer backgroundSprite = new((Texture2D)_optional[2]);
         backgroundEntity.AddComponent(backgroundSprite);
+
         return backgroundEntity;
     }
 
@@ -69,12 +74,13 @@ internal class EntityFactory
         return PlayerFactory.CreatePlayer(ANXYGame.Instance.GameLoadSpawnPosition, playerSprite);
     }
 
-    private Entity CreateTileEntity()
+    private Entity CreateTileEntity(bool background)
     {
         var singleTile = (TiledMapTile)_optional[0];
         var layerName = (string)_optional[1];
         var levelTileMap = (TiledMap)_optional[2];
         var renderSprite = (bool)_optional[3];
+
         var newTileEntity = new Entity
         {
             Position = new Vector2(singleTile.X * levelTileMap.TileWidth, singleTile.Y * levelTileMap.TileHeight)
@@ -82,8 +88,16 @@ internal class EntityFactory
         // Add Sprite to Tile Entity.
         if (renderSprite)
         {
-            var tileSprite = new SingleSpriteRenderer(levelTileMap.Tilesets[0].Texture, levelTileMap.Tilesets[0].GetTileRegion(singleTile.GlobalIdentifier - 1));
-            newTileEntity.AddComponent(tileSprite);
+            if (!background)
+            {
+                var tileSprite = new ForegroundSpriteRenderer(levelTileMap.Tilesets[0].Texture, levelTileMap.Tilesets[0].GetTileRegion(singleTile.GlobalIdentifier - 1));
+                newTileEntity.AddComponent(tileSprite);
+            }
+            else
+            {
+                var tileSprite = new BackgroundSpriteRenderer(levelTileMap.Tilesets[0].Texture, levelTileMap.Tilesets[0].GetTileRegion(singleTile.GlobalIdentifier - 1));
+                newTileEntity.AddComponent(tileSprite);
+            }
         }
         // Check for BoxColliders in XML.
         TiledMapTilesetTile foundTilesetTile = null;

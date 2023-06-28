@@ -7,6 +7,7 @@ using MonoGame.Extended.Tiled;
 using Myra;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using static ANXY.Start.EntityFactory;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
@@ -39,8 +40,8 @@ public class ANXYGame : Game
     private SpriteBatch _spriteBatch;
     private TiledMap _levelTileMap;
     private Texture2D _backgroundSprite;
-    private readonly string[] _backgroundLayerNames = { "Ground" };
-    private readonly string[] _foregroundLayerNames = { "" };
+    private readonly string[] _backgroundLayerNames = { "Ground", "BehindPlayer" };
+    public readonly string[] _foregroundLayerNames = { "InFrontOfPlayer" };
     private readonly string[] _spawnLayerNames = { "Spawn" };
     private readonly string[] _endLayerNames = { "End" };
     public Vector2 GameLoadSpawnPosition { get; private set; } = Vector2.Zero;
@@ -174,14 +175,16 @@ public class ANXYGame : Game
     /// </summary>
     private void CreateDefaultScene()
     {
+        CreateBackground();
+        CreateBackgroundLayers();
+
         SetSpawn();
         SetEnd();
 
-        CreateBackground();
-        CreateBackgroundLayers();
         CreatePlayerInput();
         CreatePlayer();
         CreateCamera();
+
         CreateForegroundLayers();
     }
 
@@ -265,16 +268,17 @@ public class ANXYGame : Game
         if (tileIndexes.Count == 0)
             return;
 
+        EntityType entityType = _foregroundLayerNames.Contains(layerName) ? EntityType.ForegroundTile : EntityType.BackgroundTile;
+
         foreach (var currentTileIndex in tileIndexes)
         {
             var tiles = _levelTileMap.TileLayers[currentTileIndex].Tiles;
             var renderSprite = _levelTileMap.TileLayers[currentTileIndex].IsVisible;
 
             // Iterate over all tiles in the layer.
-            foreach (var singleTile in tiles)
-            {
-                EntityFactory.Instance.CreateEntity(EntityType.Tile, new Object[] { singleTile, layerName, _levelTileMap, renderSprite });
-            }
+            var nonemptyTiles = tiles.Where(tile => tile.GlobalIdentifier > 0).ToList();
+
+            nonemptyTiles.ForEach(tile => EntityFactory.Instance.CreateEntity(entityType, new Object[] { tile, layerName, _levelTileMap, renderSprite }));
         }
     }
 

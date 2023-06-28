@@ -20,6 +20,11 @@ public sealed class SystemManager
     private static readonly Lazy<SystemManager> _lazy = new(() => new SystemManager());
     private readonly List<ISystem> _systems = new();
 
+    private SystemManager()
+    {
+
+    }
+
     /// <summary>
     /// Adds the system to the list. 
     /// </summary>
@@ -84,7 +89,16 @@ public sealed class SystemManager
     /// <param name="spriteBatch">spriteBatch of game class</param>
     public void DrawAll(GameTime gameTime, SpriteBatch spriteBatch)
     {
-        foreach (var system in _systems) system.Draw(gameTime, spriteBatch);
+        SpriteSystem.Instance.Draw(gameTime, spriteBatch);
+        BackgroundSpriteSystem.Instance.Draw(gameTime, spriteBatch);
+        
+        PlayerSystem.Instance.Draw(gameTime, spriteBatch);
+        PlayerSpriteSystem.Instance.Draw(gameTime, spriteBatch);
+
+        ForegroundSpriteSystem.Instance.Draw(gameTime, spriteBatch);
+        BoxColliderSystem.Instance.Draw(gameTime, spriteBatch);
+        TextRendererSystem.Instance.Draw(gameTime, spriteBatch);
+        CameraSystem.Instance.Draw(gameTime, spriteBatch);
     }
 
     /// <summary>
